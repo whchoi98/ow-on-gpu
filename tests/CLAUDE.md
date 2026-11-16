@@ -11,7 +11,7 @@
 | `run-all.sh` | 실행기. `test-*.sh`를 찾아 source로 불러 실행하고 통과, 실패, 건너뜀을 셈 |
 | `hooks/test-hooks.sh` | 훅의 존재와 권한, 설정 등록, 훅의 실제 동작(문서 알림, 비밀 값 차단, 세션 맥락, 커밋 메시지 훅) |
 | `hooks/test-secret-patterns.sh` | 비밀 값과 환경 식별 값 패턴의 검출과 오검출. 실제 검사기를 실행하고, 식별 값은 가리기 도구를 거치면 통과하는지도 확인 |
-| `structure/test-project-structure.sh` | CLAUDE.md의 구역과 `@AGENT.md`, 모듈 문서, 스킬과 에이전트의 frontmatter, 두 언어 문서의 구조, 참조 문서의 경로 |
+| `structure/test-project-structure.sh` | CLAUDE.md의 구역과 `@AGENT.md`, 모듈 문서, 스킬과 에이전트의 frontmatter, 두 언어 문서의 구조, README의 아키텍처 그림(파일이 있고 git이 추적하는지, 영어 구역은 영어판이고 한국어 구역은 한국어판인지), 참조 문서의 경로 |
 | `fixtures/secret-samples.txt` | 검출해야 하는 표본. 접두어와 본문을 나눠 저장하고 실행할 때 합침 |
 | `fixtures/identifier-samples.txt` | 막아야 하는 환경 식별 값의 표본(지어낸 값) |
 | `fixtures/false-positives.txt` | 검출하면 안 되는 표본 |

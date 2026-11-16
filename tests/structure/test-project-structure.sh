@@ -140,6 +140,34 @@ assert_eq "README: 한국어 구역의 차례" \
     "개요|주요 기능|사전 요구 사항|설치 방법|사용법|환경 설정|프로젝트 구조|테스트|API 문서|기여 방법|라이선스|연락처|" \
     "$(st_section README.md korean | st_outside_code | sed -n 's/^## //p' | tr '\n' '|')"
 
+# --- README: 아키텍처 그림 ---
+# 그림은 저장소 안의 파일을 상대 경로로 가리킨다. 로컬에만 있고 추적하지 않는 파일(build/*@1x.png)을 가리키면
+# GitHub에서는 깨진 그림이 되므로, 파일이 있는지와 git이 추적하는지를 함께 본다.
+st_images() { grep -oP '(?:src|srcset)="\K[^"]+(?=")' | grep -vE '^https?://' || true; }
+ST_EN_IMAGES=$(st_section README.md english | st_images)
+ST_KO_IMAGES=$(st_section README.md korean | st_images)
+ST_MISSING=""
+ST_UNTRACKED=""
+while IFS= read -r ST_PATH; do
+    [ -z "$ST_PATH" ] && continue
+    [ -f "$ST_PATH" ] || ST_MISSING="$ST_MISSING $ST_PATH"
+    if git rev-parse --git-dir >/dev/null 2>&1; then
+        git ls-files --error-unmatch -- "$ST_PATH" >/dev/null 2>&1 || ST_UNTRACKED="$ST_UNTRACKED $ST_PATH"
+    fi
+done < <(printf '%s\n%s\n' "$ST_EN_IMAGES" "$ST_KO_IMAGES")
+assert_eq "README: 그림 파일이 모두 있음" "" "$ST_MISSING"
+assert_eq "README: 그림 파일을 git이 추적함" "" "$ST_UNTRACKED"
+[ "$(printf '%s\n' "$ST_EN_IMAGES" | st_count '_light\.png$')" -ge 3 ] && pass "README: 영어 구역에 아키텍처 그림이 셋 이상" \
+    || fail "README: 영어 구역에 아키텍처 그림이 셋 이상" "$(printf '%s\n' "$ST_EN_IMAGES" | st_count '_light\.png$')개"
+assert_eq "README: 그림마다 다크와 라이트가 짝을 이룸" \
+    "$(printf '%s\n' "$ST_EN_IMAGES" | grep '_dark\.png$' | sed 's/_dark\.png$//')" \
+    "$(printf '%s\n' "$ST_EN_IMAGES" | grep '_light\.png$' | sed 's/_light\.png$//')"
+# 영어 구역은 영어판(-en), 한국어 구역은 같은 그림의 한국어판을 쓴다
+assert_eq "README: 한국어 구역의 그림은 영어 구역 그림의 한국어판" \
+    "$(printf '%s\n' "$ST_EN_IMAGES" | sed 's/-en_/_/')" "$ST_KO_IMAGES"
+printf '%s\n' "$ST_EN_IMAGES" | grep -v -- '-en_' | grep -q . && fail "README: 영어 구역은 영어판 그림만 씀" \
+    "$(printf '%s\n' "$ST_EN_IMAGES" | grep -v -- '-en_' | head -1)" || pass "README: 영어 구역은 영어판 그림만 씀"
+
 # --- CHANGELOG: 두 구역의 버전 목록이 같고 분류 제목은 영어다 ---
 ST_EN=$(st_section CHANGELOG.md english)
 ST_KO=$(st_section CHANGELOG.md korean)

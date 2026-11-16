@@ -1,7 +1,7 @@
 # Changelog
 
-<a href="#english"><img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"></a>
-<a href="#korean"><img src="https://img.shields.io/badge/lang-한국어-red.svg" alt="Korean"></a>
+[![English](https://img.shields.io/badge/lang-English-blue.svg)](#english)
+[![한국어](https://img.shields.io/badge/lang-한국어-red.svg)](#한국어)
 
 ---
 
@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add the API call view, the build steps view and a Korean and English switch to the check page
 - Add English texts in the BFF, selected by the `x-lang` request header
 - Add the `fallback` value of the `x-bff-search` response header for requests whose model could not be decided
+- Add `scripts/mask-identifiers.py` and a pre-commit check that keep environment identifiers such as account IDs, ARNs and CloudFront addresses out of committed files
 
 ### Changed
 
@@ -73,10 +74,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 확인용 페이지에 API 호출 보기, 구축 과정 보기, 한영 전환 추가
 - 요청 헤더 `x-lang`으로 고르는 BFF의 영어 문구 추가
 - 모델을 정하지 못한 요청을 알리는 응답 헤더 `x-bff-search`의 `fallback` 값 추가
+- 계정 ID, ARN, CloudFront 주소 같은 환경 식별 값이 커밋에 들어가지 않도록 `scripts/mask-identifiers.py`와 커밋 전 검사 추가
 
 ### Changed
 
-- BFF를 ECS Fargate에서 Graviton NodePool의 EKS 파드로 이전. ALB는 AWS Load Balancer Controller가 생성
+- BFF를 ECS Fargate에서 AWS Load Balancer Controller가 만든 ALB 뒤의 Graviton NodePool EKS 파드로 이전
 - Qwen 노드를 Spot에서 On-Demand로 변경
 - 클러스터 웹훅이 붙이는 자동 계측을 BFF 파드가 받지 않도록 변경
 - 환경별 값이 든 파일 다섯 개 대신 자리 표시만 든 `*.example` 파일을 추적하도록 변경

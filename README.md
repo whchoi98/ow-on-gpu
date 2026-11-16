@@ -1,7 +1,7 @@
 # ow-on-gpu
 
-<a href="#english"><img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"></a>
-<a href="#korean"><img src="https://img.shields.io/badge/lang-한국어-red.svg" alt="Korean"></a>
+[![English](https://img.shields.io/badge/lang-English-blue.svg)](#english)
+[![한국어](https://img.shields.io/badge/lang-한국어-red.svg)](#한국어)
 
 Serve Gemma 4 31B and Qwen3.8-27B with vLLM on Amazon EKS and measure them | Amazon EKS에서 vLLM으로 Gemma 4 31B와 Qwen3.8-27B를 서빙하고 측정합니다
 
@@ -16,6 +16,31 @@ Serve Gemma 4 31B and Qwen3.8-27B with vLLM on Amazon EKS and measure them | Ama
 ow-on-gpu is the measurement environment for part 3 of the blog series on optimising vLLM serving on Amazon EKS. Two g6e.4xlarge nodes (one L40S each) serve Gemma 4 31B and Qwen3.8-27B with vLLM v0.33.0 behind an inference gateway, and a BFF in front of the gateway decides which model receives each request. The repository holds the infrastructure code, the Kubernetes manifests, the BFF and a check page, the measurement scripts, the raw results and the documents written at each build stage.
 
 The rules, the confirmed decisions and the known pitfalls of this project are in [AGENT.md](AGENT.md). The overall structure is in [docs/architecture.md](docs/architecture.md), and the measured results are in [docs/08-results.md](docs/08-results.md).
+
+### Architecture
+
+Three infographics show the environment from different angles. Each figure follows the light or dark theme of GitHub. The SVG files with the same names are in `docs/infographic/build/`, and `docs/infographic/build.sh` rebuilds them.
+
+**Request Path and Segment Latency.** The path from the browser to the GPU nodes, the supply of models and images, the order in which the BFF picks a model, the time measured in each segment and the access limit at each boundary.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/infographic/build/08-request-flow-en_16x9_dark.png">
+  <img src="docs/infographic/build/08-request-flow-en_16x9_light.png" alt="Request path and segment latency: browser, CloudFront, internal ALB, BFF and gateway in front of the Gemma and Qwen pods on g6e.4xlarge nodes, with the supply of models and images">
+</picture>
+
+**Build Steps on the Architecture.** Each component carries the number of the build stage that created it. The numbers are the stages in the table under [Installation](#installation).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/infographic/build/10-build-steps-en_16x9_dark.png">
+  <img src="docs/infographic/build/10-build-steps-en_16x9_light.png" alt="Build steps on the architecture: every component of the serving path is marked with the build stage, 0 to 9, that created it">
+</picture>
+
+**Journey of One LLM API Call.** The eight stages one request passes through, each with the component that does the job in this environment and its measured value.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/infographic/build/09-llm-api-call-en_16x9_dark.png">
+  <img src="docs/infographic/build/09-llm-api-call-en_16x9_light.png" alt="Journey of one LLM API call: API gateway, load balancer, tokenization, model router, inference engine, post-processing, response and billing, logging and observability">
+</picture>
 
 ## Features
 
@@ -40,15 +65,23 @@ The GPU nodes are billed while they run. With every component running, the fixed
 
 ## Installation
 
-Prepare the working environment first. This step creates no AWS resource.
+Prepare the working environment first. These steps create no AWS resource.
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/whchoi98/ow-on-gpu.git
+cd ow-on-gpu
+
+# 2. Check the tools, install the git hooks, copy the example files, install the page dependencies
 bash scripts/setup.sh
+
+# 3. Confirm that the working tools run
+bash tests/run-all.sh
 ```
 
-Five files that hold environment-specific values (model bucket name, Prometheus workspace ID, public IP) are not in the repository. `scripts/setup.sh` copies their `*.example` files; replace the placeholders with your own values (`docs/onboarding.md`).
+Five files that hold environment-specific values (model bucket name, Prometheus workspace ID, public IP) are not in the repository. `scripts/setup.sh` copies their `*.example` files. Replace the placeholders with your own values (`docs/onboarding.md`).
 
-Build the environment in the order of the stages in `prompts.md`. Before any AWS resource is created, changed or deleted, show the `terraform plan` or `kubectl diff` output and get approval.
+Build the environment in the order of the stages in `prompts.md`. Before any AWS resource is created, changed or deleted, show the `terraform plan` or `kubectl diff` output and get approval. The stage numbers are the circled numbers in the build steps figure under [Architecture](#architecture).
 
 | Stage | What it builds | Code | Record |
 |---|---|---|---|
@@ -69,27 +102,31 @@ Use the project kubeconfig so the default context of a shared machine stays unto
 
 ```bash
 export KUBECONFIG=$PWD/infra/terraform/.kubeconfig
-kubectl get nodes
+kubectl get nodes -L node.kubernetes.io/instance-type,karpenter.sh/nodepool
+# 9 nodes with every component running (2026-11-16):
+#   2 x m7g.large (addons), 2 x c7i-flex.xlarge (system), 2 x c7g.large (app),
+#   2 x g6e.4xlarge (gemma-od, qwen-od), 1 x g6.xlarge (decider)
 ```
 
 Open the site address, sign in with a Cognito user and send a request from the check page.
 
 ```bash
 terraform -chdir=infra/terraform output -raw app_url
+# https://<cloudfront-domain>
 ```
 
-Deploy a BFF change. The diff is shown first and applied after approval.
+Deploy a BFF change. Show the difference first and apply after approval.
 
 ```bash
-app/bff/build.sh
-k8s/bff/install.sh diff
-k8s/bff/install.sh apply
+app/bff/build.sh              # build the image and push it to Amazon ECR
+k8s/bff/install.sh diff       # show the difference
+k8s/bff/install.sh apply      # apply after approval
 ```
 
 Deploy a page change.
 
 ```bash
-app/web/build.sh
+app/web/build.sh              # npm ci, npm test, npm run build
 terraform -chdir=infra/terraform plan -target=aws_s3_object.web -out=web.tfplan
 terraform -chdir=infra/terraform apply web.tfplan
 ```
@@ -98,6 +135,7 @@ Check a deployment without the demo password.
 
 ```bash
 python bench/bff/lang_check_live.py "$(terraform -chdir=infra/terraform output -raw app_url)"
+# 401 without a token. The message is "Sign-in is required" when x-lang is en
 kubectl -n app exec -i <bff-pod> -- python - < bench/bff/lang_check_in_pod.py
 ```
 
@@ -120,45 +158,58 @@ kubectl -n app exec -i <bff-pod> -- python - < bench/bff/lang_check_in_pod.py
 
 ## Project Structure
 
-```
-AGENT.md                # Purpose, confirmed decisions, working rules, pitfalls
-CLAUDE.md               # Loads AGENT.md and describes the working tools
-prompts.md              # Prompts for build stages 0 to 9
-infra/cdk-vpc/          # VPC as an AWS CDK stack
-infra/terraform/        # EKS, Karpenter, IAM, S3, CloudFront, WAF, Cognito
-k8s/                    # Manifests: base, gemma, qwen, decider, gateway, sleep-controller, bff, observability, bench
-jobs/                   # Jobs that load weights and publish compile caches to S3
-app/bff/                # BFF (Python, aiohttp)
-app/web/                # Check page (React, Vite)
-bench/                  # Measurement and post-deploy check scripts
-results/                # Raw measurement data
-docs/                   # Stage records, architecture, API reference, layer references, infographic sources
-blog/                   # Working folders of the three blog drafts
-tests/                  # Harness tests (hooks, settings, structure)
-scripts/                # Setup and git hook installer
-.claude/                # Claude Code settings, hooks, skills, commands, agents
+```text
+ow-on-gpu/
+├── AGENT.md                # Purpose, confirmed decisions, working rules, pitfalls
+├── CLAUDE.md               # Loads AGENT.md and describes the working tools
+├── prompts.md              # Prompts for build stages 0 to 9
+├── infra/
+│   ├── cdk-vpc/            # VPC as an AWS CDK stack
+│   └── terraform/          # EKS, Karpenter, IAM, S3, CloudFront, WAF, Cognito
+├── k8s/                    # Manifests: base, gemma, qwen, decider, gateway, sleep-controller, bff, observability, bench
+├── jobs/                   # Jobs that load weights and publish compile caches to S3
+├── app/
+│   ├── bff/                # BFF (Python, aiohttp)
+│   └── web/                # Check page (React, Vite)
+├── bench/                  # Measurement and post-deploy check scripts
+├── results/                # Raw measurement data
+├── docs/                   # Stage records, architecture, API reference, layer references
+│   └── infographic/        # Infographic sources and the built figures (build/)
+├── blog/                   # Working folders of the three blog drafts
+├── reference/              # Reference figures for the infographics
+├── source-doc/             # First originals of the blog drafts
+├── tests/                  # Harness tests (hooks, settings, structure)
+├── scripts/                # Setup, git hook installer, identifier masking
+└── .claude/                # Claude Code settings, hooks, skills, commands, agents
 ```
 
 ## Testing
 
 ```bash
-# Harness: hooks, settings, document structure and pointers
+# Harness: hooks, settings, document structure and pointers. Exits 0 when every test passes
 bash tests/run-all.sh
 
-# Check page
-npm test --prefix app/web
+# One harness suite by name: hooks or structure
+bash tests/run-all.sh structure
 
-# BFF, inside its image
+# Check page: every test file, or one file
+npm test --prefix app/web
+(cd app/web && node i18n.test.mjs)
+# i18n: ok
+
+# BFF, inside its image: every test, or one class
 docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff
+# Ran 34 tests ... OK
+docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff.RoutingRules
 ```
 
-These tests create no AWS resource and call no model.
+These tests create no AWS resource and call no model. No coverage tool is configured, so coverage is not measured.
 
 ## API Documentation
 
 The BFF exposes an OpenAI-compatible endpoint and three helper paths. Request headers, response headers and error bodies are in [docs/api-reference.md](docs/api-reference.md).
 
-```
+```text
 POST /v1/chat/completions
 POST /v1/route
 GET  /v1/status
@@ -196,6 +247,31 @@ ow-on-gpu는 블로그 시리즈 "EKS 기반 vLLM 서빙 최적화" 3부의 측�
 
 이 프로젝트의 규칙, 확정된 결정, 알려진 함정은 [AGENT.md](AGENT.md)에 있습니다. 전체 구조는 [docs/architecture.md](docs/architecture.md)에, 측정 결과는 [docs/08-results.md](docs/08-results.md)에 있습니다.
 
+### 아키텍처
+
+인포그래픽 세 장이 같은 환경을 서로 다른 관점에서 보여 줍니다. 그림은 GitHub의 라이트, 다크 테마를 따라 바뀝니다. 같은 이름의 SVG 파일이 `docs/infographic/build/`에 있고, `docs/infographic/build.sh`로 다시 만듭니다.
+
+**요청 경로와 구간별 시간.** 브라우저에서 GPU 노드까지의 경로, 모델과 이미지를 공급하는 흐름, BFF가 모델을 정하는 순서, 구간마다 측정한 시간, 경계마다 둔 접근 제한을 담았습니다.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/infographic/build/08-request-flow_16x9_dark.png">
+  <img src="docs/infographic/build/08-request-flow_16x9_light.png" alt="요청 경로와 구간별 시간: 브라우저, CloudFront, 내부 ALB, BFF, 게이트웨이를 거쳐 g6e.4xlarge 노드의 Gemma와 Qwen 파드에 이르는 경로와 모델, 이미지 공급 흐름">
+</picture>
+
+**구축 단계와 아키텍처.** 구성 요소마다 그것을 만든 구축 단계의 번호가 붙어 있습니다. 번호는 [설치 방법](#설치-방법)에 있는 표의 단계와 같습니다.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/infographic/build/10-build-steps_16x9_dark.png">
+  <img src="docs/infographic/build/10-build-steps_16x9_light.png" alt="구축 단계와 아키텍처: 서빙 경로의 구성 요소마다 그것을 만든 구축 단계(0에서 9)의 번호를 표시한 그림">
+</picture>
+
+**LLM API 호출 한 건의 여정.** 요청 하나가 거치는 여덟 단계마다 이 환경에서 그 일을 하는 구성 요소와 측정값을 적었습니다.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/infographic/build/09-llm-api-call_16x9_dark.png">
+  <img src="docs/infographic/build/09-llm-api-call_16x9_light.png" alt="LLM API 호출 한 건의 여정: API 게이트웨이, 로드 밸런서, 토큰화, 모델 라우터, 추론 엔진, 후처리, 응답과 과금, 로그와 관측">
+</picture>
+
 ## 주요 기능
 
 - **게이트웨이 하나 뒤의 두 모델** — Gemma 4 31B와 Qwen3.8-27B가 각자의 g6e.4xlarge 노드에서 실행되고, Gateway API Inference Extension과 agentgateway가 요청 본문의 `model` 값으로 경로를 고릅니다.
@@ -219,15 +295,23 @@ GPU 노드는 실행 중인 동안 요금이 나옵니다. 모든 구성 요소�
 
 ## 설치 방법
 
-먼저 작업 환경을 준비합니다. 이 단계는 AWS 리소스를 만들지 않습니다.
+먼저 작업 환경을 준비합니다. 이 단계들은 AWS 리소스를 만들지 않습니다.
 
 ```bash
+# 1. 저장소를 복제합니다
+git clone https://github.com/whchoi98/ow-on-gpu.git
+cd ow-on-gpu
+
+# 2. 도구를 확인하고, git 훅을 설치하고, 예시 파일을 복사하고, 화면의 의존성을 설치합니다
 bash scripts/setup.sh
+
+# 3. 작업 도구가 동작하는지 확인합니다
+bash tests/run-all.sh
 ```
 
-환경별 값(모델 버킷 이름, Prometheus 작업 공간 ID, 공인 IP)이 든 파일 다섯 개는 저장소에 없습니다. `scripts/setup.sh`가 `*.example` 파일을 복사하므로 자리 표시를 실제 값으로 바꿉니다(`docs/onboarding.md`).
+환경별 값(모델 버킷 이름, Prometheus 작업 공간 ID, 공인 IP)이 든 파일 다섯 개는 저장소에 없습니다. `scripts/setup.sh`가 `*.example` 파일을 복사합니다. 자리 표시를 실제 값으로 바꿉니다(`docs/onboarding.md`).
 
-`prompts.md`의 단계 순서대로 환경을 만듭니다. AWS 리소스를 만들거나 바꾸거나 지우기 전에 `terraform plan` 또는 `kubectl diff` 결과를 보여 주고 승인을 받습니다.
+`prompts.md`의 단계 순서대로 환경을 만듭니다. AWS 리소스를 만들거나 바꾸거나 지우기 전에 `terraform plan` 또는 `kubectl diff` 결과를 보여 주고 승인을 받습니다. 단계 번호는 [아키텍처](#아키텍처)의 구축 단계 그림에서 원 안에 든 번호와 같습니다.
 
 | 단계 | 만드는 것 | 코드 | 기록 |
 |---|---|---|---|
@@ -248,27 +332,31 @@ bash scripts/setup.sh
 
 ```bash
 export KUBECONFIG=$PWD/infra/terraform/.kubeconfig
-kubectl get nodes
+kubectl get nodes -L node.kubernetes.io/instance-type,karpenter.sh/nodepool
+# 모든 구성 요소가 실행 중일 때 노드 9대 (2026-11-16):
+#   m7g.large 2대(addons), c7i-flex.xlarge 2대(system), c7g.large 2대(app),
+#   g6e.4xlarge 2대(gemma-od, qwen-od), g6.xlarge 1대(decider)
 ```
 
 사이트 주소를 열고 Cognito 사용자로 로그인한 뒤 확인용 페이지에서 요청을 보냅니다.
 
 ```bash
 terraform -chdir=infra/terraform output -raw app_url
+# https://<cloudfront-domain>
 ```
 
 BFF 변경을 배포합니다. 차이를 먼저 보여 주고 승인 뒤에 적용합니다.
 
 ```bash
-app/bff/build.sh
-k8s/bff/install.sh diff
-k8s/bff/install.sh apply
+app/bff/build.sh              # 이미지를 빌드해 Amazon ECR에 올립니다
+k8s/bff/install.sh diff       # 차이를 보여 줍니다
+k8s/bff/install.sh apply      # 승인 뒤에 적용합니다
 ```
 
 화면 변경을 배포합니다.
 
 ```bash
-app/web/build.sh
+app/web/build.sh              # npm ci, npm test, npm run build
 terraform -chdir=infra/terraform plan -target=aws_s3_object.web -out=web.tfplan
 terraform -chdir=infra/terraform apply web.tfplan
 ```
@@ -277,6 +365,7 @@ terraform -chdir=infra/terraform apply web.tfplan
 
 ```bash
 python bench/bff/lang_check_live.py "$(terraform -chdir=infra/terraform output -raw app_url)"
+# 토큰이 없으면 401. x-lang이 en이면 문구가 "Sign-in is required", 아니면 "로그인이 필요합니다"
 kubectl -n app exec -i <bff-pod> -- python - < bench/bff/lang_check_in_pod.py
 ```
 
@@ -299,45 +388,58 @@ kubectl -n app exec -i <bff-pod> -- python - < bench/bff/lang_check_in_pod.py
 
 ## 프로젝트 구조
 
-```
-AGENT.md                # 목적, 확정된 결정, 작업 규칙, 알려진 함정
-CLAUDE.md               # AGENT.md를 불러오고 작업 도구의 쓰임을 적음
-prompts.md              # 구축 0단계에서 9단계까지의 프롬프트
-infra/cdk-vpc/          # AWS CDK 스택으로 만든 VPC
-infra/terraform/        # EKS, Karpenter, IAM, S3, CloudFront, WAF, Cognito
-k8s/                    # 매니페스트: base, gemma, qwen, decider, gateway, sleep-controller, bff, observability, bench
-jobs/                   # 가중치를 적재하고 compile 캐시를 S3에 게시하는 Job
-app/bff/                # BFF (Python, aiohttp)
-app/web/                # 확인용 페이지 (React, Vite)
-bench/                  # 측정 스크립트와 배포 뒤 확인 스크립트
-results/                # 측정 원시 자료
-docs/                   # 단계별 기록, 아키텍처, API 참조, 층별 참조, 인포그래픽 소스
-blog/                   # 블로그 원고 3부작의 작업 폴더
-tests/                  # 하네스 시험 (훅, 설정, 구조)
-scripts/                # 작업 환경 준비와 git 훅 설치
-.claude/                # Claude Code 설정, 훅, 스킬, 명령, 에이전트
+```text
+ow-on-gpu/
+├── AGENT.md                # 목적, 확정된 결정, 작업 규칙, 알려진 함정
+├── CLAUDE.md               # AGENT.md를 불러오고 작업 도구의 쓰임을 적음
+├── prompts.md              # 구축 0단계에서 9단계까지의 프롬프트
+├── infra/
+│   ├── cdk-vpc/            # AWS CDK 스택으로 만든 VPC
+│   └── terraform/          # EKS, Karpenter, IAM, S3, CloudFront, WAF, Cognito
+├── k8s/                    # 매니페스트: base, gemma, qwen, decider, gateway, sleep-controller, bff, observability, bench
+├── jobs/                   # 가중치를 적재하고 compile 캐시를 S3에 게시하는 Job
+├── app/
+│   ├── bff/                # BFF (Python, aiohttp)
+│   └── web/                # 확인용 페이지 (React, Vite)
+├── bench/                  # 측정 스크립트와 배포 뒤 확인 스크립트
+├── results/                # 측정 원시 자료
+├── docs/                   # 단계별 기록, 아키텍처, API 참조, 층별 참조
+│   └── infographic/        # 인포그래픽 소스와 만든 그림(build/)
+├── blog/                   # 블로그 원고 3부작의 작업 폴더
+├── reference/              # 인포그래픽의 참조 그림
+├── source-doc/             # 블로그 원고의 첫 원본
+├── tests/                  # 하네스 시험 (훅, 설정, 구조)
+├── scripts/                # 작업 환경 준비, git 훅 설치, 식별 값 가리기
+└── .claude/                # Claude Code 설정, 훅, 스킬, 명령, 에이전트
 ```
 
 ## 테스트
 
 ```bash
-# 하네스: 훅, 설정, 문서의 구조와 포인터
+# 하네스: 훅, 설정, 문서의 구조와 포인터. 모두 통과하면 종료 코드가 0입니다
 bash tests/run-all.sh
 
-# 확인용 페이지
-npm test --prefix app/web
+# 하네스의 한 묶음만 이름으로 실행: hooks 또는 structure
+bash tests/run-all.sh structure
 
-# BFF. 이미지 안에서 실행
+# 확인용 페이지: 시험 파일 전부, 또는 파일 하나
+npm test --prefix app/web
+(cd app/web && node i18n.test.mjs)
+# i18n: ok
+
+# BFF. 이미지 안에서 실행: 시험 전부, 또는 클래스 하나
 docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff
+# Ran 34 tests ... OK
+docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff.RoutingRules
 ```
 
-이 시험들은 AWS 리소스를 만들지 않고 모델을 부르지 않습니다.
+이 시험들은 AWS 리소스를 만들지 않고 모델을 부르지 않습니다. 커버리지 도구를 설정하지 않아 커버리지는 재지 않습니다.
 
 ## API 문서
 
 BFF는 OpenAI 호환 경로 하나와 보조 경로 셋을 제공합니다. 요청 헤더, 응답 헤더, 오류 본문은 [docs/api-reference.md](docs/api-reference.md)에 있습니다.
 
-```
+```text
 POST /v1/chat/completions
 POST /v1/route
 GET  /v1/status
