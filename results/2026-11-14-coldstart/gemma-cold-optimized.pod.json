@@ -1,0 +1,490 @@
+{
+ "apiVersion": "v1",
+ "kind": "Pod",
+ "metadata": {
+  "creationTimestamp": "2026-11-14T17:31:13Z",
+  "generateName": "vllm-gemma-96db4d976-",
+  "generation": 1,
+  "labels": {
+   "app.kubernetes.io/name": "vllm-gemma",
+   "eks.amazonaws.com/pod-identity": "enabled",
+   "pod-template-hash": "96db4d976",
+   "topology.kubernetes.io/region": "ap-northeast-2",
+   "topology.kubernetes.io/zone": "ap-northeast-2b"
+  },
+  "name": "vllm-gemma-96db4d976-th9jn",
+  "namespace": "inference",
+  "ownerReferences": [
+   {
+    "apiVersion": "apps/v1",
+    "blockOwnerDeletion": true,
+    "controller": true,
+    "kind": "ReplicaSet",
+    "name": "vllm-gemma-96db4d976",
+    "uid": "a5dfcec8-86d7-4270-8883-1cec6cc38043"
+   }
+  ],
+  "resourceVersion": "175586",
+  "uid": "0187c4d0-e78b-4b50-a69b-891e63d6f9f7"
+ },
+ "spec": {
+  "automountServiceAccountToken": false,
+  "containers": [
+   {
+    "args": [
+     "s3://$(MODEL_BUCKET)/models/gemma-4-31B-it-FP8-dynamic",
+     "--served-model-name=gemma-4-31b",
+     "--load-format=runai_streamer",
+     "--language-model-only",
+     "--max-model-len=16384",
+     "--kv-cache-dtype=fp8",
+     "--gpu-memory-utilization=0.90",
+     "--enable-prefix-caching",
+     "--scheduling-policy=priority",
+     "--enable-auto-tool-choice",
+     "--tool-call-parser=gemma4",
+     "--reasoning-parser=gemma4"
+    ],
+    "env": [
+     {
+      "name": "MODEL_BUCKET",
+      "valueFrom": {
+       "configMapKeyRef": {
+        "key": "MODEL_BUCKET",
+        "name": "platform"
+       }
+      }
+     },
+     {
+      "name": "AWS_DEFAULT_REGION",
+      "valueFrom": {
+       "configMapKeyRef": {
+        "key": "AWS_REGION",
+        "name": "platform"
+       }
+      }
+     },
+     {
+      "name": "VLLM_CACHE_ROOT",
+      "value": "/vllm-cache"
+     },
+     {
+      "name": "RUNAI_STREAMER_NO_BOTO3_SESSION",
+      "value": "0"
+     },
+     {
+      "name": "HF_HUB_OFFLINE",
+      "value": "1"
+     },
+     {
+      "name": "AWS_STS_REGIONAL_ENDPOINTS",
+      "value": "regional"
+     },
+     {
+      "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+      "value": "http://169.254.170.23/v1/credentials"
+     },
+     {
+      "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+      "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+     }
+    ],
+    "image": "vllm/vllm-openai:v0.33.0",
+    "imagePullPolicy": "IfNotPresent",
+    "livenessProbe": {
+     "failureThreshold": 3,
+     "httpGet": {
+      "path": "/health",
+      "port": "http",
+      "scheme": "HTTP"
+     },
+     "periodSeconds": 10,
+     "successThreshold": 1,
+     "timeoutSeconds": 1
+    },
+    "name": "vllm",
+    "ports": [
+     {
+      "containerPort": 8000,
+      "name": "http",
+      "protocol": "TCP"
+     }
+    ],
+    "readinessProbe": {
+     "failureThreshold": 3,
+     "httpGet": {
+      "path": "/health",
+      "port": "http",
+      "scheme": "HTTP"
+     },
+     "periodSeconds": 2,
+     "successThreshold": 1,
+     "timeoutSeconds": 1
+    },
+    "resources": {
+     "limits": {
+      "memory": "110Gi",
+      "nvidia.com/gpu": "1"
+     },
+     "requests": {
+      "cpu": "12",
+      "memory": "64Gi",
+      "nvidia.com/gpu": "1"
+     }
+    },
+    "startupProbe": {
+     "failureThreshold": 1800,
+     "httpGet": {
+      "path": "/health",
+      "port": "http",
+      "scheme": "HTTP"
+     },
+     "periodSeconds": 1,
+     "successThreshold": 1,
+     "timeoutSeconds": 1
+    },
+    "terminationMessagePath": "/dev/termination-log",
+    "terminationMessagePolicy": "File",
+    "volumeMounts": [
+     {
+      "mountPath": "/vllm-cache",
+      "name": "vllm-cache"
+     },
+     {
+      "mountPath": "/dev/shm",
+      "name": "shm"
+     },
+     {
+      "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+      "name": "eks-pod-identity-token",
+      "readOnly": true
+     }
+    ]
+   }
+  ],
+  "dnsPolicy": "ClusterFirst",
+  "enableServiceLinks": true,
+  "initContainers": [
+   {
+    "command": [
+     "python3",
+     "/scripts/cache-restore.py"
+    ],
+    "env": [
+     {
+      "name": "MODEL_BUCKET",
+      "valueFrom": {
+       "configMapKeyRef": {
+        "key": "MODEL_BUCKET",
+        "name": "platform"
+       }
+      }
+     },
+     {
+      "name": "AWS_DEFAULT_REGION",
+      "valueFrom": {
+       "configMapKeyRef": {
+        "key": "AWS_REGION",
+        "name": "platform"
+       }
+      }
+     },
+     {
+      "name": "CACHE_PREFIX",
+      "value": "vllm-cache/v0.33.0-gemma4-31b-fp8-l40s"
+     },
+     {
+      "name": "AWS_STS_REGIONAL_ENDPOINTS",
+      "value": "regional"
+     },
+     {
+      "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+      "value": "http://169.254.170.23/v1/credentials"
+     },
+     {
+      "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+      "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+     }
+    ],
+    "image": "vllm/vllm-openai:v0.33.0",
+    "imagePullPolicy": "IfNotPresent",
+    "name": "cache-restore",
+    "resources": {},
+    "terminationMessagePath": "/dev/termination-log",
+    "terminationMessagePolicy": "File",
+    "volumeMounts": [
+     {
+      "mountPath": "/vllm-cache",
+      "name": "vllm-cache"
+     },
+     {
+      "mountPath": "/scripts",
+      "name": "scripts",
+      "readOnly": true
+     },
+     {
+      "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+      "name": "eks-pod-identity-token",
+      "readOnly": true
+     }
+    ]
+   }
+  ],
+  "nodeName": "ip-10-200-36-101.ap-northeast-2.compute.internal",
+  "nodeSelector": {
+   "karpenter.sh/nodepool": "gemma-od"
+  },
+  "preemptionPolicy": "PreemptLowerPriority",
+  "priority": 0,
+  "restartPolicy": "Always",
+  "schedulerName": "default-scheduler",
+  "securityContext": {},
+  "serviceAccount": "gemma",
+  "serviceAccountName": "gemma",
+  "terminationGracePeriodSeconds": 60,
+  "tolerations": [
+   {
+    "effect": "NoSchedule",
+    "key": "nvidia.com/gpu",
+    "operator": "Exists"
+   },
+   {
+    "effect": "NoExecute",
+    "key": "node.kubernetes.io/not-ready",
+    "operator": "Exists",
+    "tolerationSeconds": 300
+   },
+   {
+    "effect": "NoExecute",
+    "key": "node.kubernetes.io/unreachable",
+    "operator": "Exists",
+    "tolerationSeconds": 300
+   }
+  ],
+  "volumes": [
+   {
+    "name": "eks-pod-identity-token",
+    "projected": {
+     "defaultMode": 420,
+     "sources": [
+      {
+       "serviceAccountToken": {
+        "audience": "pods.eks.amazonaws.com",
+        "expirationSeconds": 81611,
+        "path": "eks-pod-identity-token"
+       }
+      }
+     ]
+    }
+   },
+   {
+    "hostPath": {
+     "path": "/var/cache/vllm",
+     "type": "DirectoryOrCreate"
+    },
+    "name": "vllm-cache"
+   },
+   {
+    "configMap": {
+     "defaultMode": 420,
+     "name": "vllm-cache-restore"
+    },
+    "name": "scripts"
+   },
+   {
+    "emptyDir": {
+     "medium": "Memory",
+     "sizeLimit": "8Gi"
+    },
+    "name": "shm"
+   }
+  ]
+ },
+ "status": {
+  "allocatedResources": {
+   "cpu": "12",
+   "memory": "64Gi",
+   "nvidia.com/gpu": "1"
+  },
+  "conditions": [
+   {
+    "lastProbeTime": null,
+    "lastTransitionTime": "2026-11-14T17:32:54Z",
+    "observedGeneration": 1,
+    "status": "True",
+    "type": "PodReadyToStartContainers"
+   },
+   {
+    "lastProbeTime": null,
+    "lastTransitionTime": "2026-11-14T17:34:10Z",
+    "observedGeneration": 1,
+    "status": "True",
+    "type": "Initialized"
+   },
+   {
+    "lastProbeTime": null,
+    "lastTransitionTime": "2026-11-14T17:35:33Z",
+    "observedGeneration": 1,
+    "status": "True",
+    "type": "Ready"
+   },
+   {
+    "lastProbeTime": null,
+    "lastTransitionTime": "2026-11-14T17:35:33Z",
+    "observedGeneration": 1,
+    "status": "True",
+    "type": "ContainersReady"
+   },
+   {
+    "lastProbeTime": null,
+    "lastTransitionTime": "2026-11-14T17:32:53Z",
+    "observedGeneration": 1,
+    "status": "True",
+    "type": "PodScheduled"
+   }
+  ],
+  "containerStatuses": [
+   {
+    "allocatedResources": {
+     "cpu": "12",
+     "memory": "64Gi",
+     "nvidia.com/gpu": "1"
+    },
+    "allocatedResourcesStatus": [
+     {
+      "name": "nvidia.com/gpu",
+      "resources": [
+       {
+        "health": "Healthy",
+        "resourceID": "GPU-b52639a9-ef9e-2760-7c20-d9dff974ba39"
+       }
+      ]
+     }
+    ],
+    "containerID": "containerd://f809ea5a7e3c27edb132f9292c57611b21db588160f4008faffcaba7d7efc1a5",
+    "image": "docker.io/vllm/vllm-openai:v0.33.0",
+    "imageID": "docker.io/vllm/vllm-openai@sha256:d825baf9ce4b1b6bfc5ecc7b79880c7e6748c65a72d697ce3d47607aafa84c6e",
+    "lastState": {},
+    "name": "vllm",
+    "ready": true,
+    "resources": {
+     "limits": {
+      "memory": "110Gi",
+      "nvidia.com/gpu": "1"
+     },
+     "requests": {
+      "cpu": "12",
+      "memory": "64Gi",
+      "nvidia.com/gpu": "1"
+     }
+    },
+    "restartCount": 0,
+    "started": true,
+    "state": {
+     "running": {
+      "startedAt": "2026-11-14T17:34:11Z"
+     }
+    },
+    "user": {
+     "linux": {
+      "gid": 0,
+      "supplementalGroups": [
+       0
+      ],
+      "uid": 0
+     }
+    },
+    "volumeMounts": [
+     {
+      "mountPath": "/vllm-cache",
+      "name": "vllm-cache"
+     },
+     {
+      "mountPath": "/dev/shm",
+      "name": "shm"
+     },
+     {
+      "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+      "name": "eks-pod-identity-token",
+      "readOnly": true,
+      "recursiveReadOnly": "Disabled"
+     }
+    ]
+   }
+  ],
+  "hostIP": "10.200.36.101",
+  "hostIPs": [
+   {
+    "ip": "10.200.36.101"
+   }
+  ],
+  "initContainerStatuses": [
+   {
+    "containerID": "containerd://b82d1f023028edc55d1ea17d2f6c64deb0b1cd19821d25d2d779de5e42ceda74",
+    "image": "docker.io/vllm/vllm-openai:v0.33.0",
+    "imageID": "docker.io/vllm/vllm-openai@sha256:d825baf9ce4b1b6bfc5ecc7b79880c7e6748c65a72d697ce3d47607aafa84c6e",
+    "lastState": {},
+    "name": "cache-restore",
+    "ready": true,
+    "resources": {},
+    "restartCount": 0,
+    "started": false,
+    "state": {
+     "terminated": {
+      "containerID": "containerd://b82d1f023028edc55d1ea17d2f6c64deb0b1cd19821d25d2d779de5e42ceda74",
+      "exitCode": 0,
+      "finishedAt": "2026-11-14T17:34:10Z",
+      "reason": "Completed",
+      "startedAt": "2026-11-14T17:34:06Z"
+     }
+    },
+    "user": {
+     "linux": {
+      "gid": 0,
+      "supplementalGroups": [
+       0
+      ],
+      "uid": 0
+     }
+    },
+    "volumeMounts": [
+     {
+      "mountPath": "/vllm-cache",
+      "name": "vllm-cache"
+     },
+     {
+      "mountPath": "/scripts",
+      "name": "scripts",
+      "readOnly": true,
+      "recursiveReadOnly": "Disabled"
+     },
+     {
+      "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+      "name": "eks-pod-identity-token",
+      "readOnly": true,
+      "recursiveReadOnly": "Disabled"
+     }
+    ]
+   }
+  ],
+  "observedGeneration": 1,
+  "phase": "Running",
+  "podIP": "10.200.40.69",
+  "podIPs": [
+   {
+    "ip": "10.200.40.69"
+   }
+  ],
+  "qosClass": "Burstable",
+  "resources": {
+   "limits": {
+    "memory": "110Gi"
+   },
+   "requests": {
+    "cpu": "11984m",
+    "memory": "64Gi"
+   }
+  },
+  "startTime": "2026-11-14T17:32:53Z"
+ }
+}

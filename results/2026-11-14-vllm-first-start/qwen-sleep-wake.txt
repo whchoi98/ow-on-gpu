@@ -1,0 +1,9 @@
+before      | is_sleeping {'is_sleeping': False} | GPU 40791 MiB | RSS 6.5 GiB | health 0.0 s
+chat before |  '15' | 0.22 s
+sleep       |  {'status': 'sleeping', 'level': 1} | 31.71 s
+asleep      | is_sleeping {'is_sleeping': True} | GPU 2299 MiB | RSS 59.8 GiB
+health while asleep | HTTP 200
+wake_up     |  {'status': 'awake', 'tags': None} | 3.64 s
+awake       | is_sleeping {'is_sleeping': False} | GPU 40899 MiB | RSS 59.8 GiB
+chat after  |  '15' | 0.22 s
+chat after 2|  '15' | 0.22 s

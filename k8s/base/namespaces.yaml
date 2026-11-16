@@ -1,0 +1,10 @@
+# infra/terraform/storage.tf의 Pod Identity 연결이 이 네임스페이스 이름을 쓴다.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: inference
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: model-jobs

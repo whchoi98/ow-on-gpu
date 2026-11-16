@@ -1,0 +1,186 @@
+{
+ "results": [
+  {
+   "case": "en order A-1024",
+   "question": "Where is my order A-1024?",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "task",
+   "x-bff-search": "off",
+   "x-bff-reason": "{\"task\":\"support\",\"cached\":false}",
+   "tool_calls": [
+    {
+     "event": "tool_call",
+     "name": "get_order",
+     "ms": 1216.3
+    }
+   ],
+   "answer": "Your order A-1024 is currently in transit with Hanbit Express and is expected to arrive on November 16, 2026.",
+   "sources": 0,
+   "cited": [],
+   "cited_within_sources": null
+  },
+  {
+   "case": "ko order A-1024",
+   "question": "주문 A-1024 지금 어디쯤인가요?",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "task",
+   "x-bff-search": "off",
+   "x-bff-reason": "{\"task\":\"support\",\"cached\":false}",
+   "tool_calls": [
+    {
+     "event": "tool_call",
+     "name": "get_order",
+     "ms": 1233.6
+    }
+   ],
+   "answer": "주문하신 상품(A-1024)은 현재 **배송 중**이며, **한빛택배**를 통해 배송되고 있습니다. 예정 도착일은 **2026년 11월 16일**입니다.",
+   "sources": 0,
+   "cited": [],
+   "cited_within_sources": null
+  },
+  {
+   "case": "en search gemma",
+   "question": "What is the latest stable Kubernetes release? Search the web and answer in two sentences.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "task",
+   "x-bff-search": "on",
+   "x-bff-reason": "{\"task\":\"summarize\",\"cached\":false}",
+   "tool_calls": [
+    {
+     "event": "tool_call",
+     "name": "web_search",
+     "ms": 2345.1,
+     "query": "latest stable Kubernetes release version",
+     "sources": [
+      {
+       "n": 1,
+       "title": "Kubernetes",
+       "url": "https://kubernetes.io/releases/",
+       "published_at": "2026-01-16"
+      },
+      {
+       "n": 2,
+       "title": "Kubernetes v1.37: Garhwal",
+       "url": "https://kubernetes.io/blog/2026/08/26/kubernetes-v1-37-release/",
+       "published_at": "2026-09-02"
+      },
+      {
+       "n": 3,
+       "title": "Kubernetes 1.35",
+       "url": "https://kubernetes.io/releases/1.35/",
+       "published_at": null
+      },
+      {
+       "n": 4,
+       "title": "Kubernetes v1.38 Release Information",
+       "url": "https://www.kubernetes.dev/resources/release/",
+       "published_at": null
+      },
+      {
+       "n": 5,
+       "title": "Kubernetes",
+       "url": "https://en.wikipedia.org/wiki/Kubernetes",
+       "published_at": "2026-11-07"
+      }
+     ],
+     "search_ms": 1269.6
+    }
+   ],
+   "answer": "The latest stable Kubernetes release is v1.37, themed \"Garhwal\" [2]. According to recent data, version 1.37.2 was released on October 28, 2026 [5].",
+   "sources": 5,
+   "cited": [
+    2,
+    5
+   ],
+   "cited_within_sources": true
+  },
+  {
+   "case": "ko search gemma",
+   "question": "쿠버네티스 최신 안정 버전이 무엇인지 웹에서 찾아 두 문장으로 답해 주세요.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "task",
+   "x-bff-search": "on",
+   "x-bff-reason": "{\"task\":\"summarize\",\"cached\":false}",
+   "tool_calls": [
+    {
+     "event": "tool_call",
+     "name": "web_search",
+     "ms": 1694.9,
+     "query": "kubernetes latest stable version",
+     "sources": [
+      {
+       "n": 1,
+       "title": "Kubernetes",
+       "url": "https://kubernetes.io/releases/",
+       "published_at": "2026-01-16"
+      },
+      {
+       "n": 2,
+       "title": "Kubernetes v1.37: Garhwal",
+       "url": "https://kubernetes.io/blog/2026/08/26/kubernetes-v1-37-release/",
+       "published_at": "2026-09-02"
+      },
+      {
+       "n": 3,
+       "title": "Kubernetes 1.35",
+       "url": "https://kubernetes.io/ko/releases/1.35/",
+       "published_at": null
+      },
+      {
+       "n": 4,
+       "title": "Download Kubernetes",
+       "url": "https://kubernetes.io/releases/download/",
+       "published_at": "2026-09-17"
+      },
+      {
+       "n": 5,
+       "title": "Kubernetes",
+       "url": "https://en.wikipedia.org/wiki/Kubernetes",
+       "published_at": "2026-11-07"
+      }
+     ],
+     "search_ms": 679.5
+    }
+   ],
+   "answer": "쿠버네티스의 최신 안정 버전은 1.37.2(2026년 10월 28일 출시)입니다 [5]. 현재 쿠버네티스 프로젝트는 1.35, 1.36, 1.37의 최신 세 마이너 릴리스 버전에 대해 릴리스 브랜치를 유지하고 있습니다 [1].",
+   "sources": 5,
+   "cited": [
+    1,
+    5
+   ],
+   "cited_within_sources": true
+  },
+  {
+   "case": "en search no task",
+   "question": "What is the latest stable Kubernetes release? Search the web and answer in two sentences.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "fallback",
+   "x-bff-search": "fallback",
+   "x-bff-reason": "{\"why\":\"low_confidence\",\"low\":[\"route\"],\"policy_confidence\":0.872,\"route\":\"gemma\",\"route_confidence\":0.175,\"policy\":0.064,\"thinking\":0.48,\"min_confidence\":0.6,\"cached\":false}",
+   "tool_calls": [],
+   "answer": "I do not have access to Google Search or the internet to provide real-time updates. Please refer to the official Kubernetes website or release notes for the most current stable version.",
+   "sources": 0,
+   "cited": [],
+   "cited_within_sources": null
+  },
+  {
+   "case": "ko search no task",
+   "question": "쿠버네티스 최신 안정 버전이 무엇인지 웹에서 찾아 두 문장으로 답해 주세요.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "fallback",
+   "x-bff-search": "fallback",
+   "x-bff-reason": "{\"why\":\"low_confidence\",\"low\":[\"route\"],\"policy_confidence\":0.88,\"route\":\"gemma\",\"route_confidence\":0.341,\"policy\":0.06,\"thinking\":0.404,\"min_confidence\":0.6,\"cached\":false}",
+   "tool_calls": [],
+   "answer": "저는 웹 검색 기능에 직접 액세스할 수 없으므로 실시간 최신 버전을 확인할 수 없습니다. 하지만 공식 쿠버네티스 릴리스 페이지(kubernetes.io/releases)에서 가장 최신 안정 버전을 확인하실 수 있습니다.",
+   "sources": 0,
+   "cited": [],
+   "cited_within_sources": null
+  }
+ ]
+}

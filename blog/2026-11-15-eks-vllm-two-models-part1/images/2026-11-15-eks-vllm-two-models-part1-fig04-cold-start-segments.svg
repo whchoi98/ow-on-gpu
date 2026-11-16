@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="part1-fig04-title part1-fig04-desc">
+<title id="part1-fig04-title">Gemma 4 31B 콜드 스타트의 구간별 시간: 기준 구성과 최적화 구성</title>
+<desc id="part1-fig04-desc">노드 프로비저닝 55.0초와 71.0초, 이미지 pull 111.1초와 71.0초, 가중치 로드 59.6초와 19.2초, 엔진 초기화 95.5초와 23.7초, 기타 72.7초와 75.1초. 합계는 기준 구성 394초, 최적화 구성 260초</desc>
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#545B64"/></marker>
+<marker id="arrow-accent" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#EC7211"/></marker>
+<marker id="arrow-link" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#0972D3"/></marker>
+<marker id="arrow-ink" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#232F3E"/></marker>
+<marker id="arrow-teal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#01A88D"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#8C4FFF"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<line x1="120" y1="560" x2="1240" y2="560" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="108" y="564" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">0</text>
+<line x1="120" y1="444" x2="1240" y2="444" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="108" y="448" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">30</text>
+<line x1="120" y1="328" x2="1240" y2="328" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="108" y="332" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">60</text>
+<line x1="120" y1="212" x2="1240" y2="212" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="108" y="216" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">90</text>
+<line x1="120" y1="96" x2="1240" y2="96" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="108" y="100" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">120</text>
+<text x="108" y="72" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">초</text>
+<line x1="120" y1="560" x2="1240" y2="560" stroke="rgba(35,47,62,0.25)" stroke-width="1"/>
+<line x1="120" y1="96" x2="120" y2="560" stroke="rgba(35,47,62,0.25)" stroke-width="1"/>
+<rect x="144" y="347.3" width="80" height="212.7" fill="#FFFFFF"/>
+<rect x="144" y="347.3" width="80" height="212.7" fill="#232F3E" fill-opacity="0.15" stroke="#232F3E" stroke-width="1.2"/>
+<rect x="240" y="285.5" width="80" height="274.5" fill="#FFFFFF"/>
+<rect x="240" y="285.5" width="80" height="274.5" fill="#01A88D" fill-opacity="0.18" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="368" y="130.4" width="80" height="429.6" fill="#FFFFFF"/>
+<rect x="368" y="130.4" width="80" height="429.6" fill="#232F3E" fill-opacity="0.15" stroke="#232F3E" stroke-width="1.2"/>
+<rect x="464" y="285.5" width="80" height="274.5" fill="#FFFFFF"/>
+<rect x="464" y="285.5" width="80" height="274.5" fill="#01A88D" fill-opacity="0.18" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="592" y="329.5" width="80" height="230.5" fill="#FFFFFF"/>
+<rect x="592" y="329.5" width="80" height="230.5" fill="#232F3E" fill-opacity="0.15" stroke="#232F3E" stroke-width="1.2"/>
+<rect x="688" y="485.8" width="80" height="74.2" fill="#FFFFFF"/>
+<rect x="688" y="485.8" width="80" height="74.2" fill="#01A88D" fill-opacity="0.18" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="816" y="190.7" width="80" height="369.3" fill="#FFFFFF"/>
+<rect x="816" y="190.7" width="80" height="369.3" fill="#232F3E" fill-opacity="0.15" stroke="#232F3E" stroke-width="1.2"/>
+<rect x="912" y="468.4" width="80" height="91.6" fill="#FFFFFF"/>
+<rect x="912" y="468.4" width="80" height="91.6" fill="#01A88D" fill-opacity="0.18" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="816" y="324.1" width="80" height="235.9" fill="#FFFFFF"/>
+<rect x="816" y="324.1" width="80" height="235.9" fill="#232F3E" fill-opacity="0.35" stroke="#232F3E" stroke-width="1.2"/>
+<rect x="912" y="556.5" width="80" height="3.5" fill="#FFFFFF"/>
+<rect x="912" y="556.5" width="80" height="3.5" fill="#01A88D" fill-opacity="0.6" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="1040" y="278.9" width="80" height="281.1" fill="#FFFFFF"/>
+<rect x="1040" y="278.9" width="80" height="281.1" fill="#232F3E" fill-opacity="0.15" stroke="#232F3E" stroke-width="1.2"/>
+<rect x="1136" y="269.6" width="80" height="290.4" fill="#FFFFFF"/>
+<rect x="1136" y="269.6" width="80" height="290.4" fill="#01A88D" fill-opacity="0.18" stroke="#01A88D" stroke-width="1.2"/>
+<text x="40" y="44" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Gemma 4 31B 콜드 스타트의 구간별 시간</text>
+<text x="1240" y="44" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">합계: 기준 구성 394초, 최적화 구성 260초 (2026-11-14 서울 리전, 한 번씩 측정)</text>
+<text x="184" y="332" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">55.0</text>
+<text x="280" y="272" fill="#01A88D" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">71.0</text>
+<text x="232" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">노드 프로비저닝</text>
+<text x="232" y="616" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">+16.0초</text>
+<text x="408" y="116" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">111.1</text>
+<text x="504" y="272" fill="#01A88D" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">71.0</text>
+<text x="456" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">이미지 pull</text>
+<text x="456" y="616" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">-40.1초</text>
+<text x="632" y="316" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">59.6</text>
+<text x="728" y="472" fill="#01A88D" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">19.2</text>
+<text x="680" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">가중치 로드</text>
+<text x="680" y="616" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">-40.4초</text>
+<text x="856" y="436" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">compile</text>
+<text x="856" y="460" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">61.0</text>
+<text x="856" y="176" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">95.5</text>
+<text x="952" y="456" fill="#01A88D" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">23.7</text>
+<text x="904" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">엔진 초기화</text>
+<text x="904" y="616" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">-71.8초</text>
+<text x="1080" y="264" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">72.7</text>
+<text x="1176" y="256" fill="#01A88D" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">75.1</text>
+<text x="1128" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">기타</text>
+<text x="1128" y="616" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">+2.4초</text>
+<line x1="40" y1="648" x2="1240" y2="648" stroke="rgba(35,47,62,0.12)" stroke-width="0.8"/>
+<text x="40" y="676" fill="#545B64" font-size="16" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">범례</text>
+<rect x="120" y="654" width="40" height="24" rx="4" fill="#232F3E" fill-opacity="0.15" stroke="#232F3E"/>
+<text x="172" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">기준 구성</text>
+<rect x="280" y="654" width="40" height="24" rx="4" fill="#01A88D" fill-opacity="0.18" stroke="#01A88D"/>
+<text x="332" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">최적화 구성</text>
+<rect x="456" y="654" width="40" height="24" rx="4" fill="#232F3E" fill-opacity="0.35" stroke="#232F3E"/>
+<text x="508" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">엔진 초기화 가운데 torch.compile (최적화 구성은 0.9초)</text>
+</svg>

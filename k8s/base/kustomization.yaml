@@ -1,0 +1,52 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - params.yaml
+  - namespaces.yaml
+  - platform.yaml
+  - ec2nodeclasses.yaml
+  - nodepools.yaml
+  # NVIDIA k8s-device-plugin v0.20.1의 deployments/static/nvidia-device-plugin.yml 원본
+  - nvidia-device-plugin.yaml
+
+configMapGenerator:
+  # k8s/gemma와 k8s/qwen의 initContainer가 이름으로 참조하므로 해시 접미사를 붙이지 않는다.
+  - name: vllm-cache-restore
+    namespace: inference
+    files:
+      - cache-restore.py
+    options:
+      disableNameSuffixHash: true
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: base-params
+      fieldPath: data.consolidateAfter
+    targets:
+      - select:
+          kind: NodePool
+        fieldPaths:
+          - spec.disruption.consolidateAfter
+  - source:
+      kind: ConfigMap
+      name: base-params
+      fieldPath: data.modelBucket
+    targets:
+      - select:
+          kind: ConfigMap
+          name: platform
+        fieldPaths:
+          - data.MODEL_BUCKET
+
+patches:
+  # 원본은 모든 노드에 뜬다. Karpenter가 NVIDIA GPU 노드에 붙이는 라벨로 한정한다.
+  - target:
+      kind: DaemonSet
+      name: nvidia-device-plugin-daemonset
+    patch: |-
+      - op: add
+        path: /spec/template/spec/nodeSelector
+        value:
+          karpenter.k8s.aws/instance-gpu-manufacturer: nvidia

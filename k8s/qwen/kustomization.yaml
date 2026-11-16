@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: inference
+
+# InferencePool과 EPP는 Helm 차트로 설치한다(epp-values.yaml, k8s/gateway/install.sh).
+resources:
+  - deployment.yaml
+  - service.yaml
+  - routes.yaml

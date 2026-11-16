@@ -1,0 +1,29 @@
+# 기준 구성의 콜드 스타트용. gemma-od와 같고 EC2NodeClass만 이미지를 미리 받지 않는 `gpu`다.
+# 기준 구성 Deployment만 이 풀을 고른다. 측정이 끝나면 노드는 10분 뒤에 회수된다.
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: gemma-noprepull
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: gpu
+      requirements:
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values: ["g6e.4xlarge"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+      taints:
+        - key: nvidia.com/gpu
+          value: "true"
+          effect: NoSchedule
+  limits:
+    nvidia.com/gpu: 1
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 10m

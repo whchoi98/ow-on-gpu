@@ -1,0 +1,1 @@
+{"event": "cache_publish", "destination": "s3://ow-on-gpu-<suffix>/vllm-cache/v0.33.0-gemma4-31b-fp8-l40s/", "objects": 522, "bytes": 90792555, "by_top_level": {"modelinfos": 936, "torch_compile_cache": 90791619}, "missing": [], "seconds": 2.36}

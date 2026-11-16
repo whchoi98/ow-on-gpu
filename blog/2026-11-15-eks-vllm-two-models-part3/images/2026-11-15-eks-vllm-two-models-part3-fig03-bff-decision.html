@@ -1,0 +1,82 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>BFF의 모델 결정 순서</title>
+<style>
+@font-face{font-family:'Amazon Ember';font-weight:400;src:local('Amazon Ember'),local('AmazonEmber-Regular');}
+@font-face{font-family:'Amazon Ember';font-weight:600;src:local('Amazon Ember Medium'),local('Amazon Ember SemiBold'),local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember';font-weight:700;src:local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember Mono';font-weight:400;src:local('Amazon Ember Mono'),local('AmazonEmberMono-Regular');}
+html,body{margin:0;background:#fff;} svg{display:block;width:1280px;height:720px;}
+</style></head><body><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="2026-11-15-eks-vllm-two-models-part3-fig03-title 2026-11-15-eks-vllm-two-models-part3-fig03-desc">
+<title id="2026-11-15-eks-vllm-two-models-part3-fig03-title">BFF의 모델 결정 순서</title>
+<desc id="2026-11-15-eks-vllm-two-models-part3-fig03-desc">세션에 저장된 결정이 없는 요청을 BFF가 어느 모델로 보낼지 정하는 순서를 나타낸 흐름도. 주민등록번호나 카드번호 형식, 업무 종류, 이미지 첨부를 차례로 확인하고, 어느 것에도 해당하지 않을 때만 Strands Decider 2B에 묻는다.</desc>
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#545B64"/></marker>
+<marker id="arrow-accent" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#EC7211"/></marker>
+<marker id="arrow-link" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#0972D3"/></marker>
+<marker id="arrow-ink" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#232F3E"/></marker>
+<marker id="arrow-teal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#01A88D"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#8C4FFF"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<path d="M240 112 L240 144" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M440 188 L560 188" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M240 232 L240 260" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M440 304 L560 304" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M240 348 L240 376" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M440 420 L560 420" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M240 464 L240 496" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M440 544 L560 544" fill="none" stroke="#545B64" stroke-width="1.2" marker-end="url(#arrow)"/>
+<rect x="476" y="156" width="48" height="24" rx="2" fill="#FFFFFF"/>
+<text x="500" y="176" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">있음</text>
+<rect x="248" y="232" width="48" height="24" rx="2" fill="#FFFFFF"/>
+<text x="272" y="252" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">없음</text>
+<rect x="476" y="272" width="48" height="24" rx="2" fill="#FFFFFF"/>
+<text x="500" y="292" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">있음</text>
+<rect x="248" y="348" width="48" height="24" rx="2" fill="#FFFFFF"/>
+<text x="272" y="368" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">없음</text>
+<rect x="476" y="388" width="48" height="24" rx="2" fill="#FFFFFF"/>
+<text x="500" y="408" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">있음</text>
+<rect x="248" y="468" width="48" height="24" rx="2" fill="#FFFFFF"/>
+<text x="272" y="488" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">없음</text>
+<rect x="476" y="512" width="48" height="24" rx="2" fill="#FFFFFF"/>
+<text x="500" y="532" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">응답</text>
+<rect x="60" y="72" width="360" height="40" rx="20" fill="#FFFFFF"/>
+<rect x="60" y="72" width="360" height="40" rx="20" fill="#545B64" fill-opacity="0.10" stroke="#7D8998" stroke-width="1"/>
+<text x="240" y="100" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">세션에 저장된 결정이 없는 요청</text>
+<polygon points="40,188 240,144 440,188 240,232" fill="#FFFFFF" stroke="#232F3E" stroke-width="1"/>
+<text x="240" y="196" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">주민등록번호나 카드번호 형식</text>
+<rect x="560" y="152" width="680" height="72" rx="6" fill="#FFFFFF"/>
+<rect x="560" y="152" width="680" height="72" rx="6" fill="#FFFFFF" fill-opacity="1" stroke="#232F3E" stroke-opacity="1" stroke-width="1"/>
+<text x="576" y="184" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Gemma 4 31B로 보내고 민감으로 표시</text>
+<text x="576" y="208" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">결정 근거 rule / Decider를 부르지 않음</text>
+<polygon points="40,304 240,260 440,304 240,348" fill="#FFFFFF" stroke="#232F3E" stroke-width="1"/>
+<text x="240" y="312" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">업무 종류(x-task) 지정</text>
+<rect x="560" y="268" width="680" height="72" rx="6" fill="#FFFFFF"/>
+<rect x="560" y="268" width="680" height="72" rx="6" fill="#FFFFFF" fill-opacity="1" stroke="#232F3E" stroke-opacity="1" stroke-width="1"/>
+<text x="576" y="300" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">업무별 배정표의 모델</text>
+<text x="576" y="324" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">상담, 번역, 요약 = Gemma / 이미지 이해, OCR, 코딩 = Qwen</text>
+<polygon points="40,420 240,376 440,420 240,464" fill="#FFFFFF" stroke="#232F3E" stroke-width="1"/>
+<text x="240" y="428" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">이미지 첨부</text>
+<rect x="560" y="384" width="680" height="72" rx="6" fill="#FFFFFF"/>
+<rect x="560" y="384" width="680" height="72" rx="6" fill="#FFFFFF" fill-opacity="1" stroke="#232F3E" stroke-opacity="1" stroke-width="1"/>
+<text x="576" y="416" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Qwen3.8-27B</text>
+<text x="576" y="440" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">결정 근거 attachment</text>
+<rect x="40" y="496" width="400" height="96" rx="6" fill="#FFFFFF"/>
+<rect x="40" y="496" width="400" height="96" rx="6" fill="#FFFFFF" fill-opacity="1" stroke="#232F3E" stroke-opacity="1" stroke-width="1"/>
+<text x="56" y="540" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Strands Decider 2B에 질문</text>
+<text x="56" y="564" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">게이트웨이 /decide, 제한 2초</text>
+<rect x="560" y="496" width="680" height="96" rx="6" fill="#FFFFFF"/>
+<rect x="560" y="496" width="680" height="96" rx="6" fill="#FFFFFF" fill-opacity="1" stroke="#232F3E" stroke-opacity="1" stroke-width="1"/>
+<text x="576" y="528" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Decider의 판단을 결정으로 변환</text>
+<text x="576" y="552" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">신뢰도 0.6 이상: 고른 모델, thinking 판단 반영</text>
+<text x="576" y="576" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">응답 실패, 2초 초과, 0.6 미만: Gemma, thinking 끔, 민감</text>
+<text x="40" y="44" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">BFF의 모델 결정 순서 (규칙을 먼저 적용하고, 정해지지 않은 요청만 Decider에 질문)</text>
+<line x1="40" y1="648" x2="1240" y2="648" stroke="rgba(35,47,62,0.12)" stroke-width="0.8"/>
+<text x="40" y="676" fill="#545B64" font-size="16" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">범례</text>
+<rect x="120" y="654" width="40" height="24" rx="12" fill="#545B64" fill-opacity="0.10" stroke="#7D8998"/>
+<text x="172" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">시작</text>
+<polygon points="240,666 264,654 288,666 264,678" fill="#FFFFFF" stroke="#232F3E"/>
+<text x="300" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">판단</text>
+<rect x="368" y="654" width="40" height="24" rx="4" fill="#FFFFFF" stroke="#232F3E"/>
+<text x="420" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">처리와 결과</text>
+<text x="560" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">결정은 세션에 저장하고, 민감 정보 형식만 메시지마다 다시 확인</text>
+</svg></body></html>

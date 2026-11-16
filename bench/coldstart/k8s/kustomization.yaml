@@ -1,0 +1,8 @@
+# 콜드 스타트의 기준 구성에만 쓰는 리소스. 기준 구성의 Deployment(gemma-baseline.yaml)는
+# measure.py가 시나리오에 맞춰 적용하므로 여기에 넣지 않는다.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - storage-s3.yaml
+  - nodepool-noprepull.yaml

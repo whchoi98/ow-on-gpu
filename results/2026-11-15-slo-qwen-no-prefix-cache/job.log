@@ -1,0 +1,304 @@
+tokenizer files: 11 from s3://ow-on-gpu-<suffix>/models/Qwen3.8-27B-FP8-dynamic/
+0.33.0
+==============================================
+>>> S1_chat  input=256 output=128  concurrency=1  num_prompts=16  02:01:06
+==============================================
+Request throughput (req/s):              0.21      
+Output token throughput (tok/s):         27.00     
+Peak output token throughput (tok/s):    15.00     
+Peak concurrent requests:                2.00      
+Total token throughput (tok/s):          81.01     
+---------------Time to First Token----------------
+Mean TTFT (ms):                          247.72    
+Median TTFT (ms):                        251.26    
+P50 TTFT (ms):                           251.26    
+P90 TTFT (ms):                           252.01    
+P99 TTFT (ms):                           253.81    
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          35.37     
+Median TPOT (ms):                        34.39     
+P50 TPOT (ms):                           34.39     
+P90 TPOT (ms):                           54.39     
+P99 TPOT (ms):                           62.29     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           69.78     
+Median ITL (ms):                         69.74     
+P50 ITL (ms):                            69.74     
+P90 ITL (ms):                            71.72     
+P99 ITL (ms):                            76.83     
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          4739.63   
+Median E2EL (ms):                        4619.69   
+P50 E2EL (ms):                           4619.69   
+P90 E2EL (ms):                           7158.86   
+P99 E2EL (ms):                           8161.61   
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     40.72     
+Acceptance length:                       2.22      
+Drafts:                                  2108      
+Draft tokens:                            6324      
+Accepted tokens:                         2575      
+Per-position acceptance (%):
+  Position 0:                            57.78     
+  Position 1:                            38.33     
+  Position 2:                            26.04     
+==================================================
+==============================================
+>>> S1_chat  input=256 output=128  concurrency=2  num_prompts=16  02:02:35
+==============================================
+Request throughput (req/s):              0.46      
+Output token throughput (tok/s):         58.68     
+Peak output token throughput (tok/s):    30.00     
+Peak concurrent requests:                4.00      
+Total token throughput (tok/s):          176.03    
+---------------Time to First Token----------------
+Mean TTFT (ms):                          256.44    
+Median TTFT (ms):                        253.35    
+P50 TTFT (ms):                           253.35    
+P90 TTFT (ms):                           267.26    
+P99 TTFT (ms):                           278.07    
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          31.27     
+Median TPOT (ms):                        30.52     
+P50 TPOT (ms):                           30.52     
+P90 TPOT (ms):                           42.31     
+P99 TPOT (ms):                           42.87     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           72.12     
+Median ITL (ms):                         71.65     
+P50 ITL (ms):                            71.65     
+P90 ITL (ms):                            74.11     
+P99 ITL (ms):                            111.06    
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          4227.46   
+Median E2EL (ms):                        4128.73   
+P50 E2EL (ms):                           4128.73   
+P90 E2EL (ms):                           5638.53   
+P99 E2EL (ms):                           5699.07   
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     47.99     
+Acceptance length:                       2.44      
+Drafts:                                  1301      
+Draft tokens:                            3903      
+Accepted tokens:                         1873      
+Per-position acceptance (%):
+  Position 0:                            63.26     
+  Position 1:                            46.66     
+  Position 2:                            34.05     
+==================================================
+==============================================
+>>> S1_chat  input=256 output=128  concurrency=4  num_prompts=32  02:03:19
+==============================================
+Request throughput (req/s):              0.67      
+Output token throughput (tok/s):         85.70     
+Peak output token throughput (tok/s):    42.00     
+Peak concurrent requests:                6.00      
+Total token throughput (tok/s):          257.09    
+---------------Time to First Token----------------
+Mean TTFT (ms):                          1540.84   
+Median TTFT (ms):                        1332.06   
+P50 TTFT (ms):                           1332.06   
+P90 TTFT (ms):                           2797.10   
+P99 TTFT (ms):                           3620.98   
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          32.32     
+Median TPOT (ms):                        33.01     
+P50 TPOT (ms):                           33.01     
+P90 TPOT (ms):                           42.26     
+P99 TPOT (ms):                           45.44     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           72.64     
+Median ITL (ms):                         71.47     
+P50 ITL (ms):                            71.47     
+P90 ITL (ms):                            75.00     
+P99 ITL (ms):                            111.18    
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          5645.28   
+Median E2EL (ms):                        5965.80   
+P50 E2EL (ms):                           5965.80   
+P90 E2EL (ms):                           7153.89   
+P99 E2EL (ms):                           7761.99   
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     42.26     
+Acceptance length:                       2.27      
+Drafts:                                  1808      
+Draft tokens:                            5424      
+Accepted tokens:                         2292      
+Per-position acceptance (%):
+  Position 0:                            59.02     
+  Position 1:                            40.15     
+  Position 2:                            27.60     
+==================================================
+==============================================
+>>> S1_chat  input=256 output=128  concurrency=8  num_prompts=64  02:04:16
+==============================================
+Request throughput (req/s):              0.70      
+Output token throughput (tok/s):         89.40     
+Peak output token throughput (tok/s):    42.00     
+Peak concurrent requests:                11.00     
+Total token throughput (tok/s):          268.19    
+---------------Time to First Token----------------
+Mean TTFT (ms):                          6787.69   
+Median TTFT (ms):                        7007.38   
+P50 TTFT (ms):                           7007.38   
+P90 TTFT (ms):                           8795.82   
+P99 TTFT (ms):                           9616.86   
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          31.90     
+Median TPOT (ms):                        29.37     
+P50 TPOT (ms):                           29.37     
+P90 TPOT (ms):                           42.62     
+P99 TPOT (ms):                           66.55     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           72.82     
+Median ITL (ms):                         71.48     
+P50 ITL (ms):                            71.48     
+P90 ITL (ms):                            75.06     
+P99 ITL (ms):                            112.36    
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          10839.36  
+Median E2EL (ms):                        10637.18  
+P50 E2EL (ms):                           10637.18  
+P90 E2EL (ms):                           13689.41  
+P99 E2EL (ms):                           14790.71  
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     43.51     
+Acceptance length:                       2.31      
+Drafts:                                  3561      
+Draft tokens:                            10683     
+Accepted tokens:                         4648      
+Per-position acceptance (%):
+  Position 0:                            57.46     
+  Position 1:                            41.73     
+  Position 2:                            31.34     
+==================================================
+==============================================
+>>> S1_chat  input=256 output=128  concurrency=16  num_prompts=128  02:05:57
+==============================================
+Request throughput (req/s):              0.64      
+Output token throughput (tok/s):         82.00     
+Peak output token throughput (tok/s):    42.00     
+Peak concurrent requests:                18.00     
+Total token throughput (tok/s):          246.00    
+---------------Time to First Token----------------
+Mean TTFT (ms):                          19273.49  
+Median TTFT (ms):                        20321.00  
+P50 TTFT (ms):                           20321.00  
+P90 TTFT (ms):                           23022.37  
+P99 TTFT (ms):                           24495.51  
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          35.12     
+Median TPOT (ms):                        32.53     
+P50 TPOT (ms):                           32.53     
+P90 TPOT (ms):                           60.82     
+P99 TPOT (ms):                           65.66     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           72.74     
+Median ITL (ms):                         71.48     
+P50 ITL (ms):                            71.48     
+P90 ITL (ms):                            74.86     
+P99 ITL (ms):                            112.16    
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          23733.37  
+Median E2EL (ms):                        24491.64  
+P50 E2EL (ms):                           24491.64  
+P90 E2EL (ms):                           28022.81  
+P99 E2EL (ms):                           31241.37  
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     36.28     
+Acceptance length:                       2.09      
+Drafts:                                  7848      
+Draft tokens:                            23544     
+Accepted tokens:                         8541      
+Per-position acceptance (%):
+  Position 0:                            49.58     
+  Position 1:                            34.06     
+  Position 2:                            25.19     
+==================================================
+==============================================
+>>> S1_chat  input=256 output=128  concurrency=32  num_prompts=256  02:09:26
+==============================================
+Request throughput (req/s):              0.68      
+Output token throughput (tok/s):         87.06     
+Peak output token throughput (tok/s):    42.00     
+Peak concurrent requests:                35.00     
+Total token throughput (tok/s):          261.17    
+---------------Time to First Token----------------
+Mean TTFT (ms):                          40151.14  
+Median TTFT (ms):                        42532.26  
+P50 TTFT (ms):                           42532.26  
+P90 TTFT (ms):                           45576.28  
+P99 TTFT (ms):                           47133.59  
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          33.15     
+Median TPOT (ms):                        31.45     
+P50 TPOT (ms):                           31.45     
+P90 TPOT (ms):                           46.82     
+P99 TPOT (ms):                           65.17     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           72.84     
+Median ITL (ms):                         71.48     
+P50 ITL (ms):                            71.48     
+P90 ITL (ms):                            74.75     
+P99 ITL (ms):                            111.53    
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          44361.14  
+Median E2EL (ms):                        46677.49  
+P50 E2EL (ms):                           46677.49  
+P90 E2EL (ms):                           50036.41  
+P99 E2EL (ms):                           52132.69  
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     40.52     
+Acceptance length:                       2.22      
+Drafts:                                  14796     
+Draft tokens:                            44388     
+Accepted tokens:                         17987     
+Per-position acceptance (%):
+  Position 0:                            55.24     
+  Position 1:                            38.23     
+  Position 2:                            28.09     
+==================================================
+==============================================
+>>> S1_chat  input=256 output=128  concurrency=64  num_prompts=256  02:15:52
+==============================================
+Request throughput (req/s):              0.67      
+Output token throughput (tok/s):         85.46     
+Peak output token throughput (tok/s):    42.00     
+Peak concurrent requests:                67.00     
+Total token throughput (tok/s):          256.37    
+---------------Time to First Token----------------
+Mean TTFT (ms):                          81163.68  
+Median TTFT (ms):                        91002.84  
+P50 TTFT (ms):                           91002.84  
+P90 TTFT (ms):                           93529.23  
+P99 TTFT (ms):                           96130.30  
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          33.85     
+Median TPOT (ms):                        31.45     
+P50 TPOT (ms):                           31.45     
+P90 TPOT (ms):                           49.33     
+P99 TPOT (ms):                           67.34     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           72.81     
+Median ITL (ms):                         71.50     
+P50 ITL (ms):                            71.50     
+P90 ITL (ms):                            74.72     
+P99 ITL (ms):                            112.03    
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          85462.88  
+Median E2EL (ms):                        95033.69  
+P50 E2EL (ms):                           95033.69  
+P90 E2EL (ms):                           98545.02  
+P99 E2EL (ms):                           100818.89 
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     39.02     
+Acceptance length:                       2.17      
+Drafts:                                  15117     
+Draft tokens:                            45351     
+Accepted tokens:                         17694     
+Per-position acceptance (%):
+  Position 0:                            53.16     
+  Position 1:                            36.22     
+  Position 2:                            27.67     
+==================================================
+완료: 7개 결과

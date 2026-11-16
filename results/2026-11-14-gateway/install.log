@@ -1,0 +1,101 @@
+customresourcedefinition.apiextensions.k8s.io/backendtlspolicies.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/gatewayclasses.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/gateways.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/grpcroutes.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/httproutes.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/inferencemodelrewrites.llm-d.ai serverside-applied
+customresourcedefinition.apiextensions.k8s.io/inferenceobjectives.llm-d.ai serverside-applied
+customresourcedefinition.apiextensions.k8s.io/inferencepoolimports.inference.networking.x-k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/inferencepools.inference.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/listenersets.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/referencegrants.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/tcproutes.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/tlsroutes.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/udproutes.gateway.networking.k8s.io serverside-applied
+validatingadmissionpolicy.admissionregistration.k8s.io/safe-upgrades.gateway.networking.k8s.io serverside-applied
+validatingadmissionpolicybinding.admissionregistration.k8s.io/safe-upgrades.gateway.networking.k8s.io serverside-applied
+Release "agentgateway-crds" does not exist. Installing it now.
+Pulled: cr.agentgateway.dev/charts/agentgateway-crds:v1.7.0
+Digest: sha256:946b739c0fcda4d47a72d1589d184b6fd507772e733cbedf02789bafd0468064
+NAME: agentgateway-crds
+LAST DEPLOYED: Sat Nov 14 11:45:02 2026
+NAMESPACE: agentgateway-system
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+Thank you for installing the agentgateway-crds chart.
+
+Your release "agentgateway-crds" has been deployed in the "agentgateway-system" namespace.
+
+This chart installs the Custom Resource Definitions (CRDs) required by agentgateway.
+
+To check the installed CRDs:
+
+  kubectl get crds | grep agentgateway.dev
+Release "agentgateway" does not exist. Installing it now.
+Pulled: cr.agentgateway.dev/charts/agentgateway:v1.7.0
+Digest: sha256:40340d639e35206317c934e9af3e29575cf7c5377b2940679732baac6e108c15
+NAME: agentgateway
+LAST DEPLOYED: Sat Nov 14 11:45:09 2026
+NAMESPACE: agentgateway-system
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+Thank you for installing the agentgateway chart.
+
+Your release "agentgateway" has been deployed in the "agentgateway-system" namespace.
+
+To check the status of the deployment:
+
+  helm status agentgateway --namespace agentgateway-system
+
+To view the resources created by this chart:
+
+  kubectl get all -n agentgateway-system
+
+To learn how to access and use agentgateway, please visit the official documentation:
+
+  https://agentgateway.dev/docs/kubernetes/latest/
+
+To uninstall the agentgateway deployment:
+
+  helm uninstall agentgateway --namespace agentgateway-system
+Release "gemma" does not exist. Installing it now.
+Pulled: ghcr.io/llm-d/charts/llm-d-router-gateway:v1.0.0
+Digest: sha256:0a16af45be7457acea1d5df2a3e2b7da7583ad65efcb30a65bbd6f2fd8f6ea4e
+NAME: gemma
+LAST DEPLOYED: Sat Nov 14 11:45:53 2026
+NAMESPACE: inference
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+llm-d-router-gateway gemma deployed.
+Release "qwen" does not exist. Installing it now.
+Pulled: ghcr.io/llm-d/charts/llm-d-router-gateway:v1.0.0
+Digest: sha256:0a16af45be7457acea1d5df2a3e2b7da7583ad65efcb30a65bbd6f2fd8f6ea4e
+NAME: qwen
+LAST DEPLOYED: Sat Nov 14 11:46:03 2026
+NAMESPACE: inference
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+llm-d-router-gateway qwen deployed.
+agentgatewayparameters.agentgateway.dev/inference-gateway created
+agentgatewaypolicy.agentgateway.dev/model-routing created
+gateway.gateway.networking.k8s.io/inference-gateway created
+serviceaccount/gemma unchanged
+service/vllm-gemma unchanged
+deployment.apps/vllm-gemma configured
+httproute.gateway.networking.k8s.io/gemma created
+inferenceobjective.llm-d.ai/gemma-batch created
+inferenceobjective.llm-d.ai/gemma-interactive created
+serviceaccount/qwen unchanged
+service/vllm-qwen unchanged
+deployment.apps/vllm-qwen configured
+httproute.gateway.networking.k8s.io/qwen created
+inferenceobjective.llm-d.ai/qwen-batch created
+inferenceobjective.llm-d.ai/qwen-interactive created

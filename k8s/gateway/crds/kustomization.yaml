@@ -1,0 +1,12 @@
+# 버전은 docs/00-versions.md의 "버전 조합" 표와 맞춘다.
+# CRD가 커서 클라이언트 측 apply의 어노테이션 한도를 넘는다. `kubectl apply --server-side -k`로 적용한다.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Gateway API. agentgateway 1.7.x의 지원 범위(1.4에서 1.6)에 맞춰 v1.7.0이 아닌 v1.6.3을 쓴다.
+  - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
+  # GAIE: InferencePool
+  - https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/v1.6.2/manifests.yaml
+  # llm-d-router: InferenceObjective. GAIE v1.6부터 EPP와 함께 llm-d로 옮겨졌다.
+  - https://github.com/llm-d/llm-d-router/releases/download/v1.0.0/manifests.yaml

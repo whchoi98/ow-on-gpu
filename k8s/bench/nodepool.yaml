@@ -1,0 +1,61 @@
+# 부하 발생기 전용 노드. 게이트웨이, EPP와 CPU를 다투지 않게 따로 둔다.
+# 측정 Job이 없으면 10분 뒤에 회수된다.
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: bench
+spec:
+  role: KarpenterNodeRole-ow-on-gpu
+  amiSelectorTerms:
+    - alias: al2023@v20261107
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: ow-on-gpu
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: ow-on-gpu
+  # 부하 발생기는 vLLM 이미지(`vllm bench serve`)를 쓴다. 압축 9.1GiB라서 기본 20GiB로는 풀리지 않는다.
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 100Gi
+        volumeType: gp3
+        deleteOnTermination: true
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: bench
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: bench
+      requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["c", "m"]
+        - key: karpenter.k8s.aws/instance-generation
+          operator: Gt
+          values: ["6"]
+        - key: karpenter.k8s.aws/instance-cpu
+          operator: In
+          values: ["8"]
+      taints:
+        - key: ow-on-gpu/bench
+          value: "true"
+          effect: NoSchedule
+  # 두 모델의 측정을 함께 돌릴 수 있게 노드 2대까지 허용한다(모델마다 GPU 노드가 달라 서로 영향을 주지 않는다).
+  limits:
+    cpu: "16"
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 10m

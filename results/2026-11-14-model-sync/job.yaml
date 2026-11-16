@@ -1,0 +1,110 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"batch/v1","kind":"Job","metadata":{"annotations":{},"name":"model-sync","namespace":"model-jobs"},"spec":{"activeDeadlineSeconds":7200,"backoffLimit":2,"template":{"spec":{"automountServiceAccountToken":false,"containers":[{"command":["python3","/config/sync.py"],"envFrom":[{"configMapRef":{"name":"model-sync-params-b2fh5k4644"}}],"image":"public.ecr.aws/docker/library/python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90","name":"sync","resources":{"limits":{"memory":"4Gi"},"requests":{"cpu":"6","memory":"4Gi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true},"volumeMounts":[{"mountPath":"/config","name":"config","readOnly":true},{"mountPath":"/tmp","name":"tmp"}]}],"nodeSelector":{"karpenter.sh/nodepool":"system"},"restartPolicy":"Never","securityContext":{"fsGroup":1000,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}},"serviceAccountName":"model-sync","volumes":[{"configMap":{"name":"model-sync-config-4f4gb8gd42"},"name":"config"},{"emptyDir":{},"name":"tmp"}]}}}}
+  creationTimestamp: "2026-11-14T10:06:16Z"
+  generation: 1
+  labels:
+    batch.kubernetes.io/controller-uid: 14b2108e-b903-4c8b-8a5a-6ebc25829735
+    batch.kubernetes.io/job-name: model-sync
+    controller-uid: 14b2108e-b903-4c8b-8a5a-6ebc25829735
+    job-name: model-sync
+  name: model-sync
+  namespace: model-jobs
+  resourceVersion: "7408"
+  uid: 14b2108e-b903-4c8b-8a5a-6ebc25829735
+spec:
+  activeDeadlineSeconds: 7200
+  backoffLimit: 2
+  completionMode: NonIndexed
+  completions: 1
+  manualSelector: false
+  parallelism: 1
+  podReplacementPolicy: TerminatingOrFailed
+  selector:
+    matchLabels:
+      batch.kubernetes.io/controller-uid: 14b2108e-b903-4c8b-8a5a-6ebc25829735
+  suspend: false
+  template:
+    metadata:
+      labels:
+        batch.kubernetes.io/controller-uid: 14b2108e-b903-4c8b-8a5a-6ebc25829735
+        batch.kubernetes.io/job-name: model-sync
+        controller-uid: 14b2108e-b903-4c8b-8a5a-6ebc25829735
+        job-name: model-sync
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - command:
+        - python3
+        - /config/sync.py
+        envFrom:
+        - configMapRef:
+            name: model-sync-params-b2fh5k4644
+        image: public.ecr.aws/docker/library/python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90
+        imagePullPolicy: IfNotPresent
+        name: sync
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            cpu: "6"
+            memory: 4Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /config
+          name: config
+          readOnly: true
+        - mountPath: /tmp
+          name: tmp
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        karpenter.sh/nodepool: system
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount: model-sync
+      serviceAccountName: model-sync
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: model-sync-config-4f4gb8gd42
+        name: config
+      - emptyDir: {}
+        name: tmp
+status:
+  completionTime: "2026-11-14T10:15:24Z"
+  conditions:
+  - lastProbeTime: "2026-11-14T10:15:24Z"
+    lastTransitionTime: "2026-11-14T10:15:24Z"
+    message: Reached expected number of succeeded pods
+    reason: CompletionsReached
+    status: "True"
+    type: SuccessCriteriaMet
+  - lastProbeTime: "2026-11-14T10:15:24Z"
+    lastTransitionTime: "2026-11-14T10:15:24Z"
+    message: Reached expected number of succeeded pods
+    reason: CompletionsReached
+    status: "True"
+    type: Complete
+  ready: 0
+  startTime: "2026-11-14T10:06:16Z"
+  succeeded: 1
+  terminating: 0
+  uncountedTerminatedPods: {}

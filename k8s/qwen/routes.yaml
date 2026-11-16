@@ -1,0 +1,56 @@
+# 등록한 경로만 게이트웨이를 통과한다. /sleep, /wake_up, /metrics 같은 경로는 맞는 rule이 없어 파드에 닿지 않는다.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: qwen
+spec:
+  parentRefs:
+    - name: inference-gateway
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/chat/completions
+          headers:
+            - type: Exact
+              name: X-Gateway-Base-Model-Name
+              value: qwen38-27b
+      backendRefs:
+        - group: inference.networking.k8s.io
+          kind: InferencePool
+          name: qwen
+      timeouts:
+        request: 300s
+    # 모델 목록은 본문이 없어 EPP가 고를 것이 없다. Service로 바로 보낸다.
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+          headers:
+            - type: Exact
+              name: X-Gateway-Base-Model-Name
+              value: qwen38-27b
+      backendRefs:
+        - name: vllm-qwen
+          port: 8000
+---
+# 요청은 x-llm-d-inference-objective 헤더에 이 이름을 넣어 우선순위를 고른다.
+# 헤더가 없으면 priority 0으로 처리된다.
+apiVersion: llm-d.ai/v1
+kind: InferenceObjective
+metadata:
+  name: qwen-interactive
+spec:
+  priority: 10
+  poolRefs:
+    - name: qwen
+---
+# priority가 0보다 낮으면 풀이 포화됐을 때 대기하지 않고 HTTP 429로 거절된다(flow control이 꺼진 기본 동작).
+apiVersion: llm-d.ai/v1
+kind: InferenceObjective
+metadata:
+  name: qwen-batch
+spec:
+  priority: -1
+  poolRefs:
+    - name: qwen

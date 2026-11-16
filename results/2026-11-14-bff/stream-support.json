@@ -1,0 +1,255 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "support",
+ "prompt": "주문 번호 A-1024의 배송 상태를 알려 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "adb7fbe80f7a4a38b43822601b96cca7",
+  "x-bff-model": "gemma-4-31b",
+  "x-bff-decision": "task",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 59463cc863400420c782e538b95f8d6a.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 85.1,
+ "first_content_ms": 1611.1,
+ "last_content_ms": 4511.3,
+ "total_ms": 4565.8,
+ "content_events": 55,
+ "gap_ms": {
+  "median": 53.75,
+  "max": 57.7,
+  "min": 49.7,
+  "share_under_1ms": 0.0
+ },
+ "text": "주문 번호 A-1024의 현재 상태는 **배송 중**입니다. \n한빛택배를 통해 배송되고 있으며, 예상 도착일은 **2026년 11월 16일**입니다.",
+ "events": [
+  {
+   "ms": 1611.1,
+   "content": "주"
+  },
+  {
+   "ms": 1661.5,
+   "content": "문"
+  },
+  {
+   "ms": 1715.2,
+   "content": " 번"
+  },
+  {
+   "ms": 1769.6,
+   "content": "호"
+  },
+  {
+   "ms": 1823.0,
+   "content": " A"
+  },
+  {
+   "ms": 1876.3,
+   "content": "-"
+  },
+  {
+   "ms": 1929.5,
+   "content": "1"
+  },
+  {
+   "ms": 1983.8,
+   "content": "0"
+  },
+  {
+   "ms": 2037.6,
+   "content": "2"
+  },
+  {
+   "ms": 2092.6,
+   "content": "4"
+  },
+  {
+   "ms": 2145.7,
+   "content": "의"
+  },
+  {
+   "ms": 2199.0,
+   "content": " 현재"
+  },
+  {
+   "ms": 2252.6,
+   "content": " 상태"
+  },
+  {
+   "ms": 2307.6,
+   "content": "는"
+  },
+  {
+   "ms": 2361.7,
+   "content": " **"
+  },
+  {
+   "ms": 2413.8,
+   "content": "배"
+  },
+  {
+   "ms": 2467.8,
+   "content": "송"
+  },
+  {
+   "ms": 2522.2,
+   "content": " 중"
+  },
+  {
+   "ms": 2575.2,
+   "content": "**"
+  },
+  {
+   "ms": 2629.1,
+   "content": "입니다"
+  },
+  {
+   "ms": 2682.3,
+   "content": "."
+  },
+  {
+   "ms": 2736.4,
+   "content": " "
+  },
+  {
+   "ms": 2792.4,
+   "content": "\n"
+  },
+  {
+   "ms": 2845.1,
+   "content": "한"
+  },
+  {
+   "ms": 2897.9,
+   "content": "빛"
+  },
+  {
+   "ms": 2951.7,
+   "content": "택"
+  },
+  {
+   "ms": 3005.4,
+   "content": "배"
+  },
+  {
+   "ms": 3061.7,
+   "content": "를"
+  },
+  {
+   "ms": 3113.2,
+   "content": " 통해"
+  },
+  {
+   "ms": 3166.5,
+   "content": " 배"
+  },
+  {
+   "ms": 3220.5,
+   "content": "송"
+  },
+  {
+   "ms": 3275.2,
+   "content": "되고"
+  },
+  {
+   "ms": 3328.2,
+   "content": " 있으며"
+  },
+  {
+   "ms": 3382.1,
+   "content": ","
+  },
+  {
+   "ms": 3436.2,
+   "content": " 예상"
+  },
+  {
+   "ms": 3492.5,
+   "content": " 도착"
+  },
+  {
+   "ms": 3543.6,
+   "content": "일"
+  },
+  {
+   "ms": 3596.9,
+   "content": "은"
+  },
+  {
+   "ms": 3650.6,
+   "content": " **"
+  },
+  {
+   "ms": 3704.3,
+   "content": "2"
+  },
+  {
+   "ms": 3760.8,
+   "content": "0"
+  },
+  {
+   "ms": 3811.5,
+   "content": "2"
+  },
+  {
+   "ms": 3865.5,
+   "content": "6"
+  },
+  {
+   "ms": 3919.6,
+   "content": "년"
+  },
+  {
+   "ms": 3973.2,
+   "content": " "
+  },
+  {
+   "ms": 4027.3,
+   "content": "1"
+  },
+  {
+   "ms": 4080.8,
+   "content": "1"
+  },
+  {
+   "ms": 4134.6,
+   "content": "월"
+  },
+  {
+   "ms": 4192.3,
+   "content": " "
+  },
+  {
+   "ms": 4242.0,
+   "content": "1"
+  },
+  {
+   "ms": 4296.0,
+   "content": "6"
+  },
+  {
+   "ms": 4350.6,
+   "content": "일"
+  },
+  {
+   "ms": 4403.7,
+   "content": "**"
+  },
+  {
+   "ms": 4460.4,
+   "content": "입니다"
+  },
+  {
+   "ms": 4511.3,
+   "content": "."
+  }
+ ]
+}

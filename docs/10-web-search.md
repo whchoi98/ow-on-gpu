@@ -1,0 +1,123 @@
+# 웹 검색 (Amazon Bedrock AgentCore Web Search)
+
+2026-11-15에 확인용 페이지와 BFF에 웹 검색을 더해 배포했습니다. 추론은 Gemma와 Qwen이 하고, 검색만 Amazon Bedrock AgentCore Web Search의 `InvokeWebSearch` API가 합니다. 검색 결과를 쓴 답변에는 출처 번호와 링크를 함께 보여 줍니다.
+
+참고한 자료는 AWS 블로그 글 [Introducing the Web Search API on Amazon Bedrock AgentCore](https://aws.amazon.com/ko/blogs/machine-learning/introducing-the-web-search-api-on-amazon-bedrock-agentcore/)(2026-11-11)와 [개발자 가이드](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/web-search-api.html)입니다.
+
+## 동작
+
+```
+브라우저 (웹 검색 사용을 켬)
+  │ x-web-search: on
+BFF
+  ├─ 모델 요청에 web_search 도구와 지시문(오늘 날짜, 출처 번호 규칙)을 붙임
+  │
+  │   모델(Gemma 또는 Qwen)이 web_search(query)를 부름
+  ├─ InvokeWebSearch (us-east-1, BFF 파드에 Pod Identity로 연결한 역할의 IAM 권한)
+  │   결과에 번호를 붙여 모델에 돌려주고, 화면에는 검색어와 출처 목록을 SSE 주석 줄로 알림
+  │
+  │   모델이 결과를 읽고 [1], [2]를 붙여 답함
+  └─ 답변을 그대로 흘려보냄
+브라우저: 답변의 [n]을 출처 링크로 바꾸고, 답변 아래에 출처 목록을 표시
+```
+
+- 검색할지, 무엇을 검색할지, 결과로 어떻게 답할지는 모델이 정합니다. BFF는 도구를 실행하고 결과를 전달할 뿐입니다.
+- 한 요청에서 모델이 도구를 부를 수 있는 차례는 3번입니다(`MAX_TOOL_ROUNDS`). 세 번째 뒤에는 `tool_choice: none`으로 보내 지금까지의 결과로 답하게 합니다.
+- 검색을 여러 번 해도 출처 번호는 이어지고, 같은 주소는 같은 번호를 씁니다.
+- 스트리밍이 아닌 응답에는 출처 목록이 본문의 `bff_sources`에 들어갑니다.
+
+## 결정한 것과 이유
+
+| 결정 | 이유 |
+|---|---|
+| `InvokeWebSearch`를 BFF가 직접 부름 | BFF에 이미 도구를 실행하는 흐름(주문 조회)이 있습니다. Gateway의 Web Search Tool 커넥터는 MCP 클라이언트용이고, Web Answer는 답변까지 AWS 쪽에서 써 주므로 "추론은 Gemma와 Qwen이 한다"는 조건에 맞지 않습니다 |
+| 리전은 `us-east-1` | 이 API는 서울 리전에 없습니다(제공 리전: 버지니아 북부, 오하이오, 오리건, 시드니, 도쿄, 아일랜드). 검색어는 서울 리전 밖으로 나갑니다. `web_search_region` 변수로 바꿉니다 |
+| 요청이 켰을 때만 도구를 붙임 (`x-web-search: on`) | 도구 정의와 지시문이 프롬프트에 더해져 8단계에서 잰 값과 조건이 달라지고, 검색은 건당 요금이 있습니다(1,000건에 7달러) |
+| 민감 정보가 있는 요청에는 붙이지 않음 | 데이터 정책상 민감 정보 요청은 Gemma로만 보냅니다. 검색어가 리전 밖으로 나가지 않게 도구를 붙이지 않고, 응답 헤더 `x-bff-search: sensitive`로 알립니다. 모델을 정하지 못해 기본값으로 보낸 요청도 같게 다루고 `x-bff-search: fallback`으로 알립니다. 모델이 만든 검색어에 주민등록번호나 카드번호 형식이 있으면 그 검색도 보내지 않습니다 |
+| 성능 평가 요청에는 붙이지 않음 | 두 모델의 조건을 맞추려고 도구를 모두 뺍니다 |
+| 출처 목록은 화면이 그림 | 이용 조건이 검색 결과를 쓴 출력에 출처와 링크를 표시하도록 요구합니다. 모델이 번호를 빠뜨려도 목록은 항상 보입니다 |
+| 주소가 없는 결과는 버림 | `url`은 항상 오지는 않습니다. 출처를 표시할 수 없는 결과는 모델에 넘기지 않습니다 |
+| 결과는 5건, 본문은 1,200자까지 | 받은 본문은 건당 234자에서 2,400자였습니다(us-east-1, 검색어 3개). 입력 토큰을 줄이려고 자릅니다 |
+| 로그에 검색어를 남기지 않음 | 검색어는 사용자의 글에서 나옵니다. 로그에는 검색어 길이, 결과 수, 걸린 시간만 남깁니다 |
+
+## 바뀐 것
+
+| 위치 | 내용 |
+|---|---|
+| `app/bff/websearch.py` | 도구 정의, 지시문, `InvokeWebSearch` 호출, 출처 번호 관리 |
+| `app/bff/texts.py` | 도구 설명과 지시문, 검색하지 못했을 때 모델에 주는 문구의 한국어와 영어. 요청의 `x-lang: en`이면 영어를 씀(2026-11-15의 확인은 모두 한국어 문구로 했고, 영어 문구는 2026-11-16에 따로 확인했음) |
+| `app/bff/bff.py` | 도구 실행을 `run_tool`로 모으고 웹 검색을 더함. 응답 헤더 `x-bff-search`(on, off, sensitive, fallback, disabled). SSE 주석 줄에 검색어, 검색 시간, 출처 목록 |
+| `app/bff/requirements.txt` | boto3 1.44.3 (`InvokeWebSearch`는 1.43.127부터) |
+| `infra/terraform/app.tf` (지금은 `bff_eks.tf`) | BFF의 역할에 `bedrock-agentcore:InvokeWebSearch`(대상은 `arn:aws:bedrock-agentcore:us-east-1:aws:tool/web-search.v1` 하나), 환경 변수 `WEB_SEARCH_REGION` |
+| `app/web/src/citations.js`, `Sources.jsx` | 답변의 `[n]`을 출처 링크로 바꾸는 함수와 검색 기록, 출처 목록 |
+| `app/web/src/Chat.jsx`, `Console.jsx`, `Record.jsx`, `stream.js`, `format.js` | "웹 검색 사용" 선택, 예시 4개, 기록과 대화에 검색 기록과 출처 표시 |
+| `app/web/src/flow.js`, `flow-steps.js`, `flow-map.svg` | 요청 경로 지도의 Web Search 노드. 검색을 쓴 요청은 노드가 켜지고 횟수, 결과 수, 시간이 표시됨 |
+| `app/web/src/ApiCall.jsx`, `apicall.js` | "API 호출" 보기의 4~7단계 설명과 지도 연결, 웹 검색을 쓰는 실제 요청 |
+| `docs/infographic/flow.py`, `apicall.py` | 인포그래픽 08(노드, 왕복 선, 측정값, 접근 제한)과 09(Web Search 도구 칸과 6에서 5로 되돌아가는 흐름) |
+
+자격 증명은 코드에 없습니다. BFF는 EKS Pod Identity로 받은 역할(`ow-on-gpu-bff-pod`)로 서명합니다. 2026-11-15에 BFF를 EKS 파드로 옮기기 전에는 ECS 태스크 역할이었고, 권한은 같습니다(`infra/terraform/bff_eks.tf`). 옮긴 뒤 두 파드에서 검색을 한 번씩 불러 결과 5건을 받았습니다.
+
+## 응답 형식
+
+요청 헤더 `x-web-search: on`을 보내면 스트림에 다음 주석 줄이 도구 호출마다 한 번씩 옵니다. OpenAI 형식의 클라이언트는 주석 줄을 무시합니다.
+
+```
+: bff {"event":"tool_call","name":"web_search","ms":812.4,"query":"...","search_ms":536.2,"sources":[{"n":1,"title":"...","url":"https://...","published_at":"2026-11-11"}]}
+```
+
+검색이 실패하면 `error`가 들어가고 `sources`는 비어 있습니다. 모델에는 실패했다고 알려 검색 없이 답하게 합니다.
+
+## 배포 전 확인
+
+- BFF 시험 31개 통과(웹 검색 7개 추가: 도구 흐름, 켰을 때만 붙는지, 민감 요청 제외, 검색 실패, 차례 상한, 스트리밍이 아닌 응답, 민감한 검색어 차단). 컨테이너 이미지(python 3.13, arm64) 안에서도 통과했습니다.
+- 화면 시험(`npm test`)에 출처 링크 변환 시험을 더했습니다. `[1, 2]`와 `[1][3]`은 링크 여러 개로 바뀌고, 코드 안의 대괄호와 목록에 없는 번호는 그대로입니다.
+- 로컬에서 빌드를 띄워 가짜 응답으로 대화, 요청, 좁은 화면을 확인했습니다.
+- 실제 Gemma(게이트웨이 경유)와 실제 `InvokeWebSearch`로 BFF와 같은 흐름을 손으로 돌렸습니다.
+
+| 질문 | thinking | 검색 | 결과 |
+|---|---|---|---|
+| AgentCore Web Search API를 쓸 수 있는 리전 | 끔 | 1회, 결과 5건 | 출처 번호를 단 답변. 입력 토큰은 결과 5건을 포함해 약 2,600 |
+| 이번 주 서울 날씨 예보 요약 | 켬 | 1회, 결과 5건, 972ms | 날짜별 기온을 읽어 요약하고 `[1]`을 붙임 |
+
+Qwen도 같은 방법으로 확인했습니다. "Kubernetes 최신 릴리스의 주요 변경점"에 한 차례에서 검색어 두 개(영어와 한국어)를 함께 불렀고(결과 5건씩, 1,065ms와 559ms), 두 번째 차례에 `[1][5]`처럼 번호를 붙여 답했습니다. 첫 차례 2.6초, 두 번째 차례 12.1초(입력 4,328토큰, 출력 381토큰)였습니다.
+
+두 모델의 스트리밍 도구 호출 조각도 게이트웨이를 거쳐 받아 보았습니다. `index`, `id`, `function.name`, 나뉘어 오는 `arguments`가 BFF가 읽는 형식과 같고, Qwen이 한 차례에 도구를 두 번 부르면 `index` 0과 1로 옵니다.
+
+- 작업 장비(서울)에서 잰 검색 시간은 us-east-1이 481ms에서 1,065ms(6회), 도쿄가 386ms와 537ms(2회)였습니다. 그림과 화면의 "481~1,065ms"가 이 값입니다. BFF에서 잰 값은 아래 "배포 후 확인"에 있습니다.
+
+## 배포 후 확인 (2026-11-15)
+
+BFF 이미지 `20261115-024852`와 태스크 정의 4번, 새 화면 파일을 배포하고 CloudFront 주소로 확인했습니다(`bench/bff/websearch_check.py`, 원시 자료 `results/2026-11-15-websearch/`).
+
+| 확인 | 결과 |
+|---|---|
+| 웹 검색을 켠 요청 (Gemma) | `x-bff-search: on`, 검색 1회, 출처 5개, 답변의 번호 `[1, 2, 4]`가 모두 받은 출처 안에 있음 |
+| 웹 검색을 켠 요청 (Qwen) | `x-bff-search: on`, 한 차례에 검색 2회(1,022ms와 497ms), 출처 10개, 답변의 번호 `[1, 4, 5]`가 모두 받은 출처 안에 있음. 첫 내용 4.3초, 전체 14.6초 |
+| 켜지 않은 요청 | `x-bff-search: off`, 검색 알림 없음 |
+| 주민등록번호가 든 요청 | `x-bff-search: sensitive`, `x-bff-sensitive: true`, 검색 알림 없음. 모델은 조회할 수 없다고 답함 |
+| 스트리밍이 아닌 요청 | 본문의 `bff_sources`에 출처 5개 |
+| 토큰 없는 요청 | 401 |
+| 브라우저로 로그인해 요청과 "API 호출" 보기에서 보낸 요청 | 검색 기록, 출처 5개, 답변의 번호 링크가 보이고 요청 경로 그림의 Web Search 노드가 켜짐. 콘솔 오류 없음 |
+
+BFF가 잰 검색 시간(us-east-1 호출, SSE 알림의 `search_ms`)은 요청 8건에서 485ms에서 662ms, 중앙값 568ms였습니다. 배포 직후의 첫 호출은 1,645ms였습니다(클라이언트를 처음 만드는 시간이 들어 있습니다). 같은 8건에서 사용자가 본 첫 내용은 2.1초에서 2.7초, 전체는 3.2초에서 7.2초였습니다(Gemma, thinking 끔, 최대 200토큰). 첫 내용이 늦어지는 것은 모델이 도구 호출을 쓰는 시간, 검색, 결과를 붙인 두 번째 추론의 prefill이 모두 그 앞에 있기 때문입니다.
+
+## 영어 문구 확인 (2026-11-16)
+
+BFF 이미지 `20261115-153617`을 배포한 뒤, 파드 안에서 같은 앱을 토큰 검증기만 바꿔 `127.0.0.1`에 띄우고 요청을 실제 모델까지 보냈습니다(`bench/bff/lang_check_in_pod.py`, 원시 자료 `results/2026-11-16-bff-lang/in-pod.json`). 질문은 "쿠버네티스 최신 안정 버전을 웹에서 찾아 두 문장으로 답하라"는 내용의 영어와 한국어입니다. 요청마다 한 번씩 본 동작 확인이고 시간 측정이 아닙니다.
+
+| 요청 | 결과 |
+|---|---|
+| 영어 문구, Gemma (`x-lang: en`, `x-task: summarize`) | `x-bff-search: on`, 검색 1회(검색어 "latest stable Kubernetes release version"), 출처 5개, 답변의 번호 `[2, 5]`가 받은 출처 안에 있음 |
+| 한국어 문구, Gemma (`x-lang: ko`, `x-task: summarize`) | `x-bff-search: on`, 검색 1회, 출처 5개, 답변의 번호 `[2, 5]`가 받은 출처 안에 있음 |
+| 영어 문구, Qwen (`x-lang: en`, `x-task: coding`) | `x-bff-search: on`, 검색 1회, 출처 5개, 답변의 번호 `[2, 3, 5]`가 받은 출처 안에 있음 |
+| 업무 종류 없이 보낸 영어 요청 | `x-bff-decision: fallback`(route 신뢰도 0.175), `x-bff-search: sensitive`, 검색 없음. 모델은 검색할 수 없다고 답함 |
+| 업무 종류 없이 보낸 한국어 요청 | `x-bff-decision: fallback`(route 신뢰도 0.341), `x-bff-search: sensitive`, 검색 없음. 모델은 검색할 수 없다고 답함 |
+
+## 알아 둘 점
+
+- Decider의 신뢰도가 기준(0.6)에 못 미치거나 Decider가 답하지 않은 요청에도 검색이 붙지 않습니다. 이때 BFF는 Gemma로 보내면서 민감 정보 요청으로 다루기 때문입니다(`routing.py`의 `FALLBACK`). 위 표의 마지막 두 요청이 그 경우이고, 언어와 무관하게 같습니다. 그 확인을 할 때는 응답 헤더가 `x-bff-search: sensitive`였고 화면에도 "민감 정보가 있는 요청이라 웹 검색을 쓰지 않았습니다"가 나와서, 민감 정보가 없는 요청에 그 문구가 보였습니다. 그래서 표시를 나눴습니다(BFF 이미지 `20261116-130728`부터). 이 경우의 헤더 값은 `fallback`이고 화면은 "모델을 정하지 못해 웹 검색을 쓰지 않았습니다"를 보여 줍니다. 도구를 붙이지 않는 동작과 `x-bff-sensitive: true`는 그대로입니다. 업무 종류를 고른 요청은 Decider를 거치지 않으므로 해당하지 않습니다. 2026-11-16에 배포한 뒤 같은 두 요청을 다시 보내 `x-bff-decision: fallback`, `x-bff-search: fallback`을 확인했고, 업무 종류가 있는 검색 요청은 그대로 `on`이었습니다(`results/2026-11-16-bff-lang/in-pod-fallback.json`). 배포된 화면이 이 값을 한국어와 영어의 새 문구로 그리는 것은 BFF 응답을 흉내 내어 확인했습니다. 로그인한 브라우저에서 이 경로를 끝까지 보낸 확인은 하지 않았습니다.
+
+- 모델이 검색 결과를 잘못 합칠 수 있습니다. 리전 질문의 답에는 Gateway 커넥터만 제공되는 GovCloud가 API의 제공 리전처럼 들어갔습니다. 검색 결과에 두 기능의 글이 섞여 있었기 때문입니다. 출처 링크를 함께 보여 주는 이유이기도 합니다.
+- 한국어 검색어에는 다른 언어의 페이지가 섞여 옵니다. "2026년 11월 서울 날씨"의 결과 3건은 프랑스어와 스페인어 페이지였고, "서울 지하철 9호선 연장 개통"은 5건 중 1건이 한국어였습니다. 검색어 4개로 본 것이라 일반화할 수는 없습니다.
+- 기본 할당량은 계정과 리전마다 초당 10건입니다.
+- CloudTrail은 `InvokeWebSearch`를 데이터 이벤트로 기록하고(기본은 꺼짐) 검색어는 남기지 않습니다.

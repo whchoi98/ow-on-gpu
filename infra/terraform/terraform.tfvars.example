@@ -1,0 +1,2 @@
+# 작업 장비(VS Code 서버)가 인터넷으로 나갈 때 쓰는 NAT 주소. 2026-11-14 확인.
+api_public_access_cidrs = ["<ip>/32"]

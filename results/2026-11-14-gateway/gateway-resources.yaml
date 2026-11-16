@@ -1,0 +1,477 @@
+apiVersion: v1
+items:
+- apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"gateway.networking.k8s.io/v1","kind":"Gateway","metadata":{"annotations":{},"name":"inference-gateway","namespace":"inference"},"spec":{"gatewayClassName":"agentgateway","infrastructure":{"parametersRef":{"group":"agentgateway.dev","kind":"AgentgatewayParameters","name":"inference-gateway"}},"listeners":[{"allowedRoutes":{"namespaces":{"from":"Same"}},"name":"http","port":80,"protocol":"HTTP"}]}}
+    creationTimestamp: "2026-11-14T11:46:06Z"
+    generation: 1
+    name: inference-gateway
+    namespace: inference
+    resourceVersion: "31482"
+    uid: 54785513-f511-4e5c-85fa-a60fd8723f33
+  spec:
+    gatewayClassName: agentgateway
+    infrastructure:
+      parametersRef:
+        group: agentgateway.dev
+        kind: AgentgatewayParameters
+        name: inference-gateway
+    listeners:
+    - allowedRoutes:
+        namespaces:
+          from: Same
+      name: http
+      port: 80
+      protocol: HTTP
+  status:
+    addresses:
+    - type: Hostname
+      value: <elb-dns-name>
+    attachedListenerSets: 0
+    conditions:
+    - lastTransitionTime: "2026-11-14T11:46:06Z"
+      message: ""
+      observedGeneration: 1
+      reason: Accepted
+      status: "True"
+      type: Accepted
+    - lastTransitionTime: "2026-11-14T11:46:06Z"
+      message: Successfully programmed Gateway
+      observedGeneration: 1
+      reason: Programmed
+      status: "True"
+      type: Programmed
+    listeners:
+    - attachedRoutes: 2
+      conditions:
+      - lastTransitionTime: "2026-11-14T11:46:06Z"
+        message: No errors found
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:46:06Z"
+        message: No errors found
+        observedGeneration: 1
+        reason: NoConflicts
+        status: "False"
+        type: Conflicted
+      - lastTransitionTime: "2026-11-14T11:46:06Z"
+        message: No errors found
+        observedGeneration: 1
+        reason: Programmed
+        status: "True"
+        type: Programmed
+      - lastTransitionTime: "2026-11-14T11:46:06Z"
+        message: No errors found
+        observedGeneration: 1
+        reason: ResolvedRefs
+        status: "True"
+        type: ResolvedRefs
+      name: http
+      supportedKinds:
+      - group: gateway.networking.k8s.io
+        kind: HTTPRoute
+      - group: gateway.networking.k8s.io
+        kind: GRPCRoute
+- apiVersion: gateway.networking.k8s.io/v1
+  kind: HTTPRoute
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"gateway.networking.k8s.io/v1","kind":"HTTPRoute","metadata":{"annotations":{},"name":"gemma","namespace":"inference"},"spec":{"parentRefs":[{"name":"inference-gateway"}],"rules":[{"backendRefs":[{"group":"inference.networking.k8s.io","kind":"InferencePool","name":"gemma"}],"matches":[{"headers":[{"name":"X-Gateway-Base-Model-Name","type":"Exact","value":"gemma-4-31b"}],"path":{"type":"Exact","value":"/v1/chat/completions"}}],"timeouts":{"request":"300s"}},{"backendRefs":[{"name":"vllm-gemma","port":8000}],"matches":[{"headers":[{"name":"X-Gateway-Base-Model-Name","type":"Exact","value":"gemma-4-31b"}],"path":{"type":"Exact","value":"/v1/models"}}]}]}}
+    creationTimestamp: "2026-11-14T11:46:07Z"
+    generation: 1
+    name: gemma
+    namespace: inference
+    resourceVersion: "31444"
+    uid: 83dc23b6-2df7-46ad-a317-28c6723f0210
+  spec:
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: inference-gateway
+    rules:
+    - backendRefs:
+      - group: inference.networking.k8s.io
+        kind: InferencePool
+        name: gemma
+        weight: 1
+      matches:
+      - headers:
+        - name: X-Gateway-Base-Model-Name
+          type: Exact
+          value: gemma-4-31b
+        path:
+          type: Exact
+          value: /v1/chat/completions
+      timeouts:
+        request: 300s
+    - backendRefs:
+      - group: ""
+        kind: Service
+        name: vllm-gemma
+        port: 8000
+        weight: 1
+      matches:
+      - headers:
+        - name: X-Gateway-Base-Model-Name
+          type: Exact
+          value: gemma-4-31b
+        path:
+          type: Exact
+          value: /v1/models
+  status:
+    parents:
+    - conditions:
+      - lastTransitionTime: "2026-11-14T11:46:07Z"
+        message: ""
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:46:07Z"
+        message: ""
+        observedGeneration: 1
+        reason: ResolvedRefs
+        status: "True"
+        type: ResolvedRefs
+      controllerName: agentgateway.dev/agentgateway
+      parentRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: inference-gateway
+        namespace: inference
+- apiVersion: gateway.networking.k8s.io/v1
+  kind: HTTPRoute
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"gateway.networking.k8s.io/v1","kind":"HTTPRoute","metadata":{"annotations":{},"name":"qwen","namespace":"inference"},"spec":{"parentRefs":[{"name":"inference-gateway"}],"rules":[{"backendRefs":[{"group":"inference.networking.k8s.io","kind":"InferencePool","name":"qwen"}],"matches":[{"headers":[{"name":"X-Gateway-Base-Model-Name","type":"Exact","value":"qwen38-27b"}],"path":{"type":"Exact","value":"/v1/chat/completions"}}],"timeouts":{"request":"300s"}},{"backendRefs":[{"name":"vllm-qwen","port":8000}],"matches":[{"headers":[{"name":"X-Gateway-Base-Model-Name","type":"Exact","value":"qwen38-27b"}],"path":{"type":"Exact","value":"/v1/models"}}]}]}}
+    creationTimestamp: "2026-11-14T11:46:08Z"
+    generation: 1
+    name: qwen
+    namespace: inference
+    resourceVersion: "31458"
+    uid: 4c82d807-2ee5-4850-9723-e84912158fb5
+  spec:
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: inference-gateway
+    rules:
+    - backendRefs:
+      - group: inference.networking.k8s.io
+        kind: InferencePool
+        name: qwen
+        weight: 1
+      matches:
+      - headers:
+        - name: X-Gateway-Base-Model-Name
+          type: Exact
+          value: qwen38-27b
+        path:
+          type: Exact
+          value: /v1/chat/completions
+      timeouts:
+        request: 300s
+    - backendRefs:
+      - group: ""
+        kind: Service
+        name: vllm-qwen
+        port: 8000
+        weight: 1
+      matches:
+      - headers:
+        - name: X-Gateway-Base-Model-Name
+          type: Exact
+          value: qwen38-27b
+        path:
+          type: Exact
+          value: /v1/models
+  status:
+    parents:
+    - conditions:
+      - lastTransitionTime: "2026-11-14T11:46:08Z"
+        message: ""
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:46:08Z"
+        message: ""
+        observedGeneration: 1
+        reason: ResolvedRefs
+        status: "True"
+        type: ResolvedRefs
+      controllerName: agentgateway.dev/agentgateway
+      parentRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: inference-gateway
+        namespace: inference
+- apiVersion: inference.networking.k8s.io/v1
+  kind: InferencePool
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: gemma
+      meta.helm.sh/release-namespace: inference
+    creationTimestamp: "2026-11-14T11:45:53Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: gemma-epp
+      app.kubernetes.io/version: v1.0.0
+    name: gemma
+    namespace: inference
+    resourceVersion: "31441"
+    uid: 604f4920-24c9-4da4-9485-d1cf2d0778d9
+  spec:
+    appProtocol: http
+    endpointPickerRef:
+      failureMode: FailOpen
+      group: ""
+      kind: Service
+      name: gemma-epp
+      port:
+        number: 9002
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: vllm-gemma
+    targetPorts:
+    - number: 8000
+  status:
+    parents:
+    - conditions:
+      - lastTransitionTime: "2026-11-14T11:46:07Z"
+        message: InferencePool has been accepted by controller agentgateway.dev/agentgateway
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:46:07Z"
+        message: All InferencePool references have been resolved
+        observedGeneration: 1
+        reason: ResolvedRefs
+        status: "True"
+        type: ResolvedRefs
+      controllerName: agentgateway.dev/agentgateway
+      parentRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: inference-gateway
+        namespace: inference
+- apiVersion: inference.networking.k8s.io/v1
+  kind: InferencePool
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: qwen
+      meta.helm.sh/release-namespace: inference
+    creationTimestamp: "2026-11-14T11:46:03Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: qwen-epp
+      app.kubernetes.io/version: v1.0.0
+    name: qwen
+    namespace: inference
+    resourceVersion: "31456"
+    uid: b775149a-5d1e-415e-9d78-0253b5e72d22
+  spec:
+    appProtocol: http
+    endpointPickerRef:
+      failureMode: FailOpen
+      group: ""
+      kind: Service
+      name: qwen-epp
+      port:
+        number: 9002
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: vllm-qwen
+    targetPorts:
+    - number: 8000
+  status:
+    parents:
+    - conditions:
+      - lastTransitionTime: "2026-11-14T11:46:08Z"
+        message: InferencePool has been accepted by controller agentgateway.dev/agentgateway
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:46:08Z"
+        message: All InferencePool references have been resolved
+        observedGeneration: 1
+        reason: ResolvedRefs
+        status: "True"
+        type: ResolvedRefs
+      controllerName: agentgateway.dev/agentgateway
+      parentRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: inference-gateway
+        namespace: inference
+- apiVersion: llm-d.ai/v1
+  kind: InferenceObjective
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"llm-d.ai/v1","kind":"InferenceObjective","metadata":{"annotations":{},"name":"gemma-batch","namespace":"inference"},"spec":{"poolRefs":[{"name":"gemma"}],"priority":-1}}
+    creationTimestamp: "2026-11-14T11:46:07Z"
+    generation: 1
+    name: gemma-batch
+    namespace: inference
+    resourceVersion: "31445"
+    uid: ba6b33ad-9f15-43d1-b34c-4b0453f07f77
+  spec:
+    poolRefs:
+    - group: inference.networking.k8s.io
+      kind: InferencePool
+      name: gemma
+    priority: -1
+- apiVersion: llm-d.ai/v1
+  kind: InferenceObjective
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"llm-d.ai/v1","kind":"InferenceObjective","metadata":{"annotations":{},"name":"gemma-interactive","namespace":"inference"},"spec":{"poolRefs":[{"name":"gemma"}],"priority":10}}
+    creationTimestamp: "2026-11-14T11:46:07Z"
+    generation: 1
+    name: gemma-interactive
+    namespace: inference
+    resourceVersion: "31446"
+    uid: ee1ddd83-6087-4375-81ec-d982c5f9d19b
+  spec:
+    poolRefs:
+    - group: inference.networking.k8s.io
+      kind: InferencePool
+      name: gemma
+    priority: 10
+- apiVersion: llm-d.ai/v1
+  kind: InferenceObjective
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"llm-d.ai/v1","kind":"InferenceObjective","metadata":{"annotations":{},"name":"qwen-batch","namespace":"inference"},"spec":{"poolRefs":[{"name":"qwen"}],"priority":-1}}
+    creationTimestamp: "2026-11-14T11:46:08Z"
+    generation: 1
+    name: qwen-batch
+    namespace: inference
+    resourceVersion: "31457"
+    uid: 2fc3a951-3d93-40d9-a85b-d1d62794948f
+  spec:
+    poolRefs:
+    - group: inference.networking.k8s.io
+      kind: InferencePool
+      name: qwen
+    priority: -1
+- apiVersion: llm-d.ai/v1
+  kind: InferenceObjective
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"llm-d.ai/v1","kind":"InferenceObjective","metadata":{"annotations":{},"name":"qwen-interactive","namespace":"inference"},"spec":{"poolRefs":[{"name":"qwen"}],"priority":10}}
+    creationTimestamp: "2026-11-14T11:46:08Z"
+    generation: 1
+    name: qwen-interactive
+    namespace: inference
+    resourceVersion: "31459"
+    uid: 8e4bdc3f-e746-4be6-b313-f016a937fac8
+  spec:
+    poolRefs:
+    - group: inference.networking.k8s.io
+      kind: InferencePool
+      name: qwen
+    priority: 10
+- apiVersion: agentgateway.dev/v1alpha1
+  kind: AgentgatewayPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"agentgateway.dev/v1alpha1","kind":"AgentgatewayPolicy","metadata":{"annotations":{},"name":"model-routing","namespace":"inference"},"spec":{"targetRefs":[{"group":"gateway.networking.k8s.io","kind":"Gateway","name":"inference-gateway"}],"traffic":{"phase":"PreRouting","transformation":{"request":{"set":[{"name":"X-Gateway-Base-Model-Name","value":"request.method == \"GET\" ? default(request.headers[\"x-model\"], \"\") : string(json(request.body).model)"}]}}}}}
+    creationTimestamp: "2026-11-14T11:46:06Z"
+    generation: 2
+    name: model-routing
+    namespace: inference
+    resourceVersion: "33590"
+    uid: 32f5b0f1-f703-4949-8dea-ac9d17dd4382
+  spec:
+    targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: inference-gateway
+    traffic:
+      phase: PreRouting
+      transformation:
+        request:
+          set:
+          - name: X-Gateway-Base-Model-Name
+            value: 'request.method == "GET" ? default(request.headers["x-model"],
+              "") : string(json(request.body).model)'
+  status:
+    ancestors:
+    - ancestorRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: inference-gateway
+        namespace: inference
+      conditions:
+      - lastTransitionTime: "2026-11-14T11:46:06Z"
+        message: Policy accepted
+        observedGeneration: 2
+        reason: Valid
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:46:06Z"
+        message: Attached to all targets
+        observedGeneration: 2
+        reason: Attached
+        status: "True"
+        type: Attached
+      controllerName: agentgateway.dev/agentgateway
+- apiVersion: agentgateway.dev/v1alpha1
+  kind: AgentgatewayParameters
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"agentgateway.dev/v1alpha1","kind":"AgentgatewayParameters","metadata":{"annotations":{},"name":"inference-gateway","namespace":"inference"},"spec":{"deployment":{"spec":{"replicas":2,"template":{"spec":{"nodeSelector":{"karpenter.sh/nodepool":"system"},"topologySpreadConstraints":[{"labelSelector":{"matchLabels":{"gateway.networking.k8s.io/gateway-name":"inference-gateway"}},"matchLabelKeys":["pod-template-hash"],"maxSkew":1,"minDomains":2,"topologyKey":"topology.kubernetes.io/zone","whenUnsatisfiable":"DoNotSchedule"}]}}}},"service":{"metadata":{"annotations":{"service.beta.kubernetes.io/aws-load-balancer-nlb-target-type":"ip","service.beta.kubernetes.io/aws-load-balancer-scheme":"internal","service.beta.kubernetes.io/aws-load-balancer-type":"external"}},"spec":{"loadBalancerSourceRanges":["10.200.0.0/16"]}}}}
+    creationTimestamp: "2026-11-14T11:46:06Z"
+    generation: 3
+    name: inference-gateway
+    namespace: inference
+    resourceVersion: "32430"
+    uid: 4c220fad-3aa8-4748-a8e7-906d6c9234d2
+  spec:
+    deployment:
+      spec:
+        replicas: 2
+        template:
+          spec:
+            nodeSelector:
+              karpenter.sh/nodepool: system
+            topologySpreadConstraints:
+            - labelSelector:
+                matchLabels:
+                  gateway.networking.k8s.io/gateway-name: inference-gateway
+              matchLabelKeys:
+              - pod-template-hash
+              maxSkew: 1
+              minDomains: 2
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+    service:
+      metadata:
+        annotations:
+          service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+          service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+          service.beta.kubernetes.io/aws-load-balancer-type: external
+      spec:
+        loadBalancerSourceRanges:
+        - 10.200.0.0/16
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,80 @@
+# 게이트웨이 파드와 Service의 설정. Gateway가 spec.infrastructure.parametersRef로 참조한다.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: inference-gateway
+spec:
+  service:
+    metadata:
+      annotations:
+        # AWS Load Balancer Controller가 내부 NLB를 IP 대상으로 만든다.
+        # LBC는 이미 있는 Service의 type 어노테이션 변경을 지원하지 않으므로 Gateway를 만들 때부터 둔다.
+        service.beta.kubernetes.io/aws-load-balancer-type: external
+        service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+        # NLB는 배치 작업에서만 받는다. 이 보안 그룹은 infra/terraform/app.tf가 만든다.
+        # BFF를 포함해 클러스터 안의 파드는 NLB가 아닌 Service(inference-gateway.inference.svc)로 호출한다.
+        service.beta.kubernetes.io/aws-load-balancer-security-groups: ow-on-gpu-gateway-nlb
+        service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: "true"
+  deployment:
+    spec:
+      replicas: 2
+      template:
+        spec:
+          nodeSelector:
+            karpenter.sh/nodepool: system
+          # 게이트웨이가 멈추면 두 모델 모두 응답하지 못한다. 복제본을 AZ별로 나눈다.
+          # minDomains가 없으면 system 노드가 한 AZ에만 있을 때 두 파드가 그 AZ에 함께 올라간다.
+          # matchLabelKeys가 없으면 교체 중에 이전 ReplicaSet의 파드까지 세어 새 파드가 한 AZ에 몰린다.
+          topologySpreadConstraints:
+            - maxSkew: 1
+              minDomains: 2
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+              matchLabelKeys:
+                - pod-template-hash
+              labelSelector:
+                matchLabels:
+                  gateway.networking.k8s.io/gateway-name: inference-gateway
+---
+# 리스너는 하나만 둔다. NLB 리스너도 하나가 된다.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: inference-gateway
+spec:
+  gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: inference-gateway
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+---
+# 요청 본문의 model 값을 헤더로 옮긴다. HTTPRoute가 이 헤더로 풀을 고른다.
+# 라우팅 전에 실행해야 하므로 PreRouting이고, 대상은 HTTPRoute가 아닌 Gateway여야 한다.
+# 식이 실패하면 agentgateway는 헤더를 지운다. 클라이언트가 보낸 같은 이름의 헤더도 지워진다.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: model-routing
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: inference-gateway
+  traffic:
+    phase: PreRouting
+    transformation:
+      request:
+        set:
+          # 본문이 없는 GET(/v1/models)은 x-model 헤더로, 그 밖의 요청은 본문의 model 값으로 고른다.
+          # default()를 겹쳐 본문 파싱 실패를 받아 내는 식은 본문이 없는 GET에서 동작하지 않았다(2026-11-14).
+          - name: X-Gateway-Base-Model-Name
+            value: 'request.method == "GET" ? default(request.headers["x-model"], "") : string(json(request.body).model)'

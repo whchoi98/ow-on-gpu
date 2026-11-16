@@ -1,0 +1,7 @@
+[15:26:44] 서빙을 0으로 줄입니다
+[15:27:01] GPU 노드를 지웁니다: qwen-od-8t6ch (ip-10-200-16-234.ap-northeast-2.compute.internal)
+[15:33:33] optimized 구성을 적용하고 1로 올립니다. GPU 노드가 새로 뜹니다
+[15:33:36] 파드 vllm-qwen-5fc4d6cfd-c5x69이 Ready가 될 때까지 기다립니다(최대 30분)
+{"total": 290.0, "node_provisioning": 63.0, "image_pull": 77.5, "weight_load": 34.878809, "engine_init": 42.49, "other": 72.1}
+[15:38:26] 저장: results/2026-11-14-coldstart/qwen-cold-optimized.json
+exit=0

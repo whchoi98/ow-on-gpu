@@ -1,0 +1,282 @@
+[
+ {
+  "scenario": "S1_chat",
+  "concurrency": 1,
+  "started": "15:40:24",
+  "seconds": "119",
+  "running_max": 1.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.03000681973175723,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 2,
+  "started": "15:42:23",
+  "seconds": "64",
+  "running_max": 2.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.06001363946351446,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 4,
+  "started": "15:43:27",
+  "seconds": "65",
+  "running_max": 4.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.12002727892702891,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 8,
+  "started": "15:44:32",
+  "seconds": "68",
+  "running_max": 8.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.24005455785405772,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 16,
+  "started": "15:45:40",
+  "seconds": "74",
+  "running_max": 16.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.48010911570811543,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 32,
+  "started": "15:46:54",
+  "seconds": "85",
+  "running_max": 32.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.960218231416231,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 64,
+  "started": "15:48:19",
+  "seconds": "82",
+  "running_max": 45.0,
+  "waiting_max": 39.0,
+  "kv_usage_max": 0.9981814048647419,
+  "preemptions": 81.25413333333333
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 1,
+  "started": "15:49:41",
+  "seconds": "234",
+  "running_max": 1.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.08297340304614687,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 2,
+  "started": "15:53:35",
+  "seconds": "124",
+  "running_max": 2.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.16594680609229373,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 4,
+  "started": "15:55:39",
+  "seconds": "132",
+  "running_max": 4.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.33189361218458746,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 8,
+  "started": "15:57:51",
+  "seconds": "144",
+  "running_max": 8.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.6637872243691748,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 16,
+  "started": "16:00:15",
+  "seconds": "209",
+  "running_max": 12.0,
+  "waiting_max": 4.0,
+  "kv_usage_max": 0.9956808365537623,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 32,
+  "started": "16:03:44",
+  "seconds": "407",
+  "running_max": 12.0,
+  "waiting_max": 27.0,
+  "kv_usage_max": 0.9956808365537623,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 64,
+  "started": "16:10:31",
+  "seconds": "409",
+  "running_max": 12.0,
+  "waiting_max": 52.0,
+  "kv_usage_max": 0.9956808365537623,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S3_moderation",
+  "concurrency": 1,
+  "started": "16:17:20",
+  "seconds": "23",
+  "running_max": 1.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.041373039327119776,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S3_moderation",
+  "concurrency": 2,
+  "started": "16:17:43",
+  "seconds": "15",
+  "running_max": 1.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.041373039327119776,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S3_moderation",
+  "concurrency": 4,
+  "started": "16:17:58",
+  "seconds": "18",
+  "running_max": 4.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.16549215730847922,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S3_moderation",
+  "concurrency": 8,
+  "started": "16:18:16",
+  "seconds": "23",
+  "running_max": 8.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.3296203682655149,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S3_moderation",
+  "concurrency": 16,
+  "started": "16:18:39",
+  "seconds": "29",
+  "running_max": 13.0,
+  "waiting_max": 3.0,
+  "kv_usage_max": 0.5310297794953398,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S3_moderation",
+  "concurrency": 32,
+  "started": "16:19:08",
+  "seconds": "44",
+  "running_max": 21.0,
+  "waiting_max": 11.0,
+  "kv_usage_max": 0.8647419868151853,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S3_moderation",
+  "concurrency": 64,
+  "started": "16:19:52",
+  "seconds": "45",
+  "running_max": 24.0,
+  "waiting_max": 40.0,
+  "kv_usage_max": 0.9929529438508752,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S4_rag",
+  "concurrency": 1,
+  "started": "16:20:37",
+  "seconds": "247",
+  "running_max": 1.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.10479654466924304,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S4_rag",
+  "concurrency": 2,
+  "started": "16:24:44",
+  "seconds": "137",
+  "running_max": 2.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.4232780177313026,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S4_rag",
+  "concurrency": 4,
+  "started": "16:27:01",
+  "seconds": "157",
+  "running_max": 4.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.6308251875426234,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S4_rag",
+  "concurrency": 8,
+  "started": "16:29:38",
+  "seconds": "221",
+  "running_max": 7.0,
+  "waiting_max": 6.0,
+  "kv_usage_max": 0.9472607410775176,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S4_rag",
+  "concurrency": 16,
+  "started": "16:33:19",
+  "seconds": "417",
+  "running_max": 7.0,
+  "waiting_max": 11.0,
+  "kv_usage_max": 0.9488520118208684,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S4_rag",
+  "concurrency": 32,
+  "started": "16:40:16",
+  "seconds": "814",
+  "running_max": 7.0,
+  "waiting_max": 26.0,
+  "kv_usage_max": 0.9488520118208684,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S4_rag",
+  "concurrency": 64,
+  "started": "16:53:50",
+  "seconds": "816",
+  "running_max": 7.0,
+  "waiting_max": 58.0,
+  "kv_usage_max": 0.9488520118208684,
+  "preemptions": 0.0
+ }
+]

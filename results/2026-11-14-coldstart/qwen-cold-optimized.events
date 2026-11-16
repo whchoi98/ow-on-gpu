@@ -1,0 +1,13 @@
+2026-11-14T15:33:33Z	FailedScheduling	0/7 nodes are available: 3 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. preemption: 0/7 nodes are available: 7 Preemption is not helpful for scheduling.
+2026-11-14T15:33:35Z	Nominated	Pod should schedule on: nodeclaim/qwen-od-hmj9n
+2026-11-14T15:34:09Z	FailedScheduling	0/8 nodes are available: 4 node(s) didn't match Pod's node affinity/selector, 4 node(s) had untolerated taint(s). preemption: 0/8 nodes are available: 8 Preemption is not helpful for scheduling.
+2026-11-14T15:34:38Z	FailedScheduling	0/8 nodes are available: 1 Insufficient nvidia.com/gpu, 3 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. preemption: 0/8 nodes are available: 8 Preemption is not helpful for scheduling.
+2026-11-14T15:34:49Z	Scheduled	Successfully assigned inference/vllm-qwen-5fc4d6cfd-c5x69 to ip-10-200-27-13.ap-northeast-2.compute.internal
+2026-11-14T15:34:51Z	Pulling	Pulling image "vllm/vllm-openai:v0.33.0"
+2026-11-14T15:36:08Z	Pulled	Successfully pulled image "vllm/vllm-openai:v0.33.0" in 1m17.515s (1m17.515s including waiting). Image size: 9738549569 bytes.
+2026-11-14T15:36:08Z	Created	Container created
+2026-11-14T15:36:09Z	Started	Container started
+2026-11-14T15:36:23Z	Pulled	Container image "vllm/vllm-openai:v0.33.0" already present on machine and can be accessed by the pod
+2026-11-14T15:36:23Z	Created	Container created
+2026-11-14T15:36:24Z	Started	Container started
+2026-11-14T15:36:24Z	Unhealthy	Startup probe failed: Get "http://10.200.18.108:8000/health": dial tcp 10.200.18.108:8000: connect: connection refused

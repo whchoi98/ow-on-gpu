@@ -1,0 +1,227 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "",
+ "prompt": "겨울철 니트를 줄어들지 않게 세탁하는 방법을 세 줄로 알려 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "310f31b677d441cb8a4ef3990035d5c1",
+  "x-bff-model": "gemma-4-31b",
+  "x-bff-decision": "fallback",
+  "x-bff-sensitive": "true",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 96fd73ca69daee742256771ed1cdb930.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 170.2,
+ "first_content_ms": 230.0,
+ "last_content_ms": 2739.1,
+ "total_ms": 2739.7,
+ "content_events": 48,
+ "gap_ms": {
+  "median": 53.4,
+  "max": 60.8,
+  "min": 49.6,
+  "share_under_1ms": 0.0
+ },
+ "text": "1. 미지근하거나 찬물에 중성세제를 풀어 옷감이 상하지 않게 가볍게 주물러 세탁하세요.\n2. 비틀어 짜지 말고 마른 수건으로 눌러 물기를",
+ "events": [
+  {
+   "ms": 230.0,
+   "content": "1"
+  },
+  {
+   "ms": 285.7,
+   "content": "."
+  },
+  {
+   "ms": 336.7,
+   "content": " 미"
+  },
+  {
+   "ms": 390.1,
+   "content": "지"
+  },
+  {
+   "ms": 443.9,
+   "content": "근"
+  },
+  {
+   "ms": 496.9,
+   "content": "하거나"
+  },
+  {
+   "ms": 550.0,
+   "content": " 찬"
+  },
+  {
+   "ms": 604.2,
+   "content": "물"
+  },
+  {
+   "ms": 657.3,
+   "content": "에"
+  },
+  {
+   "ms": 711.0,
+   "content": " 중"
+  },
+  {
+   "ms": 763.2,
+   "content": "성"
+  },
+  {
+   "ms": 816.4,
+   "content": "세"
+  },
+  {
+   "ms": 870.4,
+   "content": "제를"
+  },
+  {
+   "ms": 924.4,
+   "content": " 풀어"
+  },
+  {
+   "ms": 977.6,
+   "content": " 옷"
+  },
+  {
+   "ms": 1031.0,
+   "content": "감이"
+  },
+  {
+   "ms": 1084.4,
+   "content": " 상"
+  },
+  {
+   "ms": 1137.0,
+   "content": "하지"
+  },
+  {
+   "ms": 1190.7,
+   "content": " 않"
+  },
+  {
+   "ms": 1244.9,
+   "content": "게"
+  },
+  {
+   "ms": 1297.6,
+   "content": " 가"
+  },
+  {
+   "ms": 1350.8,
+   "content": "볍"
+  },
+  {
+   "ms": 1411.6,
+   "content": "게"
+  },
+  {
+   "ms": 1461.4,
+   "content": " 주"
+  },
+  {
+   "ms": 1511.3,
+   "content": "물"
+  },
+  {
+   "ms": 1563.8,
+   "content": "러"
+  },
+  {
+   "ms": 1617.5,
+   "content": " 세"
+  },
+  {
+   "ms": 1671.3,
+   "content": "탁"
+  },
+  {
+   "ms": 1724.1,
+   "content": "하세요"
+  },
+  {
+   "ms": 1778.1,
+   "content": "."
+  },
+  {
+   "ms": 1831.5,
+   "content": "\n"
+  },
+  {
+   "ms": 1884.9,
+   "content": "2"
+  },
+  {
+   "ms": 1938.5,
+   "content": "."
+  },
+  {
+   "ms": 1991.9,
+   "content": " 비"
+  },
+  {
+   "ms": 2045.1,
+   "content": "틀"
+  },
+  {
+   "ms": 2097.6,
+   "content": "어"
+  },
+  {
+   "ms": 2151.4,
+   "content": " 짜"
+  },
+  {
+   "ms": 2212.0,
+   "content": "지"
+  },
+  {
+   "ms": 2261.6,
+   "content": " 말고"
+  },
+  {
+   "ms": 2311.7,
+   "content": " 마"
+  },
+  {
+   "ms": 2365.5,
+   "content": "른"
+  },
+  {
+   "ms": 2418.9,
+   "content": " 수"
+  },
+  {
+   "ms": 2472.2,
+   "content": "건"
+  },
+  {
+   "ms": 2526.1,
+   "content": "으로"
+  },
+  {
+   "ms": 2579.4,
+   "content": " 눌"
+  },
+  {
+   "ms": 2632.5,
+   "content": "러"
+  },
+  {
+   "ms": 2686.2,
+   "content": " 물"
+  },
+  {
+   "ms": 2739.1,
+   "content": "기를"
+  }
+ ]
+}

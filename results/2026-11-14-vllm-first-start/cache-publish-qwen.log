@@ -1,0 +1,1 @@
+{"event": "cache_publish", "destination": "s3://ow-on-gpu-<suffix>/vllm-cache/v0.33.0-qwen38-27b-fp8-l40s/", "objects": 2056, "bytes": 216677432, "by_top_level": {"modelinfos": 1885, "torch_compile_cache": 216675547}, "missing": [], "seconds": 7.16}

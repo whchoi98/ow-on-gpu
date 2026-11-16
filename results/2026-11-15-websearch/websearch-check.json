@@ -1,0 +1,291 @@
+[
+ {
+  "case": "search-on-gemma",
+  "prompt": "Amazon Bedrock AgentCore Web Search API를 쓸 수 있는 AWS 리전을 검색해서 알려 주세요.",
+  "task": "summarize",
+  "asked_search": true,
+  "stream": true,
+  "status": 200,
+  "model": "gemma-4-31b",
+  "decision": "task",
+  "search": "on",
+  "sensitive": "false",
+  "request_id": "76b4c2c436b14895acc640d6478b5075",
+  "notes": [
+   {
+    "event": "tool_call",
+    "name": "web_search",
+    "ms": 2955.5,
+    "query": "Amazon Bedrock Agent Core Web Search API available regions",
+    "sources": [
+     {
+      "n": 1,
+      "title": "Release notes for Amazon Bedrock AgentCore",
+      "url": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/release-notes.html",
+      "published_at": "2026-07-28"
+     },
+     {
+      "n": 2,
+      "title": "Web Search on Amazon Bedrock AgentCore expands to AWS GovCloud and 3 Regions",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-bedrock-agentcore/",
+      "published_at": "2026-10-15"
+     },
+     {
+      "n": 3,
+      "title": "Amazon Bedrock AgentCore now available in four additional AWS Regions",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-bedrock-agentcore-four-additional-regions/",
+      "published_at": "2026-07-01"
+     },
+     {
+      "n": 4,
+      "title": "Amazon Bedrock AgentCore",
+      "url": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html",
+      "published_at": null
+     },
+     {
+      "n": 5,
+      "title": "Amazon Bedrock AgentCore : Which regions is AgentCore available in?",
+      "url": "https://aws.amazon.com/bedrock/agentcore/faqs/",
+      "published_at": "2026-08-15"
+     }
+    ],
+    "search_ms": 1645.4
+   }
+  ],
+  "answer": "Amazon Bedrock AgentCore의 **Web Search API (`InvokeWebSearch`)**를 사용할 수 있는 AWS 리전은 다음과 같습니다.\n\n*   **미국 (US):** US East (N. Virginia), US East (Ohio), US West (Oregon), AWS GovCloud (US-West) [1, 2, 4]\n*   **아시아 태평양 (Asia Pacific):** Asia Pacific (Sydney), Asia Pacific (Tokyo) [1, 4]\n*   **유럽 (Europe):** Europe (Ireland) [1, 4]",
+  "first_content_ms": 3675.8,
+  "total_ms": 10228.4,
+  "summary": {
+   "searches": 1,
+   "search_ms": [
+    1645.4
+   ],
+   "sources": 5,
+   "cited": [
+    1,
+    2,
+    4
+   ],
+   "cited_known": [
+    1,
+    2,
+    4
+   ],
+   "errors": []
+  }
+ },
+ {
+  "case": "search-off",
+  "prompt": "안녕하세요를 영어로 옮겨 주세요.",
+  "task": "translate",
+  "asked_search": false,
+  "stream": true,
+  "status": 200,
+  "model": "gemma-4-31b",
+  "decision": "task",
+  "search": "off",
+  "sensitive": "false",
+  "request_id": "8438757afc3d4de78714ef2770807bff",
+  "notes": [],
+  "answer": "'안녕하세요'는 상황과 상대방에 따라 여러 가지로 표현할 수 있습니다.\n\n**1. 가장 일반적이고 무난한 표현**\n* **Hello** (안녕하세요 - 가장 표준적)\n* **Hi** (안녕/안녕하세요 - 조금 더 친근하고 가벼운 느낌)",
+  "first_content_ms": 128.1,
+  "total_ms": 3490.5,
+  "summary": {
+   "searches": 0,
+   "search_ms": [],
+   "sources": 0,
+   "cited": [],
+   "cited_known": [],
+   "errors": []
+  }
+ },
+ {
+  "case": "search-sensitive",
+  "prompt": "제 주민등록번호 900101-1234567로 가입된 서비스가 있는지 검색해 주세요.",
+  "task": "",
+  "asked_search": true,
+  "stream": true,
+  "status": 200,
+  "model": "gemma-4-31b",
+  "decision": "rule",
+  "search": "sensitive",
+  "sensitive": "true",
+  "request_id": "02ef5ca9fb3c4e0f9e800e91c0b9ba30",
+  "notes": [],
+  "answer": "죄송하지만, 저는 개인의 주민등록번호와 같은 민감한 개인정보를 이용해 외부 서비스 가입 여부를 조회하거나 검색할 수 있는 권한과 기능이 없습니다. 또한, 보안과 개인정보 보호를 위해 채팅창에 주민등록번호 전체를 입력하시는 것은 매우 위험하므로 주의하시기 바랍니다.\n\n본인의 주민등록번호로 가입된 서비스나 웹사이트를 확인하고 싶으시다면, 정부에서 운영하는 공식 서비스인 **'개인정보 포털(e프라이버시 클린서비스)'**를 이용하시는 것을 강력히 추천드립니다.\n\n### 🔍",
+  "first_content_ms": 86.0,
+  "total_ms": 6872.5,
+  "summary": {
+   "searches": 0,
+   "search_ms": [],
+   "sources": 0,
+   "cited": [],
+   "cited_known": [],
+   "errors": []
+  }
+ },
+ {
+  "case": "search-non-streaming",
+  "prompt": "Amazon Bedrock AgentCore Web Search API를 쓸 수 있는 AWS 리전을 검색해서 알려 주세요.",
+  "task": "summarize",
+  "asked_search": true,
+  "stream": false,
+  "status": 200,
+  "model": "gemma-4-31b",
+  "decision": "task",
+  "search": "on",
+  "sensitive": "false",
+  "request_id": "81b5ff278c3e4e69b9d5dc9c40d8e085",
+  "notes": [],
+  "answer": "Amazon Bedrock AgentCore의 Web Search API(`InvokeWebSearch`)를 사용할 수 있는 AWS 리전은 다음과 같습니다.\n\n**지원 리전:**\n*   **미국:** US East (N. Virginia), US East (Ohio), US West (Oregon), AWS GovCloud (US-West) [1, 2]\n*   **아시아 태평양:** Asia Pacific (Sydney), Asia Pacific (Tokyo) [1]\n*   **유럽:** Europe (Ireland) [1]\n\n해당 API를 통해 개발자는 별도의 게이트웨이 설정 없이 AWS SDK나 CLI를 사용하여 애플리케이션 및 에이전트가 웹에서 최신 정보를 검색하도록 구현할 수 있습니다 [1].",
+  "first_content_ms": null,
+  "total_ms": 11669.6,
+  "bff_sources": [
+   {
+    "n": 1,
+    "title": "Release notes for Amazon Bedrock AgentCore",
+    "url": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/release-notes.html",
+    "published_at": "2026-07-28"
+   },
+   {
+    "n": 2,
+    "title": "Web Search on Amazon Bedrock AgentCore expands to AWS GovCloud and 3 Regions",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-bedrock-agentcore/",
+    "published_at": "2026-10-15"
+   },
+   {
+    "n": 3,
+    "title": "Web Search dans Amazon Bedrock AgentCore ajoute un filtrage par domaine et par date de publication et s’étend à l’Europe et à l’Asie-Pacifique",
+    "url": "https://aws.amazon.com/fr/about-aws/whats-new/2026/08/web-search-amazon-bedrock/",
+    "published_at": null
+   },
+   {
+    "n": 4,
+    "title": "Get started with AgentCore Web Search",
+    "url": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/web-search-api-get-started.html",
+    "published_at": "2026-01-31"
+   },
+   {
+    "n": 5,
+    "title": "Amazon Bedrock Web Search : Regional availability",
+    "url": "https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/web-search.html",
+    "published_at": "2026-07-30"
+   }
+  ]
+ },
+ {
+  "case": "search-on-qwen",
+  "prompt": "Kubernetes 최신 릴리스의 주요 변경점을 검색해서 세 가지로 정리해 주세요.",
+  "task": "coding",
+  "asked_search": true,
+  "stream": true,
+  "status": 200,
+  "model": "qwen38-27b",
+  "decision": "task",
+  "search": "on",
+  "sensitive": "false",
+  "request_id": "41882f91cafc453ba9ffa38fb64f3b91",
+  "notes": [
+   {
+    "event": "tool_call",
+    "name": "web_search",
+    "ms": 2653.1,
+    "query": "Kubernetes latest release changelog new features",
+    "sources": [
+     {
+      "n": 1,
+      "title": "Kubernetes v1.37: Garhwal",
+      "url": "https://kubernetes.io/blog/2026/08/26/kubernetes-v1-37-release/",
+      "published_at": "2026-09-02"
+     },
+     {
+      "n": 2,
+      "title": "Kubernetes v1.36: ハル (Haru)",
+      "url": "https://kubernetes.io/blog/2026/04/22/kubernetes-v1-36-release/",
+      "published_at": "2026-07-27"
+     },
+     {
+      "n": 3,
+      "title": "Kubernetes v1.37 Sneak Peek",
+      "url": "https://kubernetes.io/blog/2026/07/31/kubernetes-v1-37-sneak-peek/",
+      "published_at": "2026-10-08"
+     },
+     {
+      "n": 4,
+      "title": "website/content/en/blog/_posts/2026/kubernetes-v1-37-release/index.md at main · kubernetes/website · GitHub",
+      "url": "https://github.com/kubernetes/website/blob/main/content/en/blog/_posts/2026/kubernetes-v1-37-release/index.md",
+      "published_at": null
+     },
+     {
+      "n": 5,
+      "title": "3 Breaking Changes Fixed [2026]",
+      "url": "https://tech-insider.org/kubernetes-1-37-upgrade-migration-guide-2026/",
+      "published_at": "2026-11-09"
+     }
+    ],
+    "search_ms": 1022.4
+   },
+   {
+    "event": "tool_call",
+    "name": "web_search",
+    "ms": 3150.3,
+    "query": "Kubernetes 1.34 release notes 주요 변경사항",
+    "sources": [
+     {
+      "n": 6,
+      "title": "Kubernetes v1.34: Of Wind & Will (O' WaW)",
+      "url": "https://kubernetes.io/ja/blog/2025/08/27/kubernetes-v1-34-release/",
+      "published_at": "2026-03-06"
+     },
+     {
+      "n": 7,
+      "title": "Kubernetes 1.34",
+      "url": "https://kubernetes.io/ja/releases/1.34/",
+      "published_at": "2026-10-27"
+     },
+     {
+      "n": 8,
+      "title": "What's New and Improved?",
+      "url": "https://www.perfectscale.io/blog/kubernetes-v1-34-release",
+      "published_at": "2026-08-14"
+     },
+     {
+      "n": 9,
+      "title": "Kubernetes 1.34 Release Notes – Features, Updates & Fixes",
+      "url": "https://cloudsmith.com/blog/kubernetes-1-34-what-you-need-to-know",
+      "published_at": "2025-07-28"
+     },
+     {
+      "n": 10,
+      "title": "DRA GA, Stable Tracing & Breaking Changes",
+      "url": "https://squareops.com/blog/kubernetes-1-34-whats-new-upgrade-guide/",
+      "published_at": "2026-11-07"
+     }
+    ],
+    "search_ms": 496.8
+   }
+  ],
+  "answer": "오늘(2026-11-15) 기준으로 Kubernetes 최신 릴리스는 **v1.37 \"Garhwal\"**입니다(2026-08-26 정식 출시, 1.37.1 패치가 2026-09-15에 나옴)[1][5]. 주요 변경점을 세 가지로 정리하면 다음과 같습니다.\n\n1. **IPVS 비추천(deprecation) 및 kube-proxy 변경**\n   v1.37은 IPVS를 kube-proxy 모드로 사용하는 것을 비추천으로 표시했습니다. IPVS 기반 클러스터를 운영하는 경우 iptables나 다른 모드로의 전환을 고려해야 합니다[5].\n\n2. **SELinuxMount 기본 활성화, static pod secret 지원 제거**\n   `SELinuxMount` 기능 게이트가 기본적으로 켜지며, static pod의 secret 지원이 제거되었습니다. 즉, 스태틱 매니페스트에서 secret 사용을 의존하고 있던 환경은 영향을 받습니다[5].\n\n3. **metrics.k8s.io API의 v1 정식(Stable) 승급**\n   메트릭 API `metrics.k8s.io`가 안정판 v1로 승급되어, HPA 등 리소스 기반 컨트롤의 안정성이 향상되었습니다. 전체 릴리스는 67개의 개선 사항으로, 16개가 Stable, 23개가 Beta, 27개가 Alpha, 1개가 비추천/제거에 해당합니다[1][5].\n\n참고: 같은 릴리스에서 `ConcurrentWatchObjectDecode` 게이트도 기본 활성화되어, watch 스트림의 디코딩을 제한된 워커 풀(기본 10개)로 이동시켜 API 서버 처리량을 개선했습니다[1][4].",
+  "first_content_ms": 4327.1,
+  "total_ms": 14623.2,
+  "summary": {
+   "searches": 2,
+   "search_ms": [
+    1022.4,
+    496.8
+   ],
+   "sources": 10,
+   "cited": [
+    1,
+    4,
+    5
+   ],
+   "cited_known": [
+    1,
+    4,
+    5
+   ],
+   "errors": []
+  }
+ }
+]

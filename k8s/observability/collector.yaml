@@ -1,0 +1,72 @@
+# Prometheus를 agent 모드로 띄운다. 조회는 AMP에서 하므로 이 파드에는 데이터를 오래 두지 않는다.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-collector
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: metrics-collector
+spec:
+  replicas: 1
+  # 같은 지표를 두 파드가 보내지 않게 한다.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: metrics-collector
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: metrics-collector
+    spec:
+      serviceAccountName: metrics-collector
+      nodeSelector:
+        karpenter.sh/nodepool: system
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: prometheus
+          image: quay.io/prometheus/prometheus:v3.16.0
+          args:
+            - --agent
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.agent.path=/prometheus
+            - --web.listen-address=:9090
+          ports:
+            - name: http
+              containerPort: 9090
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          readinessProbe:
+            httpGet: {path: /-/ready, port: http}
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /-/healthy, port: http}
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+              readOnly: true
+            - name: data
+              mountPath: /prometheus
+      volumes:
+        - name: config
+          configMap:
+            name: metrics-collector
+        - name: data
+          emptyDir:
+            sizeLimit: 2Gi

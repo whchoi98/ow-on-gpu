@@ -1,0 +1,455 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "translate",
+ "prompt": "다음 문장을 영어로 번역해 주세요: 오늘 서울은 맑고 기온은 12도입니다.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "8c5415ad50a74c04b647baed617c0de5",
+  "x-bff-model": "gemma-4-31b",
+  "x-bff-decision": "task",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 b677fae178cf110699d65f70e59fec32.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 41.9,
+ "first_content_ms": 102.8,
+ "last_content_ms": 5683.9,
+ "total_ms": 5737.9,
+ "content_events": 105,
+ "gap_ms": {
+  "median": 53.7,
+  "max": 69.8,
+  "min": 37.6,
+  "share_under_1ms": 0.0
+ },
+ "text": "가장 자연스러운 표현들입니다. 상황에 맞춰 선택해 보세요.\n\n1. **가장 일반적인 표현:**\n   \"It is sunny in Seoul today, and the temperature is 12 degrees.\"\n\n2. **더 간결한 표현 (날씨 예보 스타일):**\n   \"It's sunny and 12 degrees in Seoul today.\"\n\n3. **약간 더 격식 있는 표현:**\n   \"Seoul is sunny today with a temperature of 12 degrees.\"",
+ "events": [
+  {
+   "ms": 102.8,
+   "content": "가"
+  },
+  {
+   "ms": 157.1,
+   "content": "장"
+  },
+  {
+   "ms": 209.8,
+   "content": " 자연"
+  },
+  {
+   "ms": 265.7,
+   "content": "스러운"
+  },
+  {
+   "ms": 316.7,
+   "content": " 표현"
+  },
+  {
+   "ms": 370.9,
+   "content": "들"
+  },
+  {
+   "ms": 424.5,
+   "content": "입니다"
+  },
+  {
+   "ms": 478.1,
+   "content": "."
+  },
+  {
+   "ms": 531.7,
+   "content": " 상황"
+  },
+  {
+   "ms": 585.2,
+   "content": "에"
+  },
+  {
+   "ms": 639.6,
+   "content": " 맞춰"
+  },
+  {
+   "ms": 692.7,
+   "content": " 선택"
+  },
+  {
+   "ms": 747.3,
+   "content": "해"
+  },
+  {
+   "ms": 799.6,
+   "content": " 보세요"
+  },
+  {
+   "ms": 869.4,
+   "content": "."
+  },
+  {
+   "ms": 907.0,
+   "content": "\n\n"
+  },
+  {
+   "ms": 961.3,
+   "content": "1"
+  },
+  {
+   "ms": 1016.6,
+   "content": "."
+  },
+  {
+   "ms": 1068.1,
+   "content": " **"
+  },
+  {
+   "ms": 1121.9,
+   "content": "가"
+  },
+  {
+   "ms": 1176.1,
+   "content": "장"
+  },
+  {
+   "ms": 1229.0,
+   "content": " 일반"
+  },
+  {
+   "ms": 1283.2,
+   "content": "적인"
+  },
+  {
+   "ms": 1336.7,
+   "content": " 표현"
+  },
+  {
+   "ms": 1390.8,
+   "content": ":**"
+  },
+  {
+   "ms": 1447.1,
+   "content": "\n"
+  },
+  {
+   "ms": 1497.4,
+   "content": "   "
+  },
+  {
+   "ms": 1551.1,
+   "content": "\""
+  },
+  {
+   "ms": 1604.8,
+   "content": "It"
+  },
+  {
+   "ms": 1657.9,
+   "content": " is"
+  },
+  {
+   "ms": 1711.6,
+   "content": " sunny"
+  },
+  {
+   "ms": 1766.6,
+   "content": " in"
+  },
+  {
+   "ms": 1818.8,
+   "content": " Seoul"
+  },
+  {
+   "ms": 1872.9,
+   "content": " today"
+  },
+  {
+   "ms": 1926.1,
+   "content": ","
+  },
+  {
+   "ms": 1980.6,
+   "content": " and"
+  },
+  {
+   "ms": 2033.6,
+   "content": " the"
+  },
+  {
+   "ms": 2087.8,
+   "content": " temperature"
+  },
+  {
+   "ms": 2140.9,
+   "content": " is"
+  },
+  {
+   "ms": 2197.0,
+   "content": " "
+  },
+  {
+   "ms": 2247.6,
+   "content": "1"
+  },
+  {
+   "ms": 2301.5,
+   "content": "2"
+  },
+  {
+   "ms": 2355.8,
+   "content": " degrees"
+  },
+  {
+   "ms": 2408.8,
+   "content": ".\""
+  },
+  {
+   "ms": 2465.9,
+   "content": "\n\n"
+  },
+  {
+   "ms": 2517.0,
+   "content": "2"
+  },
+  {
+   "ms": 2570.7,
+   "content": "."
+  },
+  {
+   "ms": 2623.8,
+   "content": " **"
+  },
+  {
+   "ms": 2678.1,
+   "content": "더"
+  },
+  {
+   "ms": 2731.1,
+   "content": " 간"
+  },
+  {
+   "ms": 2784.7,
+   "content": "결"
+  },
+  {
+   "ms": 2838.5,
+   "content": "한"
+  },
+  {
+   "ms": 2893.1,
+   "content": " 표현"
+  },
+  {
+   "ms": 2955.1,
+   "content": " ("
+  },
+  {
+   "ms": 2999.7,
+   "content": "날"
+  },
+  {
+   "ms": 3054.7,
+   "content": "씨"
+  },
+  {
+   "ms": 3107.1,
+   "content": " 예"
+  },
+  {
+   "ms": 3160.5,
+   "content": "보"
+  },
+  {
+   "ms": 3215.1,
+   "content": " 스타일"
+  },
+  {
+   "ms": 3267.1,
+   "content": "):"
+  },
+  {
+   "ms": 3321.0,
+   "content": "**"
+  },
+  {
+   "ms": 3375.3,
+   "content": "\n"
+  },
+  {
+   "ms": 3428.9,
+   "content": "   "
+  },
+  {
+   "ms": 3481.9,
+   "content": "\""
+  },
+  {
+   "ms": 3535.8,
+   "content": "It"
+  },
+  {
+   "ms": 3590.2,
+   "content": "'"
+  },
+  {
+   "ms": 3643.1,
+   "content": "s"
+  },
+  {
+   "ms": 3697.3,
+   "content": " sunny"
+  },
+  {
+   "ms": 3750.9,
+   "content": " and"
+  },
+  {
+   "ms": 3804.8,
+   "content": " "
+  },
+  {
+   "ms": 3858.8,
+   "content": "1"
+  },
+  {
+   "ms": 3912.1,
+   "content": "2"
+  },
+  {
+   "ms": 3966.0,
+   "content": " degrees"
+  },
+  {
+   "ms": 4019.2,
+   "content": " in"
+  },
+  {
+   "ms": 4073.1,
+   "content": " Seoul"
+  },
+  {
+   "ms": 4127.1,
+   "content": " today"
+  },
+  {
+   "ms": 4180.1,
+   "content": ".\""
+  },
+  {
+   "ms": 4233.8,
+   "content": "\n\n"
+  },
+  {
+   "ms": 4288.0,
+   "content": "3"
+  },
+  {
+   "ms": 4341.2,
+   "content": "."
+  },
+  {
+   "ms": 4396.4,
+   "content": " **"
+  },
+  {
+   "ms": 4448.3,
+   "content": "약"
+  },
+  {
+   "ms": 4502.5,
+   "content": "간"
+  },
+  {
+   "ms": 4556.1,
+   "content": " 더"
+  },
+  {
+   "ms": 4610.0,
+   "content": " 격"
+  },
+  {
+   "ms": 4665.4,
+   "content": "식"
+  },
+  {
+   "ms": 4716.3,
+   "content": " 있는"
+  },
+  {
+   "ms": 4770.6,
+   "content": " 표현"
+  },
+  {
+   "ms": 4823.7,
+   "content": ":**"
+  },
+  {
+   "ms": 4878.1,
+   "content": "\n"
+  },
+  {
+   "ms": 4931.8,
+   "content": "   "
+  },
+  {
+   "ms": 4985.4,
+   "content": "\""
+  },
+  {
+   "ms": 5039.4,
+   "content": "Seoul"
+  },
+  {
+   "ms": 5092.8,
+   "content": " is"
+  },
+  {
+   "ms": 5146.8,
+   "content": " sunny"
+  },
+  {
+   "ms": 5200.1,
+   "content": " today"
+  },
+  {
+   "ms": 5253.7,
+   "content": " with"
+  },
+  {
+   "ms": 5307.6,
+   "content": " a"
+  },
+  {
+   "ms": 5361.3,
+   "content": " temperature"
+  },
+  {
+   "ms": 5415.1,
+   "content": " of"
+  },
+  {
+   "ms": 5468.4,
+   "content": " "
+  },
+  {
+   "ms": 5522.0,
+   "content": "1"
+  },
+  {
+   "ms": 5576.5,
+   "content": "2"
+  },
+  {
+   "ms": 5629.8,
+   "content": " degrees"
+  },
+  {
+   "ms": 5683.9,
+   "content": ".\""
+  }
+ ]
+}

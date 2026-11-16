@@ -1,0 +1,22 @@
+[
+  {
+    "repo": "RedHatAI/gemma-4-31B-it-FP8-dynamic",
+    "revision": "d4ab4f579dd3516f97d8a6a4c98d0653480bad15",
+    "prefix": "models/gemma-4-31B-it-FP8-dynamic"
+  },
+  {
+    "repo": "AzatAI/Qwen3.8-27B-FP8-dynamic",
+    "revision": "10c68ff4bfcfa1580bac4624f2592d4b7808a7d1",
+    "prefix": "models/Qwen3.8-27B-FP8-dynamic"
+  },
+  {
+    "repo": "StrandsAgents/strands-decider-2B-qwen3.5-v1-2610",
+    "revision": "216d1ccb46a9e9b036eb9187b248db98480f77d4",
+    "prefix": "models/strands-decider-2B-qwen3.5-v1-2610"
+  },
+  {
+    "repo": "Qwen/Qwen3.5-2B-Base",
+    "revision": "b1485b2fa6dfa1287294f269f5fb618e03d52d7c",
+    "prefix": "models/Qwen3.5-2B-Base"
+  }
+]

@@ -1,0 +1,25 @@
+# Qwen의 동시 실행 한도(3건)가 speculative decoding(MTP)에서 오는지 측정으로 확인하는 실험 구성.
+# k8s/qwen과 다른 점은 `--speculative-config`(MTP, 추측 토큰 3개)를 뺀 것 하나다.
+# vLLM v0.33.0은 Mamba 상태 그룹마다 요청당 1 + num_speculative_tokens개의 블록을 잡는다(docs/08-results.md 3절).
+# MTP를 빼면 요청당 13블록이 4블록이 되어 동시 실행 수가 늘어난다는 것이 계산이고, 이 구성으로 잰다.
+#
+#   kubectl diff  -k bench/slo/k8s/qwen-no-mtp    # 바뀌는 것 확인
+#   kubectl apply -k bench/slo/k8s/qwen-no-mtp    # 서빙 중인 Qwen이 이 구성으로 다시 시작한다
+#   kubectl apply -k k8s/qwen                     # 되돌리기
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../../k8s/qwen
+
+patches:
+  - target:
+      kind: Deployment
+      name: vllm-qwen
+    patch: |-
+      # 인자 순서가 바뀌었으면 여기서 실패한다.
+      - op: test
+        path: /spec/template/spec/containers/0/args/10
+        value: '--speculative-config={"method":"mtp","num_speculative_tokens":3}'
+      - op: remove
+        path: /spec/template/spec/containers/0/args/10

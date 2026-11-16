@@ -1,0 +1,9 @@
+NAME                                 READY   STATUS    RESTARTS   AGE     IP              NODE                                               NOMINATED NODE   READINESS GATES
+gemma-epp-5dccfccf9-9mdhz            0/1     Running   0          5m11s   10.200.76.207   ip-10-200-79-157.ap-northeast-2.compute.internal   <none>           <none>
+gemma-epp-5dccfccf9-vr4vd            1/1     Running   0          5m11s   10.200.41.105   ip-10-200-43-135.ap-northeast-2.compute.internal   <none>           <none>
+inference-gateway-65d5567887-299jg   1/1     Running   0          3m12s   10.200.44.15    ip-10-200-43-135.ap-northeast-2.compute.internal   <none>           <none>
+inference-gateway-65d5567887-brsfn   1/1     Running   0          3m10s   10.200.75.177   ip-10-200-79-157.ap-northeast-2.compute.internal   <none>           <none>
+qwen-epp-7dcf7c55b9-5d9vq            1/1     Running   0          5m1s    10.200.42.188   ip-10-200-43-135.ap-northeast-2.compute.internal   <none>           <none>
+qwen-epp-7dcf7c55b9-cjkmj            0/1     Running   0          5m1s    10.200.74.15    ip-10-200-79-157.ap-northeast-2.compute.internal   <none>           <none>
+vllm-gemma-96db4d976-lp9gk           1/1     Running   0          75m     10.200.41.88    ip-10-200-43-168.ap-northeast-2.compute.internal   <none>           <none>
+vllm-qwen-5fc4d6cfd-s5pzs            1/1     Running   0          60m     10.200.27.93    ip-10-200-16-234.ap-northeast-2.compute.internal   <none>           <none>

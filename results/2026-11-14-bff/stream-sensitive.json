@@ -1,0 +1,547 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "coding",
+ "prompt": "제 주민등록번호는 900101-1234567입니다. 이 번호의 형식을 검사하는 코드를 작성해 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "db87268dd87f4884920c7c004f8cffc5",
+  "x-bff-model": "gemma-4-31b",
+  "x-bff-decision": "rule",
+  "x-bff-sensitive": "true",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 ac706f3a00c79ad8c039deb997284aaa.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 30.8,
+ "first_content_ms": 92.2,
+ "last_content_ms": 6910.9,
+ "total_ms": 6911.6,
+ "content_events": 128,
+ "gap_ms": {
+  "median": 53.8,
+  "max": 63.2,
+  "min": 37.9,
+  "share_under_1ms": 0.0
+ },
+ "text": "주민등록번호는 단순히 숫자 개수만 맞추는 것이 아니라, 마지막 자리가 **체크섬(Checksum)**이라는 검증 식을 통해 계산된 값인지 확인하는 과정이 필요합니다.\n\n제공해주신 예시 번호를 포함하여, 주민등록번호의 **형식(정규표현식)**과 **유효성(체크섬 알고리즘)**을 모두 검사하는 파이썬 코드를 작성해 드립니다.\n\n### 파이썬 구현 코드\n\n```python\nimport re\n\ndef validate_rrn(rrn):\n    # 1. 형식 검",
+ "events": [
+  {
+   "ms": 92.2,
+   "content": "주"
+  },
+  {
+   "ms": 150.9,
+   "content": "민"
+  },
+  {
+   "ms": 199.8,
+   "content": "등록"
+  },
+  {
+   "ms": 255.4,
+   "content": "번호"
+  },
+  {
+   "ms": 307.7,
+   "content": "는"
+  },
+  {
+   "ms": 361.2,
+   "content": " 단순히"
+  },
+  {
+   "ms": 414.5,
+   "content": " 숫자"
+  },
+  {
+   "ms": 467.9,
+   "content": " 개"
+  },
+  {
+   "ms": 521.5,
+   "content": "수"
+  },
+  {
+   "ms": 575.4,
+   "content": "만"
+  },
+  {
+   "ms": 630.9,
+   "content": " 맞"
+  },
+  {
+   "ms": 682.3,
+   "content": "추"
+  },
+  {
+   "ms": 736.2,
+   "content": "는"
+  },
+  {
+   "ms": 789.8,
+   "content": " 것이"
+  },
+  {
+   "ms": 843.5,
+   "content": " 아니라"
+  },
+  {
+   "ms": 900.6,
+   "content": ","
+  },
+  {
+   "ms": 950.3,
+   "content": " 마지막"
+  },
+  {
+   "ms": 1006.5,
+   "content": " 자"
+  },
+  {
+   "ms": 1058.1,
+   "content": "리가"
+  },
+  {
+   "ms": 1111.4,
+   "content": " **"
+  },
+  {
+   "ms": 1165.2,
+   "content": "체"
+  },
+  {
+   "ms": 1219.2,
+   "content": "크"
+  },
+  {
+   "ms": 1272.7,
+   "content": "섬"
+  },
+  {
+   "ms": 1327.3,
+   "content": "("
+  },
+  {
+   "ms": 1390.5,
+   "content": "Checksum"
+  },
+  {
+   "ms": 1449.1,
+   "content": ")**"
+  },
+  {
+   "ms": 1487.0,
+   "content": "이라는"
+  },
+  {
+   "ms": 1540.7,
+   "content": " 검"
+  },
+  {
+   "ms": 1594.8,
+   "content": "증"
+  },
+  {
+   "ms": 1650.2,
+   "content": " 식"
+  },
+  {
+   "ms": 1701.8,
+   "content": "을"
+  },
+  {
+   "ms": 1755.8,
+   "content": " 통해"
+  },
+  {
+   "ms": 1809.4,
+   "content": " 계산"
+  },
+  {
+   "ms": 1862.7,
+   "content": "된"
+  },
+  {
+   "ms": 1916.5,
+   "content": " 값"
+  },
+  {
+   "ms": 1970.3,
+   "content": "인지"
+  },
+  {
+   "ms": 2024.2,
+   "content": " 확인"
+  },
+  {
+   "ms": 2078.3,
+   "content": "하는"
+  },
+  {
+   "ms": 2131.2,
+   "content": " 과정"
+  },
+  {
+   "ms": 2185.3,
+   "content": "이"
+  },
+  {
+   "ms": 2238.6,
+   "content": " 필요"
+  },
+  {
+   "ms": 2292.9,
+   "content": "합니다"
+  },
+  {
+   "ms": 2346.0,
+   "content": "."
+  },
+  {
+   "ms": 2400.2,
+   "content": "\n\n"
+  },
+  {
+   "ms": 2452.7,
+   "content": "제"
+  },
+  {
+   "ms": 2506.4,
+   "content": "공"
+  },
+  {
+   "ms": 2561.3,
+   "content": "해주"
+  },
+  {
+   "ms": 2613.9,
+   "content": "신"
+  },
+  {
+   "ms": 2668.3,
+   "content": " 예"
+  },
+  {
+   "ms": 2721.5,
+   "content": "시"
+  },
+  {
+   "ms": 2775.3,
+   "content": " 번"
+  },
+  {
+   "ms": 2831.9,
+   "content": "호를"
+  },
+  {
+   "ms": 2882.1,
+   "content": " 포함"
+  },
+  {
+   "ms": 2936.2,
+   "content": "하여"
+  },
+  {
+   "ms": 2990.0,
+   "content": ","
+  },
+  {
+   "ms": 3044.4,
+   "content": " 주민"
+  },
+  {
+   "ms": 3099.8,
+   "content": "등록"
+  },
+  {
+   "ms": 3150.9,
+   "content": "번호"
+  },
+  {
+   "ms": 3206.5,
+   "content": "의"
+  },
+  {
+   "ms": 3258.7,
+   "content": " **"
+  },
+  {
+   "ms": 3312.2,
+   "content": "형"
+  },
+  {
+   "ms": 3366.3,
+   "content": "식"
+  },
+  {
+   "ms": 3419.8,
+   "content": "("
+  },
+  {
+   "ms": 3473.6,
+   "content": "정"
+  },
+  {
+   "ms": 3527.6,
+   "content": "규"
+  },
+  {
+   "ms": 3580.6,
+   "content": "표"
+  },
+  {
+   "ms": 3633.6,
+   "content": "현"
+  },
+  {
+   "ms": 3688.4,
+   "content": "식"
+  },
+  {
+   "ms": 3741.7,
+   "content": ")**"
+  },
+  {
+   "ms": 3795.3,
+   "content": "과"
+  },
+  {
+   "ms": 3849.9,
+   "content": " **"
+  },
+  {
+   "ms": 3902.5,
+   "content": "유"
+  },
+  {
+   "ms": 3956.4,
+   "content": "효"
+  },
+  {
+   "ms": 4010.1,
+   "content": "성"
+  },
+  {
+   "ms": 4064.5,
+   "content": "("
+  },
+  {
+   "ms": 4117.4,
+   "content": "체"
+  },
+  {
+   "ms": 4170.7,
+   "content": "크"
+  },
+  {
+   "ms": 4225.3,
+   "content": "섬"
+  },
+  {
+   "ms": 4281.5,
+   "content": " 알고"
+  },
+  {
+   "ms": 4331.8,
+   "content": "리"
+  },
+  {
+   "ms": 4386.0,
+   "content": "즘"
+  },
+  {
+   "ms": 4439.8,
+   "content": ")**"
+  },
+  {
+   "ms": 4493.5,
+   "content": "을"
+  },
+  {
+   "ms": 4551.3,
+   "content": " 모두"
+  },
+  {
+   "ms": 4601.0,
+   "content": " 검"
+  },
+  {
+   "ms": 4654.9,
+   "content": "사"
+  },
+  {
+   "ms": 4708.4,
+   "content": "하는"
+  },
+  {
+   "ms": 4763.6,
+   "content": " 파"
+  },
+  {
+   "ms": 4816.6,
+   "content": "이"
+  },
+  {
+   "ms": 4869.7,
+   "content": "썬"
+  },
+  {
+   "ms": 4923.1,
+   "content": " 코"
+  },
+  {
+   "ms": 4976.8,
+   "content": "드를"
+  },
+  {
+   "ms": 5031.1,
+   "content": " 작성"
+  },
+  {
+   "ms": 5083.7,
+   "content": "해"
+  },
+  {
+   "ms": 5137.6,
+   "content": " 드"
+  },
+  {
+   "ms": 5192.3,
+   "content": "립니다"
+  },
+  {
+   "ms": 5245.3,
+   "content": "."
+  },
+  {
+   "ms": 5299.8,
+   "content": "\n\n"
+  },
+  {
+   "ms": 5352.5,
+   "content": "###"
+  },
+  {
+   "ms": 5406.5,
+   "content": " 파"
+  },
+  {
+   "ms": 5460.0,
+   "content": "이"
+  },
+  {
+   "ms": 5513.8,
+   "content": "썬"
+  },
+  {
+   "ms": 5567.7,
+   "content": " 구현"
+  },
+  {
+   "ms": 5622.3,
+   "content": " 코드"
+  },
+  {
+   "ms": 5675.3,
+   "content": "\n\n"
+  },
+  {
+   "ms": 5731.2,
+   "content": "```"
+  },
+  {
+   "ms": 5782.0,
+   "content": "python"
+  },
+  {
+   "ms": 5835.9,
+   "content": "\n"
+  },
+  {
+   "ms": 5889.1,
+   "content": "import"
+  },
+  {
+   "ms": 5943.1,
+   "content": " re"
+  },
+  {
+   "ms": 6000.2,
+   "content": "\n\n"
+  },
+  {
+   "ms": 6052.5,
+   "content": "def"
+  },
+  {
+   "ms": 6104.1,
+   "content": " validate"
+  },
+  {
+   "ms": 6157.7,
+   "content": "_"
+  },
+  {
+   "ms": 6212.3,
+   "content": "rr"
+  },
+  {
+   "ms": 6266.1,
+   "content": "n"
+  },
+  {
+   "ms": 6319.8,
+   "content": "("
+  },
+  {
+   "ms": 6373.6,
+   "content": "rr"
+  },
+  {
+   "ms": 6427.5,
+   "content": "n"
+  },
+  {
+   "ms": 6481.3,
+   "content": "):"
+  },
+  {
+   "ms": 6534.5,
+   "content": "\n"
+  },
+  {
+   "ms": 6588.1,
+   "content": "    "
+  },
+  {
+   "ms": 6641.6,
+   "content": "#"
+  },
+  {
+   "ms": 6695.5,
+   "content": " "
+  },
+  {
+   "ms": 6749.7,
+   "content": "1"
+  },
+  {
+   "ms": 6803.1,
+   "content": "."
+  },
+  {
+   "ms": 6857.4,
+   "content": " 형식"
+  },
+  {
+   "ms": 6910.9,
+   "content": " 검"
+  }
+ ]
+}

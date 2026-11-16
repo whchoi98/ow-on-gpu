@@ -1,0 +1,29 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "",
+ "prompt": "구간 목록을 병합하는 파이썬 함수를 설계해 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "37786a090bb249a8b25e22267e90a541",
+  "x-bff-model": "qwen38-27b",
+  "x-bff-decision": "decider",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 42383e8361f0476662a68c1be508932a.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 184.2,
+ "first_content_ms": null,
+ "last_content_ms": null,
+ "total_ms": 1312.5,
+ "content_events": 0,
+ "gap_ms": null,
+ "text": "",
+ "events": []
+}

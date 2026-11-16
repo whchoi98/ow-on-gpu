@@ -1,0 +1,3 @@
+models: [('gemma-4-31b', 16384)]
+chat: '한국의 수도는 서울입니다.' | finish: stop | usage: 29 + 8 | 1.93 s
+tool call: [('get_order', '{"order_id": "A-1024"}')] | content: None | finish: tool_calls | 1.24 s

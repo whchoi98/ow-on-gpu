@@ -1,0 +1,135 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "coding",
+ "prompt": "파이썬에서 리스트를 뒤집는 방법을 한 줄로 알려 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "31deea8f5aef45f9b994f73ea50628da",
+  "x-bff-model": "qwen38-27b",
+  "x-bff-decision": "task",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 8c27c3a4dd8572a518e6596f91de1aa2.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 3914.3,
+ "first_content_ms": 4060.7,
+ "last_content_ms": 5733.3,
+ "total_ms": 5733.3,
+ "content_events": 25,
+ "gap_ms": {
+  "median": 69.55,
+  "max": 76.6,
+  "min": 62.7,
+  "share_under_1ms": 0.0
+ },
+ "text": "파이썬에서 리스트를 뒤집는 가장 간단한 한 줄 방법은 슬라이싱(slicing)을 사용하는 것입니다:\n\n```python\nreversed_list = original_list[::-1]\n```\n\n### 설명\n- `[::-1]`은 시작에서 끝까지 1씩 뒤로 진행하라는 의미입니다",
+ "events": [
+  {
+   "ms": 4060.7,
+   "content": "파이"
+  },
+  {
+   "ms": 4130.8,
+   "content": "썬에서"
+  },
+  {
+   "ms": 4199.4,
+   "content": " 리스트를 뒤집"
+  },
+  {
+   "ms": 4268.6,
+   "content": "는 가장"
+  },
+  {
+   "ms": 4339.6,
+   "content": " 간단한 한 줄 방법은"
+  },
+  {
+   "ms": 4409.0,
+   "content": " 슬라이"
+  },
+  {
+   "ms": 4481.0,
+   "content": "싱(s"
+  },
+  {
+   "ms": 4548.5,
+   "content": "licing)을 사용하는"
+  },
+  {
+   "ms": 4618.3,
+   "content": " 것입니다:\n\n```"
+  },
+  {
+   "ms": 4687.7,
+   "content": "python\nre"
+  },
+  {
+   "ms": 4757.4,
+   "content": "versed_list = original"
+  },
+  {
+   "ms": 4830.6,
+   "content": "_list[::-1]"
+  },
+  {
+   "ms": 4896.3,
+   "content": "\n```\n\n###"
+  },
+  {
+   "ms": 4966.8,
+   "content": " 설명"
+  },
+  {
+   "ms": 5036.2,
+   "content": "\n- `[::-"
+  },
+  {
+   "ms": 5106.5,
+   "content": "1]`은"
+  },
+  {
+   "ms": 5176.0,
+   "content": " 시작"
+  },
+  {
+   "ms": 5245.5,
+   "content": "에서"
+  },
+  {
+   "ms": 5315.1,
+   "content": " 끝까지"
+  },
+  {
+   "ms": 5386.3,
+   "content": " "
+  },
+  {
+   "ms": 5454.5,
+   "content": "1씩"
+  },
+  {
+   "ms": 5531.1,
+   "content": " 뒤"
+  },
+  {
+   "ms": 5593.8,
+   "content": "로 진행"
+  },
+  {
+   "ms": 5664.6,
+   "content": "하"
+  },
+  {
+   "ms": 5733.3,
+   "content": "라는 의미입니다"
+  }
+ ]
+}

@@ -1,0 +1,111 @@
+# 업무 시간은 평일 09:00에서 19:00(Asia/Seoul)로 가정했다.
+# 19:00에 재우고, 업무 시작 30분 전인 08:30에 깨운다. 시간은 schedule만 바꾸면 된다.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: qwen-sleep
+spec:
+  schedule: "0 19 * * 1-5"
+  timeZone: Asia/Seoul
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: qwen-sleep
+            # NetworkPolicy가 이 라벨의 파드만 Qwen의 8000 포트에 닿게 한다.
+            ow-on-gpu/qwen-admin: "true"
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          nodeSelector:
+            karpenter.sh/nodepool: system
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: sleep
+              image: public.ecr.aws/docker/library/python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90
+              command: ["python3", "/scripts/cron.py", "sleep"]
+              env:
+                - name: QWEN_ADMIN_URL
+                  value: http://vllm-qwen-admin.inference.svc:8000
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+          volumes:
+            - name: scripts
+              configMap:
+                name: sleep-controller-scripts
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: qwen-wake
+spec:
+  schedule: "30 8 * * 1-5"
+  timeZone: Asia/Seoul
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: qwen-wake
+            # NetworkPolicy가 이 라벨의 파드만 깨우기 API에 닿게 한다.
+            ow-on-gpu/wake-client: "true"
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          nodeSelector:
+            karpenter.sh/nodepool: system
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: wake
+              image: public.ecr.aws/docker/library/python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90
+              command: ["python3", "/scripts/cron.py", "wake"]
+              env:
+                - name: WAKE_API_URL
+                  value: http://qwen-wake-api.inference.svc:8080
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+          volumes:
+            - name: scripts
+              configMap:
+                name: sleep-controller-scripts

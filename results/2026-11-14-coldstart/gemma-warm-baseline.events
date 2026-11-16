@@ -1,0 +1,6 @@
+2026-11-14T17:21:06Z	FailedScheduling	0/7 nodes are available: 1 Insufficient cpu, 1 Insufficient memory, 1 Insufficient nvidia.com/gpu, 2 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. preemption: 0/7 nodes are available: 1 No preemption victims found for incoming pod, 6 Preemption is not helpful for scheduling.
+2026-11-14T17:21:07Z	Scheduled	Successfully assigned inference/vllm-gemma-5cc8dd9554-hk5qb to ip-10-200-47-142.ap-northeast-2.compute.internal
+2026-11-14T17:21:11Z	Pulled	Container image "vllm/vllm-openai:v0.33.0" already present on machine and can be accessed by the pod
+2026-11-14T17:21:11Z	Created	Container created
+2026-11-14T17:21:11Z	Started	Container started
+2026-11-14T17:21:11Z	Unhealthy	Startup probe failed: Get "http://10.200.34.142:8000/health": dial tcp 10.200.34.142:8000: connect: connection refused

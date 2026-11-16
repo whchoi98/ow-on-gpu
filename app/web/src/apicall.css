@@ -1,0 +1,556 @@
+/* "API 호출" 보기. 색은 styles.css의 변수와 요청 경로 그림의 팔레트(주황은 진행 중, 초록은 지나옴)를 그대로 쓴다. */
+.apicall {
+  --now: #e8710a;
+  --now-bg: #fff4e3;
+  --on: #4f8a10;
+  --seg-entry: #b79bf0;
+  --seg-bff: #7d3fe0;
+  --seg-gateway: #5a2bb3;
+  --seg-engine: #2e8cf0;
+}
+
+.apicall h3 {
+  margin: 0;
+  font: 400 1.2rem/1.3 var(--font-display);
+}
+
+.apicall h4 {
+  margin: 0 0 6px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.apicall h4 span {
+  margin-left: 6px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------- 조작 */
+
+.apicall__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.apicall__sides {
+  display: inline-flex;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.apicall__side {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.apicall__side + .apicall__side {
+  border-left: 1px solid var(--ink);
+}
+
+.apicall__side[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--raised);
+}
+
+.apicall__side:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.apicall__side:focus-visible {
+  outline-offset: -4px;
+}
+
+.apicall__task {
+  font-size: 0.8rem;
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.apicall__status {
+  flex: 1 1 24em;
+  color: var(--ink-soft);
+  font-size: 0.87rem;
+}
+
+.apicall__status.is-failed {
+  color: #a11246;
+}
+
+/* ---------------------------------------------------------------- 단계 띠 */
+
+/* 기록계의 용지처럼 한 줄로 이어진 띠. 아래의 펜 표시가 지금 단계 밑으로 옮겨 간다. */
+.apicall__rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 1.35fr repeat(3, 1fr);
+  margin: 0;
+  padding: 0 0 12px;
+  list-style: none;
+}
+
+.apicall__cell {
+  min-width: 0;
+  border: 1px solid var(--rule);
+  border-left-width: 0;
+  background: var(--field);
+}
+
+.apicall__cell:first-child {
+  border-left-width: 1px;
+  border-radius: 6px 0 0 6px;
+}
+
+.apicall__cell:nth-child(8) {
+  border-radius: 0 6px 6px 0;
+}
+
+.apicall__step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  align-content: start;
+  width: 100%;
+  height: 100%;
+  min-height: 74px;
+  padding: 10px 12px 11px;
+  border: 0;
+  border-top: 3px solid transparent;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.apicall__step:disabled {
+  cursor: default;
+}
+
+.apicall__step:hover:not(:disabled) {
+  background: #fff;
+}
+
+.apicall__step:focus-visible {
+  outline-offset: -3px;
+}
+
+.apicall__n {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--rule-soft);
+  color: var(--ink);
+  font: 500 0.8rem/1 var(--font-mono);
+}
+
+.apicall__en {
+  font: 400 0.98rem/1.25 var(--font-display);
+}
+
+.apicall__ko {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.apicall__step.is-on {
+  border-top-color: var(--on);
+}
+
+.apicall__step.is-on .apicall__n {
+  background: var(--on);
+  color: #fff;
+}
+
+.apicall__step.is-now {
+  border-top-color: var(--now);
+  background: var(--now-bg);
+}
+
+.apicall__step.is-now .apicall__n {
+  background: var(--now);
+  color: #fff;
+}
+
+.apicall__step[aria-current="step"] .apicall__en {
+  font-weight: 800;
+}
+
+/* 엔진 단계는 그림에서도 가장 넓은 칸이다. */
+.apicall__cell--engine {
+  background: #f3f8ff;
+}
+
+.apicall__pen {
+  position: absolute;
+  bottom: 0;
+  left: var(--pen);
+  width: 0;
+  height: 0;
+  margin-left: -7px;
+  border: 7px solid transparent;
+  border-top-width: 0;
+  border-bottom: 10px solid var(--now);
+  transition: left 320ms cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+/* ---------------------------------------------------------------- 지도와 설명 */
+
+/* 지도는 요청 보기와 같은 폭으로 두어 글자가 읽히게 하고, 설명은 그 아래에 둔다. */
+.apicall__stage {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.apicall__map {
+  margin: 0;
+  min-width: 0;
+}
+
+.apicall__detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px 28px;
+  min-width: 0;
+  padding: 16px 20px 18px;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--now);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.apicall__main,
+.apicall__side-col {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.apicall__detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.apicall__badge {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--raised);
+  font: 500 0.9rem/1 var(--font-mono);
+}
+
+.apicall__detail-ko {
+  color: var(--ink-soft);
+  font-size: 0.87rem;
+}
+
+.apicall__lead {
+  max-width: 46em;
+}
+
+.apicall__here {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.apicall__here > div {
+  display: grid;
+  grid-template-columns: 11em minmax(0, 1fr);
+  gap: 12px;
+  padding-top: 6px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.apicall__here dt {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.apicall__here dd {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.apicall__values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px 24px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: var(--field);
+}
+
+.apicall__rows {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.apicall__rows > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.87rem;
+}
+
+.apicall__rows dt {
+  color: var(--ink-soft);
+}
+
+.apicall__rows dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.83rem;
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.apicall__none {
+  color: var(--ink-soft);
+  font-size: 0.87rem;
+}
+
+.apicall__note {
+  padding: 8px 12px;
+  border-left: 3px solid #d4245f;
+  background: #fff3f6;
+  font-size: 0.87rem;
+}
+
+/* ---------------------------------------------------------------- 시간 띠 */
+
+.apicall__budget {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule-soft);
+  border-radius: 6px;
+}
+
+.apicall__budget-title {
+  font-size: 0.87rem;
+  font-weight: 800;
+}
+
+.apicall__budget-title span {
+  margin-left: 8px;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.apicall__bar-row {
+  display: grid;
+  grid-template-columns: 11.5em minmax(0, 1fr);
+  align-items: center;
+  gap: 3px 12px;
+  font-size: 0.83rem;
+}
+
+.apicall__bar-label b {
+  margin-left: 4px;
+  font: 500 0.87rem/1 var(--font-mono);
+}
+
+.apicall__bar {
+  display: flex;
+  gap: 2px;
+  height: 14px;
+}
+
+.apicall__seg {
+  flex: none;
+  min-width: 2px;
+  border-radius: 2px;
+  transition: width 240ms ease;
+}
+
+.apicall__seg--entry {
+  background: var(--seg-entry);
+}
+
+.apicall__seg--bff {
+  background: var(--seg-bff);
+}
+
+.apicall__seg--gateway {
+  background: var(--seg-gateway);
+}
+
+.apicall__seg--engine {
+  background: var(--seg-engine);
+}
+
+.apicall__bar-text {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.apicall__dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 5px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------- 이 요청의 답변 */
+
+/* 검색 기록(.searches), 답변(.answer), 출처(.sources)는 대화 보기의 스타일을 그대로 쓴다. */
+.apicall__answer {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 16px 20px 18px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.apicall__question {
+  max-width: 60em;
+  padding-left: 12px;
+  border-left: 3px solid var(--rule);
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------- 한 장으로 보기 */
+
+.apicall__sheet {
+  position: relative;
+  min-width: 900px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.apicall__sheet img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 그림의 단계 카드 위에 놓는 투명한 버튼 */
+.apicall__spot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.apicall__spot:hover:not(:disabled) {
+  border-color: rgb(232 113 10 / 0.55);
+  background: rgb(232 113 10 / 0.05);
+}
+
+.apicall__spot.is-current {
+  border-color: var(--now);
+  box-shadow: 0 0 0 3px rgb(232 113 10 / 0.18);
+}
+
+.apicall__spot:disabled {
+  cursor: default;
+}
+
+.apicall__spot:focus-visible {
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- 좁은 화면 */
+
+@media (max-width: 1100px) {
+  .apicall__detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .apicall__rail {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding-bottom: 0;
+  }
+
+  .apicall__cell,
+  .apicall__cell:first-child,
+  .apicall__cell:nth-child(8) {
+    border-left-width: 1px;
+    border-radius: 6px;
+  }
+
+  .apicall__pen {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .apicall__rail {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .apicall__en {
+    font-size: 0.82rem;
+  }
+
+  .apicall__side {
+    padding: 0 12px;
+  }
+
+  .apicall__task {
+    display: none;
+  }
+
+  .apicall__here > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .apicall__bar-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .apicall__bar-text {
+    grid-column: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apicall__pen,
+  .apicall__seg,
+  .apicall__step,
+  .apicall__spot {
+    transition: none;
+  }
+}

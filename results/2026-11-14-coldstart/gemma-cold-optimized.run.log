@@ -1,0 +1,7 @@
+[17:24:43] 서빙을 0으로 줄입니다
+[17:24:47] GPU 노드를 지웁니다: gemma-noprepull-mpq5g (ip-10-200-47-142.ap-northeast-2.compute.internal)
+[17:31:12] optimized 구성을 적용하고 1로 올립니다. GPU 노드가 새로 뜹니다
+[17:31:14] 파드 vllm-gemma-96db4d976-th9jn이 Ready가 될 때까지 기다립니다(최대 30분)
+{"total": 260.0, "node_provisioning": 71.0, "image_pull": 71.0, "weight_load": 19.233934, "engine_init": 23.68, "other": 75.1}
+[17:35:36] 저장: results/2026-11-14-coldstart/gemma-cold-optimized.json
+exit=0

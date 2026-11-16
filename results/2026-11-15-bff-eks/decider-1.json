@@ -1,0 +1,107 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "",
+ "prompt": "이 파이썬 코드의 버그를 고쳐 주세요. def add(a, b): return a - b",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "8a708b7636b3402ca72abe93dd3ed396",
+  "x-bff-model": "qwen38-27b",
+  "x-bff-decision": "decider",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 e42809190d4394933c5c8068352d0f12.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 198.6,
+ "first_content_ms": 344.8,
+ "last_content_ms": 1531.1,
+ "total_ms": 1531.2,
+ "content_events": 18,
+ "gap_ms": {
+  "median": 69.7,
+  "max": 72.8,
+  "min": 66.9,
+  "share_under_1ms": 0.0
+ },
+ "text": "함수 이름이 `add`(더하기)인데 실제로는 뺄셈(`-`)을 수행하고 있습니다.\n\n**고정된 코드:**\n\n```python\ndef add(a, b):\n    return a + b",
+ "events": [
+  {
+   "ms": 344.8,
+   "content": "함"
+  },
+  {
+   "ms": 413.8,
+   "content": "수 이름"
+  },
+  {
+   "ms": 483.2,
+   "content": "이"
+  },
+  {
+   "ms": 553.0,
+   "content": " `add`("
+  },
+  {
+   "ms": 623.2,
+   "content": "더"
+  },
+  {
+   "ms": 694.6,
+   "content": "하기)인데 실제로"
+  },
+  {
+   "ms": 762.9,
+   "content": "는"
+  },
+  {
+   "ms": 833.1,
+   "content": " 뺄"
+  },
+  {
+   "ms": 901.9,
+   "content": "셈(`-"
+  },
+  {
+   "ms": 971.6,
+   "content": "`)을 수행하고"
+  },
+  {
+   "ms": 1044.4,
+   "content": " 있습니다.\n\n**"
+  },
+  {
+   "ms": 1111.3,
+   "content": "고"
+  },
+  {
+   "ms": 1180.7,
+   "content": "정된 코드:**"
+  },
+  {
+   "ms": 1250.1,
+   "content": "\n\n"
+  },
+  {
+   "ms": 1320.6,
+   "content": "```python\ndef"
+  },
+  {
+   "ms": 1390.4,
+   "content": " add(a, b"
+  },
+  {
+   "ms": 1459.9,
+   "content": "):\n    return"
+  },
+  {
+   "ms": 1531.1,
+   "content": " a + b"
+  }
+ ]
+}

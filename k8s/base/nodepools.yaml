@@ -1,0 +1,123 @@
+# 공통 사항
+# - GPU NodePool에는 zone 요구 조건을 두지 않는다. Karpenter가 용량이 있는 AZ를 고른다.
+# - GPU NodePool은 limits로 GPU 1장까지만 허용해 노드가 의도와 다르게 늘지 않게 한다.
+# - 실행 중인 파드를 옮기지 않도록 빈 노드만 회수한다(WhenEmpty).
+# - consolidateAfter는 params.yaml의 값으로 바뀐다. 아래 값은 자리 표시다.
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: gemma-od
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: vllm
+      requirements:
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values: ["g6e.4xlarge"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+      taints:
+        - key: nvidia.com/gpu
+          value: "true"
+          effect: NoSchedule
+  limits:
+    nvidia.com/gpu: 1
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 30m
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: qwen-od
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: vllm
+      requirements:
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values: ["g6e.4xlarge"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+      taints:
+        - key: nvidia.com/gpu
+          value: "true"
+          effect: NoSchedule
+  limits:
+    nvidia.com/gpu: 1
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 30m
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: decider
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: gpu
+      requirements:
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values: ["g6.xlarge"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+      taints:
+        - key: nvidia.com/gpu
+          value: "true"
+          effect: NoSchedule
+  limits:
+    nvidia.com/gpu: 1
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 30m
+---
+# 게이트웨이, EPP, 적재 Job용 CPU 노드. AZ 분산은 NodePool이 아닌 각 워크로드의
+# topologySpreadConstraints로 건다. NodePool은 네 AZ를 모두 허용한다.
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: system
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: system
+      requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["c", "m"]
+        - key: karpenter.k8s.aws/instance-generation
+          operator: Gt
+          values: ["6"]
+        - key: karpenter.k8s.aws/instance-cpu
+          operator: In
+          values: ["4", "8"]
+  limits:
+    cpu: "32"
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 30m

@@ -1,0 +1,13 @@
+CUDA compat package should be installed for NVIDIA driver smaller than 575.57.08
+Current installed NVIDIA driver version is 580.178.04
+Skipping CUDA compat setup as newer NVIDIA driver is installed
+serving /opt/ml/model/strands-decider-2B-qwen3.5-v1-2610 on http://0.0.0.0:8080 
+(cuda)
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+Loading weights:   0%|          | 0/320 [00:00<?, ?it/s]Loading weights: 100%|██████████| 320/320 [00:00<00:00, 4895.37it/s]
+[strands-decider] warmed up in 70.5 s
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+INFO:     10.200.16.182:37332 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:37338 - "GET /health HTTP/1.1" 200 OK

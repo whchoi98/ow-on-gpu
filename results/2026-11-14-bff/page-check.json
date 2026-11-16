@@ -1,0 +1,31 @@
+{
+ "before": {
+  "loginVisible": true,
+  "appVisible": false
+ },
+ "wrongPassword": {
+  "message": "이메일 또는 비밀번호가 맞지 않습니다",
+  "appVisible": false
+ },
+ "afterLogin": {
+  "loginVisible": false,
+  "appVisible": true,
+  "passwordFieldCleared": true
+ },
+ "chat": {
+  "meta": "HTTP 200, 모델 gemma-4-31b, 결정 task\n첫 토큰 1613ms, 청크 53개, 전체 4464ms",
+  "answer": "주문 번호 A-1024의 상품은 현재 **배송 중**이며, 한빛택배를 통해 배송되고 있습니다. 도착 예정일은 **2026년 11월 16일**입니다.",
+  "domUpdates": 53,
+  "firstUpdateMs": 1645,
+  "lastUpdateMs": 4440,
+  "medianGapMs": 54
+ },
+ "afterSignout": {
+  "loginVisible": true,
+  "appVisible": false,
+  "tokenInStorage": false
+ },
+ "problems": [
+  "console: Failed to load resource: the server responded with a status of 400 ()"
+ ]
+}

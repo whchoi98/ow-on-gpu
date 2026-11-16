@@ -1,0 +1,68 @@
+# VPC CNI의 NetworkPolicy가 켜져 있어야 적용된다(infra/terraform/eks.tf의 enableNetworkPolicy).
+# 파드가 떠 있는 노드에서 오는 트래픽은 정책과 무관하게 허용되므로 kubelet의 probe는 막히지 않는다.
+#
+# Qwen의 8000 포트에는 /sleep과 /wake_up이 열려 있다. 닿아야 하는 파드만 허용한다.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vllm-qwen-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: vllm-qwen
+  policyTypes: ["Ingress"]
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8000
+      from:
+        # 추론 요청을 넘기는 게이트웨이
+        - podSelector:
+            matchLabels:
+              gateway.networking.k8s.io/gateway-name: inference-gateway
+        # 지표를 읽는 EPP
+        - podSelector:
+            matchLabels:
+              llm-d-router-gateway: qwen-epp
+        # 깨우기 API
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: qwen-wake-api
+        # sleep CronJob과 측정용 파드
+        - podSelector:
+            matchLabels:
+              ow-on-gpu/qwen-admin: "true"
+        # 지표 수집기(k8s/observability). /metrics를 읽는다.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: metrics-collector
+---
+# 깨우기 API는 깨우기 CronJob, 측정용 파드, BFF만 호출할 수 있다.
+# BFF는 같은 클러스터의 파드라서 Service로 들어온다. 2026-11-15 전에는 ECS Fargate에 있어 전용 내부 NLB로 들어왔다.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: qwen-wake-api-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: qwen-wake-api
+  policyTypes: ["Ingress"]
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8080
+      from:
+        - podSelector:
+            matchLabels:
+              ow-on-gpu/wake-client: "true"
+        # EKS 파드로 옮긴 BFF(네임스페이스 app, k8s/bff). Qwen으로 갈 요청마다 깨우기 API의 Service를 부른다.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: app
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: bff

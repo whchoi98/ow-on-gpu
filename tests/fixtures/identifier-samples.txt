@@ -1,0 +1,17 @@
+# .claude/hooks/secret-scan.sh의 IDENTIFIER_PATTERNS가 막아야 하는 환경 식별 값의 표본.
+# 형식: <이름><TAB><접두어><TAB><본문>. 모두 지어낸 값이다. 실행할 때 접두어와 본문을 합친다.
+계정이 든 ARN	arn:aws:iam::	123456789012:role/example
+가린 계정이 든 ARN	arn:aws:elasticloadbalancing:ap-northeast-2:	<account-id>:targetgroup/demo/0123456789abcdef
+ECR 주소의 계정 ID	1234567890	12.dkr.ecr.ap-northeast-2.amazonaws.com/demo
+로그 경로의 계정 ID	AWSLogs/	123456789012/elasticloadbalancing
+CloudFront 도메인	d1234abcd	5678ef.cloudfront.net
+Cognito 사용자 풀 ID	ap-northeast-2_	AbCdEf123
+로드 밸런서 주소	internal-demo-1234567890.	ap-northeast-2.elb.amazonaws.com
+로드 밸런서 ID	app/demo-alb/	0123456789abcdef
+EKS 엔드포인트	0123456789ABCDEF0123456789ABCDEF.	gr7.ap-northeast-2.eks.amazonaws.com
+Prometheus 작업 공간 ID	ws-01234567-89ab-	cdef-0123-456789abcdef
+버킷 이름의 접미사	ow-on-gpu-	0123456789abcdef0123456789
+보안 그룹 ID	sg-	0123456789abcdef0
+인스턴스 ID	i-	0123456789abcdef0
+VPC origin ID	vo_	AbCdEf1234567
+공인 IP의 /32	8.8.4.	4/32

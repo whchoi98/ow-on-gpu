@@ -1,0 +1,48 @@
+# llm-d-router-gateway 차트(v1.0.0)의 값. 릴리스 이름 qwen으로 설치하면
+# InferencePool `qwen`과 EPP Deployment, Service `qwen-epp`가 만들어진다.
+provider:
+  name: none   # agentgateway는 차트가 따로 만들어 줄 리소스가 없다
+
+router:
+  modelServers:
+    matchLabels:
+      app.kubernetes.io/name: vllm-qwen
+    targetPorts:
+      - number: 8000
+
+  inferencePool:
+    # EPP가 응답하지 않으면 게이트웨이가 EPP 없이 풀의 파드로 보낸다.
+    failureMode: FailOpen
+
+  epp:
+    # 복제본이 2개 이상이면 차트가 리더 선출을 켠다. 리더만 Ready이고 나머지는 대기한다.
+    replicas: 2
+    # 대기 복제본은 설계상 NotReady다. 기본 전략(Recreate)에서는 Deployment가 Available이 되지 않아
+    # helm --wait가 끝나지 않으므로, 차트 README의 안내대로 대기 복제본 수만큼 unavailable을 허용한다.
+    deploymentStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 0
+    # 차트 기본 요청은 CPU 8, 메모리 8Gi다. 파드 하나를 고르는 이 구성에는 과하다.
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: karpenter.sh/nodepool
+                  operator: In
+                  values: ["system"]
+      # EPP가 멈추면 이 풀의 라우팅 품질이 떨어진다. 복제본을 AZ별로 나눈다.
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: topology.kubernetes.io/zone
+            labelSelector:
+              matchLabels:
+                llm-d-router-gateway: qwen-epp

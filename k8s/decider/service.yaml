@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: decider
+  labels:
+    app.kubernetes.io/name: decider
+spec:
+  selector:
+    app.kubernetes.io/name: decider
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

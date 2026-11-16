@@ -1,0 +1,10 @@
+2026-11-14T17:14:27Z	FailedScheduling	0/7 nodes are available: 3 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. preemption: 0/7 nodes are available: 7 Preemption is not helpful for scheduling.
+2026-11-14T17:14:29Z	Nominated	Pod should schedule on: nodeclaim/gemma-noprepull-mpq5g
+2026-11-14T17:15:14Z	FailedScheduling	0/8 nodes are available: 4 node(s) didn't match Pod's node affinity/selector, 4 node(s) had untolerated taint(s). preemption: 0/8 nodes are available: 8 Preemption is not helpful for scheduling.
+2026-11-14T17:15:24Z	FailedScheduling	0/8 nodes are available: 1 Insufficient nvidia.com/gpu, 3 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. preemption: 0/8 nodes are available: 8 Preemption is not helpful for scheduling.
+2026-11-14T17:15:35Z	Scheduled	Successfully assigned inference/vllm-gemma-5cc8dd9554-vj4vz to ip-10-200-47-142.ap-northeast-2.compute.internal
+2026-11-14T17:15:39Z	Pulling	Pulling image "vllm/vllm-openai:v0.33.0"
+2026-11-14T17:17:30Z	Pulled	Successfully pulled image "vllm/vllm-openai:v0.33.0" in 1m51.103s (1m51.103s including waiting). Image size: 9738549569 bytes.
+2026-11-14T17:17:30Z	Created	Container created
+2026-11-14T17:17:31Z	Started	Container started
+2026-11-14T17:17:32Z	Unhealthy	Startup probe failed: Get "http://10.200.36.9:8000/health": dial tcp 10.200.36.9:8000: connect: connection refused

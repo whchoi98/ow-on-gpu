@@ -1,0 +1,123 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "coding",
+ "prompt": "파이썬에서 리스트를 뒤집는 방법을 한 줄로 알려 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "789a718af8c44d548d5c49362d2c2744",
+  "x-bff-model": "qwen38-27b",
+  "x-bff-decision": "task",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 27c13a77821c1c1f56b0da25a8ee2d20.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 52.4,
+ "first_content_ms": 198.0,
+ "last_content_ms": 1738.8,
+ "total_ms": 1739.3,
+ "content_events": 22,
+ "gap_ms": {
+  "median": 69.8,
+  "max": 211.8,
+  "min": 6.2,
+  "share_under_1ms": 0.0
+ },
+ "text": "리스트를 뒤집는 가장 일반적인 한 줄 방법은 슬라이싱을 사용하는 것입니다:\n\n```python\nreversed_list = my_list[::-1]\n```\n\n**설명:**\n- `[::-1]`은 스텝(step)이 -1인 슬라이스로, 원소를 뒤에서 앞으로 가져와서",
+ "events": [
+  {
+   "ms": 198.0,
+   "content": "리스트"
+  },
+  {
+   "ms": 267.2,
+   "content": "를 뒤집는"
+  },
+  {
+   "ms": 337.2,
+   "content": " 가장"
+  },
+  {
+   "ms": 407.0,
+   "content": " 일반적인"
+  },
+  {
+   "ms": 476.9,
+   "content": " 한 줄 방법은 슬라이"
+  },
+  {
+   "ms": 546.3,
+   "content": "싱을 사용하는"
+  },
+  {
+   "ms": 617.4,
+   "content": " 것입니다:\n\n```"
+  },
+  {
+   "ms": 686.8,
+   "content": "python\nre"
+  },
+  {
+   "ms": 756.7,
+   "content": "versed_list = my"
+  },
+  {
+   "ms": 825.7,
+   "content": "_list[::-1]"
+  },
+  {
+   "ms": 895.5,
+   "content": "\n```\n\n**"
+  },
+  {
+   "ms": 965.1,
+   "content": "설명:**\n-"
+  },
+  {
+   "ms": 1035.2,
+   "content": " `[::-1]"
+  },
+  {
+   "ms": 1104.9,
+   "content": "`은"
+  },
+  {
+   "ms": 1316.7,
+   "content": " 스텝(step"
+  },
+  {
+   "ms": 1383.8,
+   "content": ")이 -1"
+  },
+  {
+   "ms": 1453.9,
+   "content": "인 슬라이스로"
+  },
+  {
+   "ms": 1523.0,
+   "content": ", 원"
+  },
+  {
+   "ms": 1593.5,
+   "content": "소를"
+  },
+  {
+   "ms": 1665.4,
+   "content": " 뒤에서 앞으로"
+  },
+  {
+   "ms": 1732.6,
+   "content": " 가져"
+  },
+  {
+   "ms": 1738.8,
+   "content": "와서"
+  }
+ ]
+}

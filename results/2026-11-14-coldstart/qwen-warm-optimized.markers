@@ -1,0 +1,10 @@
+(APIServer pid=1) INFO 11-14 15:40:28 [startup.py:96] non-default args: {'model_tag': 's3://ow-on-gpu-<suffix>/models/Qwen3.8-27B-FP8-dynamic', 'enable_auto_tool_choice': True, 'tool_call_parser': 'qwen3_coder', 'model': 's3://ow-on-gpu-<suffix>/models/Qwen3.8-27B-FP8-dynamic', 'max_model_len': 32768, 'served_model_name': ['qwen38-27b'], 'enable_sleep_mode': True, 'load_format': 'runai_streamer', 'reasoning_parser': 'qwen3', 'gpu_memory_utilization': 0.9, 'kv_cache_dtype': 'fp8', 'enable_prefix_caching': True, 'max_num_seqs': 32, 'scheduling_policy': 'priority', 'speculative_config': {'method': 'mtp', 'num_speculative_tokens': 3}}
+(EngineCore pid=215) INFO 11-14 15:41:31 [model_runner.py:428] Model loading took 34.39 GiB memory and 35.351969 seconds
+(EngineCore pid=215) INFO 11-14 15:41:45 [monitor.py:62] [backbone] torch.compile took 0.81 s in total
+(EngineCore pid=215) INFO 11-14 15:41:46 [monitor.py:62] [eagle_head] torch.compile took 0.06 s in total
+(EngineCore pid=215) INFO 11-14 15:41:58 [model_runner.py:1163] Graph capturing finished in 11 secs, took 0.94 GiB
+(EngineCore pid=215) INFO 11-14 15:42:12 [model_runner.py:1163] Graph capturing finished in 12 secs, took 0.58 GiB
+(EngineCore pid=215) INFO 11-14 15:42:13 [core.py:405] init engine (profile, create kv cache, warmup model) took 41.84 s (compilation: 0.86 s)
+(APIServer pid=1) INFO 11-14 15:42:15 [entry.py:139] Starting vLLM server on http://0.0.0.0:8000
+INFO:     Application startup complete.
+[cache-restore] {"event": "cache_restore", "source": "s3://ow-on-gpu-<suffix>/vllm-cache/v0.33.0-qwen38-27b-fp8-l40s/", "objects": 2056, "bytes": 216677432, "downloaded": 0, "seconds": 0.78}

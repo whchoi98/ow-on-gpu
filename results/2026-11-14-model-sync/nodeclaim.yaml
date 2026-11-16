@@ -1,0 +1,150 @@
+apiVersion: v1
+items:
+- apiVersion: karpenter.sh/v1
+  kind: NodeClaim
+  metadata:
+    annotations:
+      compatibility.karpenter.k8s.aws/cluster-name-tagged: "true"
+      karpenter.k8s.aws/ec2nodeclass-hash: "6169020153662011982"
+      karpenter.k8s.aws/ec2nodeclass-hash-version: v6
+      karpenter.k8s.aws/instance-profile-name: ow-on-gpu_2038051798918025962
+      karpenter.k8s.aws/tagged: "true"
+      karpenter.sh/nodeclaim-min-values-relaxed: "false"
+      karpenter.sh/nodepool-hash: "6909493740327328512"
+      karpenter.sh/nodepool-hash-version: v3
+    creationTimestamp: "2026-11-14T10:06:17Z"
+    finalizers:
+    - karpenter.sh/termination
+    generateName: system-
+    generation: 1
+    labels:
+      karpenter.k8s.aws/ec2nodeclass: system
+      karpenter.k8s.aws/instance-capability-flex: "true"
+      karpenter.k8s.aws/instance-category: c
+      karpenter.k8s.aws/instance-cpu: "8"
+      karpenter.k8s.aws/instance-cpu-manufacturer: intel
+      karpenter.k8s.aws/instance-cpu-sustained-clock-speed-mhz: "3200"
+      karpenter.k8s.aws/instance-ebs-bandwidth: "10000"
+      karpenter.k8s.aws/instance-encryption-in-transit-supported: "true"
+      karpenter.k8s.aws/instance-family: c7i-flex
+      karpenter.k8s.aws/instance-generation: "7"
+      karpenter.k8s.aws/instance-hypervisor: nitro
+      karpenter.k8s.aws/instance-memory: "16384"
+      karpenter.k8s.aws/instance-network-bandwidth: "1562"
+      karpenter.k8s.aws/instance-size: 2xlarge
+      karpenter.k8s.aws/instance-tenancy: default
+      karpenter.sh/capacity-type: on-demand
+      karpenter.sh/nodepool: system
+      kubernetes.io/arch: amd64
+      kubernetes.io/os: linux
+      node.kubernetes.io/instance-type: c7i-flex.2xlarge
+      topology.k8s.aws/zone-id: apne2-az4
+      topology.kubernetes.io/region: ap-northeast-2
+      topology.kubernetes.io/zone: ap-northeast-2d
+    name: system-hpdxf
+    ownerReferences:
+    - apiVersion: karpenter.sh/v1
+      blockOwnerDeletion: true
+      kind: NodePool
+      name: system
+      uid: 3a2c1dd1-6839-410c-aab2-5e006f6374db
+    resourceVersion: "7401"
+    uid: a98969d9-6e2b-4470-921f-14cd4f06eca5
+  spec:
+    expireAfter: 720h
+    nodeClassRef:
+      group: karpenter.k8s.aws
+      kind: EC2NodeClass
+      name: system
+    requirements:
+    - key: kubernetes.io/arch
+      operator: In
+      values:
+      - amd64
+    - key: karpenter.k8s.aws/instance-generation
+      operator: Gte
+      values:
+      - "7"
+    - key: karpenter.k8s.aws/instance-cpu
+      operator: In
+      values:
+      - "4"
+      - "8"
+    - key: karpenter.sh/capacity-type
+      operator: In
+      values:
+      - on-demand
+    - key: karpenter.k8s.aws/ec2nodeclass
+      operator: In
+      values:
+      - system
+    - key: karpenter.k8s.aws/instance-category
+      operator: In
+      values:
+      - c
+      - m
+    - key: karpenter.sh/nodepool
+      operator: In
+      values:
+      - system
+    - key: node.kubernetes.io/instance-type
+      operator: In
+      values:
+      - c7i-flex.2xlarge
+      - c7i.2xlarge
+      - c8i-flex.2xlarge
+      - c8i.2xlarge
+      - m7i-flex.2xlarge
+      - m7i.2xlarge
+      - m8i-flex.2xlarge
+      - m8i.2xlarge
+    resources:
+      requests:
+        cpu: 6350m
+        memory: 4352Mi
+        pods: "5"
+  status:
+    allocatable:
+      cpu: 7910m
+      ephemeral-storage: 17Gi
+      memory: 14162Mi
+      pods: "58"
+      vpc.amazonaws.com/pod-eni: "18"
+    capacity:
+      cpu: "8"
+      ephemeral-storage: 20Gi
+      memory: 15155Mi
+      pods: "58"
+      vpc.amazonaws.com/pod-eni: "18"
+    conditions:
+    - lastTransitionTime: "2026-11-14T10:06:20Z"
+      message: ""
+      observedGeneration: 1
+      reason: Launched
+      status: "True"
+      type: Launched
+    - lastTransitionTime: "2026-11-14T10:06:50Z"
+      message: ""
+      observedGeneration: 1
+      reason: Registered
+      status: "True"
+      type: Registered
+    - lastTransitionTime: "2026-11-14T10:07:06Z"
+      message: ""
+      observedGeneration: 1
+      reason: Initialized
+      status: "True"
+      type: Initialized
+    - lastTransitionTime: "2026-11-14T10:07:06Z"
+      message: ""
+      observedGeneration: 1
+      reason: Ready
+      status: "True"
+      type: Ready
+    imageID: ami-06862f157e5da8321
+    lastPodEventTime: "2026-11-14T10:15:23Z"
+    nodeName: ip-10-200-74-205.ap-northeast-2.compute.internal
+    providerID: aws:///ap-northeast-2d/<instance-id>
+kind: List
+metadata:
+  resourceVersion: ""

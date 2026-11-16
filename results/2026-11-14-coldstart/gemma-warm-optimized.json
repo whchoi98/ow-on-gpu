@@ -1,0 +1,53 @@
+{
+ "label": "gemma-warm-optimized",
+ "scenario": "warm-optimized",
+ "pod": "vllm-gemma-96db4d976-hxwwh",
+ "node": "ip-10-200-36-101.ap-northeast-2.compute.internal",
+ "instance_type": "g6e.4xlarge",
+ "capacity_type": "on-demand",
+ "zone": "ap-northeast-2b",
+ "nodepool": "gemma-od",
+ "new_node": false,
+ "restart_count": 0,
+ "timestamps": {
+  "pod_created": "2026-11-14T17:35:38Z",
+  "nodeclaim_created": "2026-11-14T17:31:15Z",
+  "node_ready": "2026-11-14T17:32:26+00:00",
+  "pod_scheduled": "2026-11-14T17:35:40+00:00",
+  "pod_initialized": "2026-11-14T17:35:42+00:00",
+  "container_started": "2026-11-14T17:35:42Z",
+  "pod_ready": "2026-11-14T17:37:04+00:00"
+ },
+ "segments_s": {
+  "total": 86.0,
+  "node_provisioning": 0.0,
+  "image_pull": 0.0,
+  "weight_load": 19.61355,
+  "engine_init": 23.69,
+  "other": 42.7
+ },
+ "detail_s": {
+  "pod_created_to_scheduled": 2.0,
+  "scheduled_to_container_start": 2.0,
+  "container_start_to_ready": 82.0,
+  "compilation": 0.9,
+  "loading_weights_took": null,
+  "init_containers": [
+   {
+    "name": "cache-restore",
+    "seconds": 0.0
+   }
+  ]
+ },
+ "weight_load_marker": "Model loading took",
+ "image_pulls": [
+  {
+   "seconds": 0.0,
+   "message": "Container image \"vllm/vllm-openai:v0.33.0\" already present on machine and can be accessed by the pod"
+  },
+  {
+   "seconds": 0.0,
+   "message": "Container image \"vllm/vllm-openai:v0.33.0\" already present on machine and can be accessed by the pod"
+  }
+ ]
+}

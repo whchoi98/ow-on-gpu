@@ -1,0 +1,7 @@
+NAME                        	NAMESPACE          	REVISION	UPDATED                                	STATUS  	CHART                             	APP VERSION
+agentgateway                	agentgateway-system	1       	2026-11-14 11:45:09.13752705 +0000 UTC 	deployed	agentgateway-v1.7.0               	v1.7.0     
+agentgateway-crds           	agentgateway-system	1       	2026-11-14 11:45:02.759499005 +0000 UTC	deployed	agentgateway-crds-v1.7.0          	v1.7.0     
+aws-load-balancer-controller	kube-system        	1       	2026-11-14 09:52:05.384611388 +0000 UTC	deployed	aws-load-balancer-controller-3.6.3	v3.6.3     
+gemma                       	inference          	1       	2026-11-14 11:45:53.135910614 +0000 UTC	deployed	llm-d-router-gateway-v1.0.0       	v1.0.0     
+karpenter                   	kube-system        	1       	2026-11-14 09:52:05.397858363 +0000 UTC	deployed	karpenter-1.15.2                  	1.15.2     
+qwen                        	inference          	1       	2026-11-14 11:46:03.066501885 +0000 UTC	deployed	llm-d-router-gateway-v1.0.0       	v1.0.0     

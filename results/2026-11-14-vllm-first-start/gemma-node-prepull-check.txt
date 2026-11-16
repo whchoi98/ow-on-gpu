@@ -1,0 +1,42 @@
+Success	Result=success
+ExecMainStartTimestamp=
+ExecMainExitTimestamp=
+ExecMainStatus=0
+ActiveState=inactive
+SubState=dead
+---journal
+Nov 14 10:33:55 ip-10-200-43-168.ap-northeast-2.compute.internal bash[5648]:    └──manifest (e3481489818d)                   complete           |++++++++++++++++++++++++++++++++++++++|
+Nov 14 10:33:55 ip-10-200-43-168.ap-northeast-2.compute.internal bash[5648]:       └──config (a0dfdeea1d42)                  complete           |++++++++++++++++++++++++++++++++++++++|
+Nov 14 10:33:55 ip-10-200-43-168.ap-northeast-2.compute.internal bash[5648]: application/vnd.docker.distribution.manifest.list.v2+json sha256:d825baf9ce4b1b6bfc5ecc7b79880c7e6748c65a72d697ce3d47607aafa84c6e
+Nov 14 10:33:55 ip-10-200-43-168.ap-northeast-2.compute.internal bash[5648]: Completed pull from OCI Registry (docker.io/vllm/vllm-openai:v0.33.0)        elapsed: 108.7s        total:  9.1 Gi        (85.5 MiB/s)
+Nov 14 10:33:55 ip-10-200-43-168.ap-northeast-2.compute.internal systemd[1]: prepull-vllm.service: Deactivated successfully.
+Nov 14 10:34:47 ip-10-200-43-168.ap-northeast-2.compute.internal systemd[1]: prepull-vllm.service: Failed to open /run/systemd/transient/prepull-vllm.service: No such file or directory
+---cloud-init
+Running as unit: prepull-vllm.service
+---boot
+Startup finished in 429ms (firmware) + 1.089s (loader) + 582ms (kernel) + 1.083s (initrd) + 52.644s (userspace) = 55.827s 
+graphical.target reached after 52.582s in userspace.
+2026-11-14 10:31:23
+---disk
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1   20G  6.1G   14G  31% /
+/dev/md127      559G   38G  521G   7% /mnt/k8s-disks/0
+NAME            SIZE TYPE  MOUNTPOINT
+nvme0n1          20G disk  
+├─nvme0n1p1      20G part  /
+├─nvme0n1p127     1M part  
+└─nvme0n1p128    10M part  /boot/efi
+nvme1n1       558.8G disk  
+└─md127       558.7G raid0 /mnt/k8s-disks/0
+---images
+27
+docker.io/vllm/vllm-openai:v0.33.0                                                                                                                        applic
+docker.io/vllm/vllm-openai@sha256:d825baf9ce4b1b6bfc5ecc7b79880c7e6748c65a72d697ce3d47607aafa84c6e                                                        applic
+---nvidia
+NVIDIA L40S, 580.178.04, 46068 MiB
+---containerd
+ActiveEnterTimestamp=Sat 2026-11-14 10:32:06 UTC
+ActiveEnterTimestamp=Sat 2026-11-14 10:32:06 UTC
+	time="2026-11-14T10:34:48Z" level=warning msg="DEPRECATION: The `bin_dir` property of `[plugins.\"io.containerd.cri.v1.runtime\".cni`] is deprecated since containerd v2.1 and will be removed in containerd v2.4. Use `bin_dirs` in the same s
+time="2026-11-14T10:34:48Z" level=warning msg="DEPRECATION: The `bin_dir` property of `[plugins.\"io.containerd.cri.v1.runtime\".cni`] is deprecated since containerd v2.1 and will be removed in containerd v2.4. Use `bin_dirs` in the same se
+

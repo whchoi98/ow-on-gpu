@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="p2-fig04-title p2-fig04-desc">
+<title id="p2-fig04-title">Qwen3.8-27B의 KV 캐시 블록 배분: MTP를 켠 구성과 끈 구성</title>
+<desc id="p2-fig04-desc">MTP를 켠 구성은 KV 캐시 46블록에서 요청 하나가 Mamba 그룹 3개에 4블록씩과 attention 1블록, 모두 13블록을 잡아 3건만 동시에 실행하고 7블록이 남는다. MTP를 끈 구성은 82블록에서 요청 하나가 4블록을 잡아 20건을 동시에 실행하고 2블록이 남는다. 요청 하나의 속도는 32.5에서 19.2 tok/s로 줄고 최대 처리량은 91.2에서 281.8 tok/s로 늘어난다</desc>
+<defs><style>@font-face{font-family:'Amazon Ember';font-weight:400;src:local('Amazon Ember'),local('AmazonEmber-Regular');}
+@font-face{font-family:'Amazon Ember';font-weight:600;src:local('Amazon Ember Medium'),local('Amazon Ember SemiBold'),local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember';font-weight:700;src:local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember Mono';font-weight:400;src:local('Amazon Ember Mono'),local('AmazonEmberMono-Regular');}</style></defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<text x="40" y="44" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Qwen3.8-27B의 KV 캐시 블록 배분: MTP를 켠 구성과 끈 구성 (S1 짧은 채팅, vLLM v0.33.0)</text>
+<rect x="40" y="72" width="584" height="536" rx="8" fill="#232F3E" fill-opacity="0.03" stroke="#232F3E" stroke-opacity="0.3" stroke-width="1.2"/>
+<text x="56" y="104" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">MTP 켬 (추측 토큰 3개)</text>
+<text x="56" y="128" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">KV 캐시 2.45GiB, 46블록</text>
+<text x="200" y="160" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">Mamba 1</text>
+<text x="316" y="160" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">Mamba 2</text>
+<text x="432" y="160" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">Mamba 3</text>
+<text x="512" y="160" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">attention</text>
+<text x="64" y="204" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">요청 1</text>
+<rect x="136" y="172" width="400" height="52" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="144" y="180" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="152" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="176" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="200" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="224" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="260" y="180" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="268" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="292" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="316" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="340" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="376" y="180" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="384" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="408" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="432" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="456" y="188" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="492" y="180" width="36" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="500" y="188" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<text x="64" y="268" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">요청 2</text>
+<rect x="136" y="236" width="400" height="52" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="144" y="244" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="152" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="176" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="200" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="224" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="260" y="244" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="268" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="292" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="316" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="340" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="376" y="244" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="384" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="408" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="432" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="456" y="252" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="492" y="244" width="36" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="500" y="252" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<text x="64" y="332" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">요청 3</text>
+<rect x="136" y="300" width="400" height="52" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="144" y="308" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="152" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="176" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="200" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="224" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="260" y="308" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="268" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="292" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="316" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="340" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="376" y="308" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="384" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="408" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="432" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="456" y="316" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="492" y="308" width="36" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#7D8998" stroke-opacity="1.0" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="500" y="316" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="144" y="376" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="168" y="376" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="192" y="376" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="216" y="376" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="240" y="376" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="264" y="376" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="288" y="376" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="324" y="392" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">남은 7블록</text>
+<text x="144" y="428" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">네 번째 요청은 13블록이 필요해 대기 (사유 capacity)</text>
+<text x="56" y="472" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">요청당 13블록 = Mamba 그룹 3개 × (1 + 추측 3) + attention 1</text>
+<text x="56" y="500" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">46블록 ÷ 13블록 = 3건 (KV 캐시 사용률 0.848)</text>
+<text x="56" y="544" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">동시 실행 3건</text>
+<text x="56" y="576" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">요청 하나 32.5 tok/s (동시성 1), 최대 처리량 91.2 tok/s</text>
+<rect x="656" y="72" width="584" height="536" rx="8" fill="#232F3E" fill-opacity="0.03" stroke="#232F3E" stroke-opacity="0.3" stroke-width="1.2"/>
+<text x="672" y="104" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">MTP 끔</text>
+<text x="672" y="128" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">KV 캐시 4.0GiB, 82블록</text>
+<text x="672" y="160" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">요청 번호</text>
+<text x="672" y="196" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">1~4</text>
+<rect x="752" y="172" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="760" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="784" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="808" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="832" y="180" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="872" y="172" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="880" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="904" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="928" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="952" y="180" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="992" y="172" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1000" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1024" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1048" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1072" y="180" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="1112" y="172" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1120" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1144" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1168" y="180" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1192" y="180" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<text x="672" y="240" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">5~8</text>
+<rect x="752" y="216" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="760" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="784" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="808" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="832" y="224" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="872" y="216" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="880" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="904" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="928" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="952" y="224" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="992" y="216" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1000" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1024" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1048" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1072" y="224" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="1112" y="216" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1120" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1144" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1168" y="224" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1192" y="224" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<text x="672" y="284" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">9~12</text>
+<rect x="752" y="260" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="760" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="784" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="808" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="832" y="268" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="872" y="260" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="880" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="904" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="928" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="952" y="268" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="992" y="260" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1000" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1024" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1048" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1072" y="268" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="1112" y="260" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1120" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1144" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1168" y="268" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1192" y="268" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<text x="672" y="328" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">13~16</text>
+<rect x="752" y="304" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="760" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="784" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="808" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="832" y="312" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="872" y="304" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="880" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="904" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="928" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="952" y="312" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="992" y="304" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1000" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1024" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1048" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1072" y="312" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="1112" y="304" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1120" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1144" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1168" y="312" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1192" y="312" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<text x="672" y="372" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">17~20</text>
+<rect x="752" y="348" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="760" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="784" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="808" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="832" y="356" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="872" y="348" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="880" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="904" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="928" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="952" y="356" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="992" y="348" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1000" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1024" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1048" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1072" y="356" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="1112" y="348" width="108" height="36" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<rect x="1120" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1144" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1168" y="356" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<rect x="1192" y="356" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<rect x="760" y="400" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<rect x="784" y="400" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="820" y="416" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">남은 2블록 (21번째 요청부터 대기)</text>
+<text x="672" y="472" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">요청당 4블록 = Mamba 그룹 3개 × 1 + attention 1</text>
+<text x="672" y="500" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">82블록 ÷ 4블록 = 20건 (KV 캐시 사용률 0.976)</text>
+<text x="672" y="544" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">동시 실행 20건</text>
+<text x="672" y="576" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">요청 하나 19.2 tok/s (동시성 1), 최대 처리량 281.8 tok/s</text>
+<line x1="40" y1="632" x2="1240" y2="632" stroke="rgba(35,47,62,0.12)" stroke-width="0.8"/>
+<text x="40" y="660" fill="#545B64" font-size="16" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">범례</text>
+<rect x="120" y="640" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.55" stroke="#8C4FFF" stroke-width="1"/>
+<text x="152" y="656" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Mamba 상태 블록</text>
+<rect x="304" y="640" width="20" height="20" rx="2" fill="#8C4FFF" fill-opacity="0.14" stroke="#8C4FFF" stroke-width="1"/>
+<text x="336" y="656" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">추측 토큰용 블록 (MTP)</text>
+<rect x="540" y="640" width="20" height="20" rx="2" fill="#232F3E" fill-opacity="0.30" stroke="#232F3E" stroke-width="1"/>
+<text x="572" y="656" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">attention 블록</text>
+<rect x="708" y="640" width="20" height="20" rx="2" fill="#FFFFFF" stroke="#545B64" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="740" y="656" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">남은 블록</text>
+<rect x="840" y="636" width="44" height="28" rx="6" fill="#FFFFFF" fill-opacity="1.0" stroke="#545B64" stroke-opacity="1.0" stroke-width="1"/>
+<text x="896" y="656" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">요청 하나가 잡은 블록</text>
+</svg>

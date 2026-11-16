@@ -1,0 +1,88 @@
+# Changelog
+
+<a href="#english"><img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"></a>
+<a href="#korean"><img src="https://img.shields.io/badge/lang-한국어-red.svg" alt="Korean"></a>
+
+---
+
+<a id="english"></a>
+
+# English
+
+All notable changes to this project will be documented in this file.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+- Add the EKS cluster, the Karpenter NodePools and the S3 model bucket for serving on g6e.4xlarge nodes
+- Add a Job that loads model weights from Hugging Face into S3 so serving pods read only from S3
+- Add vLLM v0.33.0 deployments for Gemma 4 31B and Qwen3.8-27B with compile caches restored from S3
+- Add the inference gateway with one InferencePool and endpoint picker per model
+- Add the Strands Decider 2B service behind the gateway path `/decide`
+- Add the sleep schedule and the wake API for Qwen
+- Add the BFF with Cognito login, routing rules, an order lookup tool and SSE relay
+- Add the check page with request, chat, benchmark, routing, status and architecture views
+- Add metrics collection to Amazon Managed Service for Prometheus and a serving dashboard
+- Add measurement scripts for cold start, sleep recovery, TTFT by segment, throughput under the SLO and priority
+- Add a web search tool that calls Amazon Bedrock AgentCore Web Search and numbers its sources
+- Add the API call view, the build steps view and a Korean and English switch to the check page
+- Add English texts in the BFF, selected by the `x-lang` request header
+- Add the `fallback` value of the `x-bff-search` response header for requests whose model could not be decided
+
+### Changed
+
+- Move the BFF from ECS Fargate to EKS pods on a Graviton NodePool behind an ALB created by the AWS Load Balancer Controller
+- Run the Qwen node On-Demand instead of Spot
+- Opt the BFF pods out of the automatic instrumentation added by a cluster webhook
+- Track placeholder-only `*.example` files instead of the five files that hold environment-specific values
+
+### Removed
+
+- Remove the ECS Fargate service, the Terraform-managed ALB and the NLB of the wake API
+
+[Unreleased]: https://github.com/whchoi98/ow-on-gpu/commits/main
+
+---
+
+<a id="korean"></a>
+
+# 한국어
+
+이 프로젝트의 모든 주요 변경 사항은 이 파일에 기록됩니다.
+이 문서는 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)를 기반으로 하며,
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html)을 따릅니다.
+
+## [Unreleased]
+
+### Added
+
+- g6e.4xlarge 노드에서 서빙하기 위한 EKS 클러스터, Karpenter NodePool, S3 모델 버킷 추가
+- 서빙 파드가 S3에서만 읽도록 Hugging Face의 모델 가중치를 S3에 적재하는 Job 추가
+- S3에서 compile 캐시를 복원하는 Gemma 4 31B와 Qwen3.8-27B의 vLLM v0.33.0 Deployment 추가
+- 모델마다 InferencePool과 엔드포인트 선택기를 둔 추론 게이트웨이 추가
+- 게이트웨이 경로 `/decide` 뒤의 Strands Decider 2B 서비스 추가
+- Qwen의 sleep 일정과 깨우기 API 추가
+- Cognito 로그인, 경로 결정 규칙, 주문 조회 도구, SSE 전달을 갖춘 BFF 추가
+- 요청, 대화, 성능 평가, 경로 판단, 상태, 구조 보기가 있는 확인용 페이지 추가
+- Amazon Managed Service for Prometheus로의 지표 수집과 서빙 대시보드 추가
+- 콜드 스타트, sleep 복귀, 구간별 TTFT, SLO 하 처리량, 우선순위 측정 스크립트 추가
+- Amazon Bedrock AgentCore Web Search를 부르고 출처에 번호를 붙이는 웹 검색 도구 추가
+- 확인용 페이지에 API 호출 보기, 구축 과정 보기, 한영 전환 추가
+- 요청 헤더 `x-lang`으로 고르는 BFF의 영어 문구 추가
+- 모델을 정하지 못한 요청을 알리는 응답 헤더 `x-bff-search`의 `fallback` 값 추가
+
+### Changed
+
+- BFF를 ECS Fargate에서 Graviton NodePool의 EKS 파드로 이전. ALB는 AWS Load Balancer Controller가 생성
+- Qwen 노드를 Spot에서 On-Demand로 변경
+- 클러스터 웹훅이 붙이는 자동 계측을 BFF 파드가 받지 않도록 변경
+- 환경별 값이 든 파일 다섯 개 대신 자리 표시만 든 `*.example` 파일을 추적하도록 변경
+
+### Removed
+
+- ECS Fargate 서비스, Terraform이 만든 ALB, 깨우기 API의 NLB 제거
+
+[Unreleased]: https://github.com/whchoi98/ow-on-gpu/commits/main

@@ -1,0 +1,27 @@
+===== svc: http://inference-gateway.inference.svc
+chat model=gemma-4-31b                                     HTTP 200  model=gemma-4-31b content='저는 구글에서 학습시킨 대규모 언어 모델입니다.'
+chat model=qwen38-27b                                      HTTP 200  model=qwen38-27b content='저는 알리바바 그룹의 퉁이 연구소(Tongyi Lab)에서 개발한 대규모 언어 모델 퉁이 치엔원(Qwen)입니다.'
+chat model=unknown-model                                   HTTP 404  route not found
+POST /sleep?level=1                                        HTTP 404  route not found
+POST /sleep?level=1 + model header qwen38-27b              HTTP 404  route not found
+POST /sleep with body model=qwen38-27b                     HTTP 404  route not found
+POST /wake_up                                              HTTP 404  route not found
+GET /is_sleeping + x-model qwen38-27b                      HTTP 404  route not found
+GET /metrics + x-model gemma-4-31b                         HTTP 404  route not found
+POST /v1/completions model=gemma-4-31b                     HTTP 404  route not found
+body model=gemma, spoofed header=qwen38-27b                HTTP 200  model=gemma-4-31b content='저는 구글에서 학습시킨 대규모 언어 모델입니다.'
+GET /v1/models + x-model gemma-4-31b                       HTTP 200  models=['gemma-4-31b']
+GET /v1/models + x-model qwen38-27b                        HTTP 200  models=['qwen38-27b']
+GET /v1/models (헤더 없음)                                     HTTP 404  route not found
+chat gemma + objective gemma-interactive                   HTTP 200  model=gemma-4-31b content='저는 구글에서 학습시킨 대규모 언어 모델입니다.'
+chat gemma + objective gemma-batch                         HTTP 200  model=gemma-4-31b content='저는 구글에서 학습시킨 대규모 언어 모델입니다.'
+chat qwen + objective qwen-batch                           HTTP 200  model=qwen38-27b content='저는 알리바바 그룹의 퉁이 연구소(Tongyi Lab)에서 개발한 대규모 언어 모델 퉁이 치엔원(Qwen)입니다.'
+chat gemma stream=true                                     HTTP 200  {'chunks': 16, 'first_chunk_s': 0.08, 'total_s': 0.77}
+chat qwen stream=true                                      HTTP 200  {'chunks': 15, 'first_chunk_s': 0.16, 'total_s': 1.13}
+===== nlb: http://<elb-dns-name>
+chat model=gemma-4-31b                                     HTTP 200  model=gemma-4-31b content='저는 구글에서 학습시킨 대규모 언어 모델입니다.'
+chat model=qwen38-27b                                      HTTP 200  model=qwen38-27b content='저는 알리바바 그룹의 퉁이 연구소(Tongyi Lab)에서 개발한 대규모 언어 모델 퉁이 치엔원(Qwen)입니다.'
+chat model=unknown-model                                   HTTP 404  route not found
+POST /sleep?level=1                                        HTTP 404  route not found
+POST /sleep?level=1 + model header qwen38-27b              HTTP 404  route not found
+POST /sleep with body model=qwen38-27b                     HTTP 404  route not found

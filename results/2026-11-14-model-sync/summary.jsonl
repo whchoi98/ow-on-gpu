@@ -1,0 +1,5 @@
+{"event": "verified", "model": "models/gemma-4-31B-it-FP8-dynamic", "s3": "s3://ow-on-gpu-<suffix>/models/gemma-4-31B-it-FP8-dynamic/", "objects": 18, "bytes": 33300479335, "expected_objects": 18, "expected_bytes": 33300479335, "match": true}
+{"event": "verified", "model": "models/Qwen3.8-27B-FP8-dynamic", "s3": "s3://ow-on-gpu-<suffix>/models/Qwen3.8-27B-FP8-dynamic/", "objects": 14, "bytes": 36798482331, "expected_objects": 14, "expected_bytes": 36798482331, "match": true}
+{"event": "verified", "model": "models/strands-decider-2B-qwen3.5-v1-2610", "s3": "s3://ow-on-gpu-<suffix>/models/strands-decider-2B-qwen3.5-v1-2610/", "objects": 29, "bytes": 234803773, "expected_objects": 29, "expected_bytes": 234803773, "match": true}
+{"event": "verified", "model": "models/Qwen3.5-2B-Base", "s3": "s3://ow-on-gpu-<suffix>/models/Qwen3.5-2B-Base/", "objects": 12, "bytes": 4571206192, "expected_objects": 12, "expected_bytes": 4571206192, "match": true}
+{"event": "summary", "ok": true, "objects": 73, "bytes": 74904971631, "transferred": 73, "seconds": 491.4}

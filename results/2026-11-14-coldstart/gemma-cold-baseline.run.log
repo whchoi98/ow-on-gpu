@@ -1,0 +1,7 @@
+[17:07:52] 서빙을 0으로 줄입니다
+[17:07:56] GPU 노드를 지웁니다: gemma-od-ph825 (ip-10-200-43-168.ap-northeast-2.compute.internal)
+[17:14:27] baseline 구성을 적용하고 1로 올립니다. GPU 노드가 새로 뜹니다
+[17:14:28] 파드 vllm-gemma-5cc8dd9554-vj4vz이 Ready가 될 때까지 기다립니다(최대 30분)
+{"total": 394.0, "node_provisioning": 55.0, "image_pull": 111.1, "weight_load": 59.610507, "engine_init": 95.54, "other": 72.7}
+[17:21:03] 저장: results/2026-11-14-coldstart/gemma-cold-baseline.json
+exit=0

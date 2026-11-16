@@ -1,0 +1,10 @@
+2026-11-14T17:35:38Z	FailedScheduling	0/7 nodes are available: 1 Insufficient cpu, 1 Insufficient memory, 1 Insufficient nvidia.com/gpu, 2 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. preemption: 0/7 nodes are available: 1 No preemption victims found for incoming pod, 6 Preemption is not helpful for scheduling.
+2026-11-14T17:35:40Z	Scheduled	Successfully assigned inference/vllm-gemma-96db4d976-hxwwh to ip-10-200-36-101.ap-northeast-2.compute.internal
+2026-11-14T17:35:40Z	FailedScheduling	Failed to schedule pod, incompatible requirements, key karpenter.sh/nodepool, karpenter.sh/nodepool In [gemma-od] not in karpenter.sh/nodepool In [system]; all available instance types exceed limits for nodepool (NodePool=qwen-od); all available instance types exceed limits for nodepool (NodePool=gemma-od); incompatible requirements, key karpenter.sh/nodepool, karpenter.sh/nodepool In [gemma-od] not in karpenter.sh/nodepool In [gemma-noprepull]; all available instance types exceed limits for nodepool (NodePool=decider); did not tolerate taint (taint=ow-on-gpu/bench=true:NoSchedule)
+2026-11-14T17:35:40Z	Pulled	Container image "vllm/vllm-openai:v0.33.0" already present on machine and can be accessed by the pod
+2026-11-14T17:35:40Z	Created	Container created
+2026-11-14T17:35:41Z	Started	Container started
+2026-11-14T17:35:42Z	Pulled	Container image "vllm/vllm-openai:v0.33.0" already present on machine and can be accessed by the pod
+2026-11-14T17:35:42Z	Created	Container created
+2026-11-14T17:35:42Z	Started	Container started
+2026-11-14T17:35:43Z	Unhealthy	Startup probe failed: Get "http://10.200.43.68:8000/health": dial tcp 10.200.43.68:8000: connect: connection refused

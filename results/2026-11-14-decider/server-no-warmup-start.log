@@ -1,0 +1,22 @@
+CUDA compat package should be installed for NVIDIA driver smaller than 575.57.08
+Current installed NVIDIA driver version is 580.178.04
+Skipping CUDA compat setup as newer NVIDIA driver is installed
+serving /opt/ml/model/strands-decider-2B-qwen3.5-v1-2610 on http://0.0.0.0:8080 
+(cuda)
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+Loading weights:   0%|          | 0/320 [00:00<?, ?it/s]Loading weights:  41%|████      | 130/320 [00:00<00:00, 1190.85it/s]Loading weights:  81%|████████  | 258/320 [00:00<00:00, 1241.12it/s]Loading weights: 100%|██████████| 320/320 [00:00<00:00, 1265.39it/s]
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+INFO:     10.200.16.182:59398 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:59402 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:59410 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:59416 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:59420 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:59426 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:59436 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:37060 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:37064 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:37080 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:37088 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.16.182:37096 - "GET /health HTTP/1.1" 200 OK

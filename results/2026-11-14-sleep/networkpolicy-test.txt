@@ -1,0 +1,24 @@
+  [plain] Qwen 8000 직접 (/is_sleeping, 관리용 Service)     차단 (URLError: <urlopen error timed out>)
+  [plain] Qwen 8000 직접 (/v1/models, 일반 Service)        차단 (URLError: <urlopen error timed out>)
+  [plain] 깨우기 API (/healthz)                           차단 (URLError: <urlopen error timed out>)
+  [plain] 깨우기 API (POST /wake)                         차단 (URLError: <urlopen error timed out>)
+  [plain] 게이트웨이 경유 Qwen 대화                             허용 (HTTP 200) {"id":"chatcmpl-6cacd695-c086-4a55-bcb5-d5e3e567a9f9","objec
+  [plain] Gemma 8000 직접 (정책 없음)                        허용 (HTTP 200) {"object":"list","data":[{"id":"gemma-4-31b","object":"model
+  [admin] Qwen 8000 직접 (/is_sleeping, 관리용 Service)     허용 (HTTP 200) {"is_sleeping":false}
+  [admin] Qwen 8000 직접 (/v1/models, 일반 Service)        허용 (HTTP 200) {"object":"list","data":[{"id":"qwen38-27b","object":"model"
+  [admin] 깨우기 API (/healthz)                           차단 (URLError: <urlopen error timed out>)
+  [admin] 깨우기 API (POST /wake)                         차단 (URLError: <urlopen error timed out>)
+  [admin] 게이트웨이 경유 Qwen 대화                             허용 (HTTP 200) {"id":"chatcmpl-948be4db-086c-429c-b6f9-3aa044eaf205","objec
+  [admin] Gemma 8000 직접 (정책 없음)                        허용 (HTTP 200) {"object":"list","data":[{"id":"gemma-4-31b","object":"model
+  [wakeclient] Qwen 8000 직접 (/is_sleeping, 관리용 Service)     차단 (URLError: <urlopen error timed out>)
+  [wakeclient] Qwen 8000 직접 (/v1/models, 일반 Service)        차단 (URLError: <urlopen error timed out>)
+  [wakeclient] 깨우기 API (/healthz)                           허용 (HTTP 200) {"status": "ok"}
+  [wakeclient] 깨우기 API (POST /wake)                         허용 (HTTP 200) {"was_sleeping": false, "awake": true}
+  [wakeclient] 게이트웨이 경유 Qwen 대화                             허용 (HTTP 200) {"id":"chatcmpl-64b0a6a6-a638-4644-ab8a-38a0cf350cea","objec
+  [wakeclient] Gemma 8000 직접 (정책 없음)                        허용 (HTTP 200) {"object":"list","data":[{"id":"gemma-4-31b","object":"model
+  [model-jobs+labels] Qwen 8000 직접 (/is_sleeping, 관리용 Service)     차단 (URLError: <urlopen error timed out>)
+  [model-jobs+labels] Qwen 8000 직접 (/v1/models, 일반 Service)        차단 (URLError: <urlopen error timed out>)
+  [model-jobs+labels] 깨우기 API (/healthz)                           차단 (URLError: <urlopen error timed out>)
+  [model-jobs+labels] 깨우기 API (POST /wake)                         차단 (URLError: <urlopen error timed out>)
+  [model-jobs+labels] 게이트웨이 경유 Qwen 대화                             허용 (HTTP 200) {"id":"chatcmpl-8fec528a-977e-4c95-aa04-fa899146ad18","objec
+  [model-jobs+labels] Gemma 8000 직접 (정책 없음)                        허용 (HTTP 200) {"object":"list","data":[{"id":"gemma-4-31b","object":"model

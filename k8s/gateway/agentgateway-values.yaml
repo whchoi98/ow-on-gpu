@@ -1,0 +1,7 @@
+# agentgateway 컨트롤러 차트(oci://cr.agentgateway.dev/charts/agentgateway v1.7.0)의 값
+inferenceExtension:
+  enabled: true
+
+# 컨트롤러는 Karpenter의 system NodePool에 올린다. 애드온 노드 그룹은 arm64이고 CriticalAddonsOnly taint가 있다.
+nodeSelector:
+  karpenter.sh/nodepool: system

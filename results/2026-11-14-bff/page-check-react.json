@@ -1,0 +1,47 @@
+{
+ "records": [
+  {
+   "head": "기록 3 | 코딩 | Gemma 4 31B | 민감 정보 규칙으로 결정 | 민감 정보",
+   "readouts": "응답 헤더 172ms 첫 토큰 173ms 조각 간격 54ms 조각 수 908개 전체 49.21초",
+   "ticks": 908,
+   "markdown": {
+    "strong": 7,
+    "pre": 1,
+    "table": 0,
+    "li": 8
+   },
+   "rawAsterisks": 2
+  },
+  {
+   "head": "기록 2 | 코딩 | Qwen3.8-27B | 업무 종류로 결정",
+   "readouts": "응답 헤더 194ms 첫 토큰 195ms 조각 간격 70ms 조각 수 232개 전체 16.36초",
+   "ticks": 232,
+   "markdown": {
+    "strong": 6,
+    "pre": 3,
+    "table": 1,
+    "li": 3
+   },
+   "rawAsterisks": 0
+  },
+  {
+   "head": "기록 1 | 상담 | Gemma 4 31B | 업무 종류로 결정",
+   "readouts": "응답 헤더 189ms 첫 토큰 1,645ms 조각 간격 54ms 조각 수 54개 전체 4.55초",
+   "ticks": 54,
+   "markdown": {
+    "strong": 2,
+    "pre": 0,
+    "table": 0,
+    "li": 0
+   },
+   "rawAsterisks": 0
+  }
+ ],
+ "mobileOverflowPx": {
+  "login": 0,
+  "console": 0
+ },
+ "problems": [
+  "console: Failed to load resource: the server responded with a status of 400 ()"
+ ]
+}

@@ -1,0 +1,291 @@
+/* "구축 과정" 보기. 단계는 왼쪽의 번호 표식을 세로선으로 이어 차례를 보인다.
+   색과 글꼴은 styles.css의 변수를 그대로 쓴다. */
+
+.deploy__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px 24px;
+  padding: 14px 0 2px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.deploy__facts dt {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.deploy__facts dd {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* 번호 표식. 번호 줄과 단계 목록이 같은 모양을 쓴다. */
+.deploy__num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 1.7em;
+  height: 1.7em;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--field);
+  font: 500 0.82rem/1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.deploy__index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.deploy__jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 3px 12px 3px 5px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--field);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.deploy__jump:hover {
+  border-color: var(--ink);
+}
+
+.deploy__steps {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dstep {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 0 14px;
+  scroll-margin-top: 12px;
+}
+
+.dstep:focus {
+  outline: none;
+}
+
+.dstep:focus-visible .dstep__body {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* 표식 아래로 다음 단계까지 잇는 선. 마지막 단계에는 긋지 않는다. */
+.dstep::before {
+  content: "";
+  position: absolute;
+  top: 2.6rem;
+  bottom: -14px;
+  left: 1.3rem;
+  width: 1px;
+  background: var(--rule);
+}
+
+.dstep:last-child::before {
+  display: none;
+}
+
+.dstep__mark {
+  position: relative;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-size: 1rem;
+}
+
+.dstep.is-todo .dstep__mark {
+  border-style: dashed;
+  background: var(--raised);
+  color: var(--ink);
+}
+
+.dstep__body {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--field);
+}
+
+.dstep.is-todo .dstep__body {
+  border-style: dashed;
+  background: transparent;
+}
+
+.dstep__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.dstep__head h3 {
+  margin: 0;
+  font: 800 1.12rem/1.35 var(--font-display);
+}
+
+.dstep__order {
+  margin-right: 0.6em;
+  color: var(--ink-soft);
+  font: 500 0.8rem/1 var(--font-mono);
+}
+
+.dstep__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+}
+
+.dstep__text {
+  max-width: 62em;
+}
+
+.dstep__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 16px 28px;
+  align-items: start;
+}
+
+.dstep__points {
+  display: grid;
+  gap: 8px;
+  padding-left: 1.15em;
+  color: var(--ink);
+  font-size: 0.93rem;
+}
+
+.dstep__points li::marker {
+  color: var(--ink-soft);
+}
+
+.dstep__side {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* 긴 명령은 가로로 밀지 않고 줄을 넘겨 끝까지 보이게 한다. */
+.dstep__cmd {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #dfe7e1;
+  font: 400 0.8rem/1.7 var(--font-mono);
+}
+
+.dstep__cmd code {
+  font: inherit;
+}
+
+.dstep__rows {
+  display: grid;
+  gap: 4px;
+  font-size: 0.87rem;
+}
+
+.dstep__rows div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.dstep__rows dt {
+  color: var(--ink-soft);
+}
+
+.dstep__rows dd {
+  font: 500 0.85rem/1.6 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.dstep__doc {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.dstep__doc code {
+  margin-left: 0.4em;
+  font: 400 0.95em var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.deploy__findings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 14px;
+  list-style: none;
+}
+
+.finding {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 16px 18px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--field);
+}
+
+/* 수치를 먼저 읽게 한다. 수치의 뜻은 바로 아래 제목이 말한다. */
+.finding__value {
+  font: 500 1.05rem/1.4 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--gemma);
+}
+
+.finding h3 {
+  margin: 0;
+  font: 800 1rem/1.4 var(--font-display);
+}
+
+.finding__text {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .dstep {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0 10px;
+  }
+
+  .dstep::before {
+    top: 2rem;
+    left: 1rem;
+  }
+
+  .dstep__mark {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.85rem;
+  }
+
+  .dstep__body {
+    padding: 14px;
+  }
+
+  .dstep__cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

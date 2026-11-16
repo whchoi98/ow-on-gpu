@@ -1,0 +1,227 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "",
+ "prompt": "환불 규정을 세 줄로 요약해 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "9a693aeae4134eabafd79010a2351575",
+  "x-bff-model": "gemma-4-31b",
+  "x-bff-decision": "decider",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 3d323ad2164015c07894bca53f36fa3e.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 179.4,
+ "first_content_ms": 240.5,
+ "last_content_ms": 2763.2,
+ "total_ms": 2815.7,
+ "content_events": 48,
+ "gap_ms": {
+  "median": 53.9,
+  "max": 58.0,
+  "min": 49.3,
+  "share_under_1ms": 0.0
+ },
+ "text": "요약할 **환불 규정 내용(텍스트나 이미지, 링크 등)**을 제공해 주세요! \n\n내용을 알려주시면 바로 핵심만 파악하여 **세 줄로 요약**해 드리겠습니다.",
+ "events": [
+  {
+   "ms": 240.5,
+   "content": "요"
+  },
+  {
+   "ms": 294.6,
+   "content": "약"
+  },
+  {
+   "ms": 347.0,
+   "content": "할"
+  },
+  {
+   "ms": 401.1,
+   "content": " **"
+  },
+  {
+   "ms": 454.6,
+   "content": "환"
+  },
+  {
+   "ms": 508.5,
+   "content": "불"
+  },
+  {
+   "ms": 563.3,
+   "content": " 규"
+  },
+  {
+   "ms": 615.6,
+   "content": "정"
+  },
+  {
+   "ms": 669.8,
+   "content": " 내용"
+  },
+  {
+   "ms": 722.7,
+   "content": "("
+  },
+  {
+   "ms": 776.7,
+   "content": "텍"
+  },
+  {
+   "ms": 830.2,
+   "content": "스트"
+  },
+  {
+   "ms": 883.8,
+   "content": "나"
+  },
+  {
+   "ms": 937.0,
+   "content": " 이미지"
+  },
+  {
+   "ms": 995.0,
+   "content": ","
+  },
+  {
+   "ms": 1044.3,
+   "content": " 링크"
+  },
+  {
+   "ms": 1098.5,
+   "content": " 등"
+  },
+  {
+   "ms": 1151.6,
+   "content": ")**"
+  },
+  {
+   "ms": 1205.6,
+   "content": "을"
+  },
+  {
+   "ms": 1258.8,
+   "content": " 제공"
+  },
+  {
+   "ms": 1313.1,
+   "content": "해"
+  },
+  {
+   "ms": 1366.1,
+   "content": " 주세요"
+  },
+  {
+   "ms": 1421.2,
+   "content": "!"
+  },
+  {
+   "ms": 1473.8,
+   "content": " "
+  },
+  {
+   "ms": 1526.8,
+   "content": "\n\n"
+  },
+  {
+   "ms": 1581.4,
+   "content": "내"
+  },
+  {
+   "ms": 1634.6,
+   "content": "용"
+  },
+  {
+   "ms": 1689.9,
+   "content": "을"
+  },
+  {
+   "ms": 1744.8,
+   "content": " 알려"
+  },
+  {
+   "ms": 1795.3,
+   "content": "주"
+  },
+  {
+   "ms": 1849.7,
+   "content": "시면"
+  },
+  {
+   "ms": 1902.9,
+   "content": " 바로"
+  },
+  {
+   "ms": 1957.3,
+   "content": " 핵심"
+  },
+  {
+   "ms": 2012.7,
+   "content": "만"
+  },
+  {
+   "ms": 2063.3,
+   "content": " 파"
+  },
+  {
+   "ms": 2118.0,
+   "content": "악"
+  },
+  {
+   "ms": 2171.0,
+   "content": "하여"
+  },
+  {
+   "ms": 2225.0,
+   "content": " **"
+  },
+  {
+   "ms": 2280.1,
+   "content": "세"
+  },
+  {
+   "ms": 2332.2,
+   "content": " 줄"
+  },
+  {
+   "ms": 2386.3,
+   "content": "로"
+  },
+  {
+   "ms": 2439.6,
+   "content": " 요"
+  },
+  {
+   "ms": 2494.5,
+   "content": "약"
+  },
+  {
+   "ms": 2546.6,
+   "content": "**"
+  },
+  {
+   "ms": 2600.3,
+   "content": "해"
+  },
+  {
+   "ms": 2654.2,
+   "content": " 드리"
+  },
+  {
+   "ms": 2707.4,
+   "content": "겠습니다"
+  },
+  {
+   "ms": 2763.2,
+   "content": "."
+  }
+ ]
+}

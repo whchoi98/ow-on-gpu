@@ -1,0 +1,8 @@
+before: GET / -> 200
+burst: 400 requests, status counts:
+    400 200
+burst finished after 0.5s
+blocked: first 403 at 25.6s after burst start
+while blocked: POST /v1/chat/completions -> 403
+released: 300.4s after the first 403
+exit=0

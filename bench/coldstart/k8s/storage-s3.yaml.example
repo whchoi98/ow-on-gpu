@@ -1,0 +1,44 @@
+# 모델 버킷의 models/ 아래를 Mountpoint for Amazon S3(FUSE)로 마운트한다. 1부의 기준 구성과 같은 방식이다.
+# 드라이버는 infra/terraform/observability.tf의 EKS 애드온이 설치한다.
+# 마운트 옵션은 1부에서 쓴 값(gemma4-vllm/gpu01/storage-s3.yaml)을 그대로 따른다.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: models-s3
+spec:
+  capacity:
+    storage: 1200Gi   # 정적 프로비저닝에서는 쓰이지 않는 값이다
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: ""
+  claimRef:
+    namespace: inference
+    name: models-s3
+  mountOptions:
+    - region ap-northeast-2
+    - prefix models/
+    - read-only
+    - allow-other
+    - metadata-ttl 300
+    - max-threads 96
+    - maximum-throughput-gbps 20   # g6e.4xlarge의 네트워크 대역폭
+  csi:
+    driver: s3.csi.aws.com
+    volumeHandle: ow-on-gpu-models
+    volumeAttributes:
+      # infra/terraform의 model_bucket 출력값
+      bucketName: ow-on-gpu-<suffix>
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: models-s3
+  namespace: inference
+spec:
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: ""
+  volumeName: models-s3
+  resources:
+    requests:
+      storage: 1200Gi

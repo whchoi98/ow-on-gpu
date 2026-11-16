@@ -1,0 +1,9 @@
+(APIServer pid=1) INFO 11-14 17:35:52 [startup.py:96] non-default args: {'model_tag': 's3://ow-on-gpu-<suffix>/models/gemma-4-31B-it-FP8-dynamic', 'enable_auto_tool_choice': True, 'tool_call_parser': 'gemma4', 'model': 's3://ow-on-gpu-<suffix>/models/gemma-4-31B-it-FP8-dynamic', 'max_model_len': 16384, 'served_model_name': ['gemma-4-31b'], 'load_format': 'runai_streamer', 'reasoning_parser': 'gemma4', 'gpu_memory_utilization': 0.9, 'kv_cache_dtype': 'fp8', 'enable_prefix_caching': True, 'language_model_only': True, 'scheduling_policy': 'priority'}
+(EngineCore pid=219) INFO 11-14 17:36:34 [model_runner.py:428] Model loading took 30.63 GiB memory and 19.613550 seconds
+(EngineCore pid=219) INFO 11-14 17:36:36 [monitor.py:62] [backbone] torch.compile took 0.90 s in total
+(EngineCore pid=219) INFO 11-14 17:36:45 [model_runner.py:1163] Graph capturing finished in 7 secs, took 0.68 GiB
+(EngineCore pid=219) INFO 11-14 17:36:57 [model_runner.py:1163] Graph capturing finished in 10 secs, took 0.35 GiB
+(EngineCore pid=219) INFO 11-14 17:36:58 [core.py:405] init engine (profile, create kv cache, warmup model) took 23.69 s (compilation: 0.90 s)
+(APIServer pid=1) INFO 11-14 17:37:02 [entry.py:139] Starting vLLM server on http://0.0.0.0:8000
+INFO:     Application startup complete.
+[cache-restore] {"event": "cache_restore", "source": "s3://ow-on-gpu-<suffix>/vllm-cache/v0.33.0-gemma4-31b-fp8-l40s/", "objects": 522, "bytes": 90792555, "downloaded": 0, "seconds": 0.39}

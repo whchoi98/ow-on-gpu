@@ -1,0 +1,303 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "requests_per_model": 20,
+ "max_tokens": 32,
+ "models": {
+  "gemma": {
+   "requests": 20,
+   "requests_with_all_segments": 20,
+   "user_first_content_ms": {
+    "n": 20,
+    "median": 81.9,
+    "min": 77.9,
+    "p95": 153.6,
+    "max": 153.6
+   },
+   "user_headers_ms": {
+    "n": 20,
+    "median": 19.8,
+    "min": 18.1,
+    "p95": 93.7,
+    "max": 93.7
+   },
+   "segments_ms": {
+    "user_to_edge": {
+     "n": 20,
+     "median": 1.8,
+     "min": 1.0,
+     "p95": 3.2,
+     "max": 3.2
+    },
+    "cloudfront": {
+     "n": 20,
+     "median": 5.0,
+     "min": 3.0,
+     "p95": 79.0,
+     "max": 79.0
+    },
+    "alb": {
+     "n": 20,
+     "median": 1.6,
+     "min": 0.9,
+     "p95": 4.2,
+     "max": 4.2
+    },
+    "bff": {
+     "n": 20,
+     "median": 0.1,
+     "min": 0.1,
+     "p95": 0.1,
+     "max": 0.1
+    },
+    "gateway": {
+     "n": 20,
+     "median": 9.7,
+     "min": 8.8,
+     "p95": 16.4,
+     "max": 16.4
+    },
+    "vllm": {
+     "n": 20,
+     "median": 63.2,
+     "min": 59.9,
+     "p95": 66.6,
+     "max": 66.6
+    },
+    "remainder": {
+     "n": 20,
+     "median": -0.5,
+     "min": -1.3,
+     "p95": 6.8,
+     "max": 6.8
+    }
+   },
+   "detail_ms": {
+    "cdn_upstream_fbl": {
+     "n": 20,
+     "median": 15.0,
+     "min": 14.0,
+     "p95": 30.0,
+     "max": 30.0
+    },
+    "cdn_downstream_fbl": {
+     "n": 20,
+     "median": 18.0,
+     "min": 16.0,
+     "p95": 92.0,
+     "max": 92.0
+    },
+    "alb_request_processing": {
+     "n": 20,
+     "median": 0.0,
+     "min": 0.0,
+     "p95": 2.0,
+     "max": 2.0
+    },
+    "alb_target_processing": {
+     "n": 20,
+     "median": 13.0,
+     "min": 12.0,
+     "p95": 20.0,
+     "max": 20.0
+    },
+    "bff_decide": {
+     "n": 20,
+     "median": 0.1,
+     "min": 0.1,
+     "p95": 0.1,
+     "max": 0.1
+    },
+    "bff_wake": {
+     "n": 20,
+     "median": 0.0,
+     "min": 0.0,
+     "p95": 0.0,
+     "max": 0.0
+    },
+    "bff_upstream_headers": {
+     "n": 20,
+     "median": 11.2,
+     "min": 10.2,
+     "p95": 17.7,
+     "max": 17.7
+    },
+    "bff_first_content": {
+     "n": 20,
+     "median": 73.0,
+     "min": 69.7,
+     "p95": 80.6,
+     "max": 80.6
+    },
+    "vllm_queue": {
+     "n": 20,
+     "median": 0.0,
+     "min": 0.0,
+     "p95": 0.1,
+     "max": 0.1
+    },
+    "vllm_prefill": {
+     "n": 20,
+     "median": 58.8,
+     "min": 55.9,
+     "p95": 60.7,
+     "max": 60.7
+    },
+    "epp_scheduler": {
+     "n": 20,
+     "median": 0.0,
+     "min": 0.0,
+     "p95": 0.0,
+     "max": 0.0
+    }
+   }
+  },
+  "qwen": {
+   "requests": 20,
+   "requests_with_all_segments": 20,
+   "user_first_content_ms": {
+    "n": 20,
+    "median": 177.5,
+    "min": 172.6,
+    "p95": 253.1,
+    "max": 253.1
+   },
+   "user_headers_ms": {
+    "n": 20,
+    "median": 32.4,
+    "min": 26.9,
+    "p95": 39.2,
+    "max": 39.2
+   },
+   "segments_ms": {
+    "user_to_edge": {
+     "n": 20,
+     "median": 1.9,
+     "min": 1.2,
+     "p95": 5.0,
+     "max": 5.0
+    },
+    "cloudfront": {
+     "n": 20,
+     "median": 5.0,
+     "min": 4.0,
+     "p95": 9.0,
+     "max": 9.0
+    },
+    "alb": {
+     "n": 20,
+     "median": 1.6,
+     "min": 0.8,
+     "p95": 12.7,
+     "max": 12.7
+    },
+    "bff": {
+     "n": 20,
+     "median": 12.8,
+     "min": 9.8,
+     "p95": 21.9,
+     "max": 21.9
+    },
+    "gateway": {
+     "n": 20,
+     "median": 8.4,
+     "min": 7.8,
+     "p95": 78.0,
+     "max": 78.0
+    },
+    "vllm": {
+     "n": 20,
+     "median": 147.6,
+     "min": 147.1,
+     "p95": 160.0,
+     "max": 160.0
+    },
+    "remainder": {
+     "n": 20,
+     "median": -0.6,
+     "min": -11.3,
+     "p95": 0.1,
+     "max": 0.1
+    }
+   },
+   "detail_ms": {
+    "cdn_upstream_fbl": {
+     "n": 20,
+     "median": 27.5,
+     "min": 22.0,
+     "p95": 35.0,
+     "max": 35.0
+    },
+    "cdn_downstream_fbl": {
+     "n": 20,
+     "median": 30.0,
+     "min": 25.0,
+     "p95": 37.0,
+     "max": 37.0
+    },
+    "alb_request_processing": {
+     "n": 20,
+     "median": 0.0,
+     "min": 0.0,
+     "p95": 1.0,
+     "max": 1.0
+    },
+    "alb_target_processing": {
+     "n": 20,
+     "median": 25.0,
+     "min": 20.0,
+     "p95": 33.0,
+     "max": 33.0
+    },
+    "bff_decide": {
+     "n": 20,
+     "median": 0.1,
+     "min": 0.1,
+     "p95": 0.1,
+     "max": 0.1
+    },
+    "bff_wake": {
+     "n": 20,
+     "median": 12.8,
+     "min": 9.7,
+     "p95": 21.8,
+     "max": 21.8
+    },
+    "bff_upstream_headers": {
+     "n": 20,
+     "median": 9.6,
+     "min": 8.7,
+     "p95": 16.2,
+     "max": 16.2
+    },
+    "bff_first_content": {
+     "n": 20,
+     "median": 169.4,
+     "min": 165.1,
+     "p95": 240.5,
+     "max": 240.5
+    },
+    "vllm_queue": {
+     "n": 20,
+     "median": 0.0,
+     "min": 0.0,
+     "p95": 0.0,
+     "max": 0.0
+    },
+    "vllm_prefill": {
+     "n": 20,
+     "median": 144.4,
+     "min": 144.0,
+     "p95": 149.1,
+     "max": 149.1
+    },
+    "epp_scheduler": {
+     "n": 20,
+     "median": 0.0,
+     "min": 0.0,
+     "p95": 0.0,
+     "max": 0.0
+    }
+   }
+  }
+ }
+}

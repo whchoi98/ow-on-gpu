@@ -1,0 +1,26 @@
+# Qwen의 동시 실행 한도(3건)가 prefix caching에서 오는지 확인하는 실험 구성.
+# k8s/qwen과 다른 점은 `--enable-prefix-caching`을 `--disable-prefix-caching`으로 바꾼 것 하나다.
+# vLLM v0.33.0은 prefix caching이 켜져 있으면 하이브리드 모델의 Mamba 캐시를 'align' 모드로 두고
+# attention 블록을 1,600토큰으로 맞춘다. 플래그를 지우기만 하면 기본값(None)이 켜짐으로 풀리므로 명시적으로 끈다.
+#
+#   kubectl diff  -k bench/slo/k8s/qwen-no-prefix-cache    # 바뀌는 것 확인
+#   kubectl apply -k bench/slo/k8s/qwen-no-prefix-cache    # 서빙 중인 Qwen이 이 구성으로 다시 시작한다
+#   kubectl apply -k k8s/qwen                              # 되돌리기
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../../k8s/qwen
+
+patches:
+  - target:
+      kind: Deployment
+      name: vllm-qwen
+    patch: |-
+      # 인자 순서가 바뀌었으면 여기서 실패한다.
+      - op: test
+        path: /spec/template/spec/containers/0/args/8
+        value: --enable-prefix-caching
+      - op: replace
+        path: /spec/template/spec/containers/0/args/8
+        value: --disable-prefix-caching

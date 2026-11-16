@@ -1,0 +1,223 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "",
+ "prompt": "이 파이썬 코드의 버그를 고쳐 주세요: def add(a, b): return a - b",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "2829a1a5c7294ebc82d64a9224177cbd",
+  "x-bff-model": "qwen38-27b",
+  "x-bff-decision": "decider",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 85694a073e95a1b9b5b18f2e7878450a.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 207.9,
+ "first_content_ms": 354.6,
+ "last_content_ms": 3626.7,
+ "total_ms": 3627.0,
+ "content_events": 47,
+ "gap_ms": {
+  "median": 69.6,
+  "max": 139.3,
+  "min": 59.1,
+  "share_under_1ms": 0.0
+ },
+ "text": "`add` 함수의 이름과 실제 수행하는 연산이 일치하지 않습니다. 함수 이름이 `add`이므로 덧셈(`+`)을 수행해야 하지만, 현재는 뺄셈(`-`)을 수행하고 있습니다.\n\n### 수정된 코드:\n```python\ndef add(a, b):\n    return a + b\n```\n\n### 설명:\n- **버그**: `return a - b` (뺄셈)\n- **수정**: `return a + b` (덧셈)\n\n이로써 함수가 의도한 대로 두 수를 더하여 반환합니다.",
+ "events": [
+  {
+   "ms": 354.6,
+   "content": "`"
+  },
+  {
+   "ms": 424.4,
+   "content": "add`"
+  },
+  {
+   "ms": 498.7,
+   "content": " 함수의"
+  },
+  {
+   "ms": 563.4,
+   "content": " 이름과"
+  },
+  {
+   "ms": 632.9,
+   "content": " 실제"
+  },
+  {
+   "ms": 702.2,
+   "content": " 수행"
+  },
+  {
+   "ms": 772.1,
+   "content": "하는 연"
+  },
+  {
+   "ms": 842.3,
+   "content": "산이 일치하지"
+  },
+  {
+   "ms": 911.3,
+   "content": " 않습니다. 함수"
+  },
+  {
+   "ms": 981.3,
+   "content": " 이름이"
+  },
+  {
+   "ms": 1050.4,
+   "content": " `add`이"
+  },
+  {
+   "ms": 1120.0,
+   "content": "므로 덧"
+  },
+  {
+   "ms": 1193.2,
+   "content": "셈(`"
+  },
+  {
+   "ms": 1259.0,
+   "content": "+`)을 수행"
+  },
+  {
+   "ms": 1328.8,
+   "content": "해야 하지만"
+  },
+  {
+   "ms": 1398.5,
+   "content": ", 현재"
+  },
+  {
+   "ms": 1467.9,
+   "content": "는"
+  },
+  {
+   "ms": 1537.4,
+   "content": " 뺄"
+  },
+  {
+   "ms": 1607.3,
+   "content": "셈(`-`)"
+  },
+  {
+   "ms": 1676.8,
+   "content": "을 수행하고 있습니다"
+  },
+  {
+   "ms": 1746.4,
+   "content": ".\n\n###"
+  },
+  {
+   "ms": 1816.2,
+   "content": " 수정된 코드:"
+  },
+  {
+   "ms": 1885.7,
+   "content": "\n```python\n"
+  },
+  {
+   "ms": 1955.6,
+   "content": "def add(a,"
+  },
+  {
+   "ms": 2024.7,
+   "content": " b):\n   "
+  },
+  {
+   "ms": 2097.3,
+   "content": " return a +"
+  },
+  {
+   "ms": 2164.2,
+   "content": " b\n```\n\n"
+  },
+  {
+   "ms": 2233.8,
+   "content": "### 설명:\n"
+  },
+  {
+   "ms": 2305.1,
+   "content": "- **"
+  },
+  {
+   "ms": 2373.2,
+   "content": "버그"
+  },
+  {
+   "ms": 2447.4,
+   "content": "**: `return"
+  },
+  {
+   "ms": 2512.8,
+   "content": " a - b`"
+  },
+  {
+   "ms": 2582.8,
+   "content": " ("
+  },
+  {
+   "ms": 2722.1,
+   "content": "뺄셈)"
+  },
+  {
+   "ms": 2792.6,
+   "content": "\n- **수"
+  },
+  {
+   "ms": 2871.7,
+   "content": "정**: `return"
+  },
+  {
+   "ms": 2930.8,
+   "content": " a + b`"
+  },
+  {
+   "ms": 3000.2,
+   "content": " (덧셈)"
+  },
+  {
+   "ms": 3069.9,
+   "content": "\n\n이로써"
+  },
+  {
+   "ms": 3142.7,
+   "content": " 함수"
+  },
+  {
+   "ms": 3209.8,
+   "content": "가"
+  },
+  {
+   "ms": 3279.0,
+   "content": " 의"
+  },
+  {
+   "ms": 3355.7,
+   "content": "도한"
+  },
+  {
+   "ms": 3418.1,
+   "content": " 대로 두"
+  },
+  {
+   "ms": 3487.8,
+   "content": " 수"
+  },
+  {
+   "ms": 3557.3,
+   "content": "를 더하여"
+  },
+  {
+   "ms": 3626.7,
+   "content": " 반환합니다."
+  }
+ ]
+}

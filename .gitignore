@@ -1,0 +1,33 @@
+# 자격 증명과 로컬 설정. 데모 계정 비밀번호는 어떤 파일에도 두지 않는다(명령의 환경 변수로만 넘긴다).
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+
+# Terraform 상태에는 ECR 토큰 같은 값이 들어 있다. infra/terraform/.gitignore에도 같은 규칙이 있다.
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform/
+.kubeconfig
+
+# 빌드 산출물과 의존성
+node_modules/
+dist/
+cdk.out/
+__pycache__/
+*.pyc
+
+# 편집기와 운영체제
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# 환경마다 다른 값(버킷 이름, 작업 공간 주소, 공인 IP)이 든 파일. 자리 표시만 든 *.example을 추적한다.
+# 실제 값은 terraform output에서 읽어 채운다(docs/onboarding.md). 예시와 내용이 어긋나면 하네스 시험이 알린다.
+k8s/base/params.yaml
+k8s/observability/prometheus.yml
+bench/coldstart/k8s/storage-s3.yaml
+jobs/model-sync/params.env
+infra/terraform/terraform.tfvars

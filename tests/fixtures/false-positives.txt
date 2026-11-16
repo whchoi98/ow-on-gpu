@@ -1,0 +1,27 @@
+dGhpcyBpcyBhIHRlc3Q=
+password = ""
+CLAUDE_NOTIFY_WEBHOOK=
+aws_secret_access_key="testing"
+akiaiosfodnn7example
+AKIA_PREFIX_IS_NOT_A_KEY
+secret_name = os.environ["SECRET_NAME"]
+api_key: ${API_KEY}
+USER_PASSWORD="$USER_PASSWORD" app/bff/create-user.sh demo@example.com
+from huggingface_hub import hf_hub_download
+비밀번호는 코드와 Terraform state에 두지 않습니다
+| `x-bff-sensitive` | `true`, `false` | 민감 정보 요청으로 다뤘는지 |
+sha256:75b43c49b89172d0cb9387c42f0434d86b22e96bf719df20552186f9aa29d7ff
+arn:aws:elasticloadbalancing:*:*:targetgroup/*/*
+arn:aws:bedrock-agentcore:us-east-1:aws:tool/web-search.v1
+arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+image: 763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/strands-decider@sha256:c11c41913c586c98
+https://<cloudfront-domain>/v1/chat/completions
+<account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/bff:20261116-130728
+cidr: 10.200.43.97/32
+ip-10-200-20-131.ap-northeast-2.compute.internal
+https://aps-workspaces.ap-northeast-2.amazonaws.com/workspaces/<amp-workspace-id>/api/v1/remote_write
+bucketName: ow-on-gpu-<suffix>
+elasticloadbalancing.ap-northeast-2.amazonaws.com
+app/web/src/App.jsx
+image: vllm/vllm-openai:v0.33.0
+target: <arn> via <elb-dns-name>

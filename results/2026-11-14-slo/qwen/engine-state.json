@@ -1,0 +1,142 @@
+[
+ {
+  "scenario": "S1_chat",
+  "concurrency": 1,
+  "started": "15:50:09",
+  "seconds": "78",
+  "running_max": 1.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.28260869565217395,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 2,
+  "started": "15:51:27",
+  "seconds": "43",
+  "running_max": 2.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.5652173913043479,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 4,
+  "started": "15:52:10",
+  "seconds": "59",
+  "running_max": 3.0,
+  "waiting_max": 1.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 8,
+  "started": "15:53:09",
+  "seconds": "98",
+  "running_max": 3.0,
+  "waiting_max": 5.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 16,
+  "started": "15:54:47",
+  "seconds": "194",
+  "running_max": 3.0,
+  "waiting_max": 13.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 32,
+  "started": "15:58:01",
+  "seconds": "394",
+  "running_max": 3.0,
+  "waiting_max": 29.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S1_chat",
+  "concurrency": 64,
+  "started": "16:04:35",
+  "seconds": "371",
+  "running_max": 3.0,
+  "waiting_max": 61.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 1,
+  "started": "16:10:46",
+  "seconds": "130",
+  "running_max": 1.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.28260869565217395,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 2,
+  "started": "16:12:56",
+  "seconds": "69",
+  "running_max": 2.0,
+  "waiting_max": 0.0,
+  "kv_usage_max": 0.5652173913043479,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 4,
+  "started": "16:14:05",
+  "seconds": "114",
+  "running_max": 3.0,
+  "waiting_max": 1.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 8,
+  "started": "16:15:59",
+  "seconds": "176",
+  "running_max": 3.0,
+  "waiting_max": 5.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 16,
+  "started": "16:18:55",
+  "seconds": "339",
+  "running_max": 3.0,
+  "waiting_max": 13.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 32,
+  "started": "16:24:34",
+  "seconds": "698",
+  "running_max": 3.0,
+  "waiting_max": 29.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ },
+ {
+  "scenario": "S2_summary",
+  "concurrency": 64,
+  "started": "16:36:12",
+  "seconds": "697",
+  "running_max": 3.0,
+  "waiting_max": 61.0,
+  "kv_usage_max": 0.8478260869565217,
+  "preemptions": 0.0
+ }
+]

@@ -1,0 +1,132 @@
+# infra/terraform/storage.tf가 이 ServiceAccount에 S3 쓰기 역할을 Pod Identity로 연결한다.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cache-publish
+automountServiceAccountToken: false
+---
+# 공통 사항
+# - 캐시가 있는 노드에서만 돌아야 하므로 vLLM 파드와 같은 노드로 묶는다(podAffinity).
+#   vLLM 파드가 없으면 Pending으로 남고, Karpenter가 이 Job 때문에 GPU 노드를 새로 띄우지 않는다.
+# - GPU는 요청하지 않는다. 노드에 이미 있는 vLLM 이미지를 쓴다.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cache-publish-gemma
+  labels:
+    model: gemma
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        model: gemma
+    spec:
+      serviceAccountName: cache-publish
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              namespaces: ["inference"]
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: vllm-gemma
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: publish
+          image: vllm/vllm-openai:v0.33.0
+          command: ["python3", "/scripts/cache-publish.py"]
+          env:
+            - name: MODEL_BUCKET
+              valueFrom:
+                configMapKeyRef: {name: platform, key: MODEL_BUCKET}
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef: {name: platform, key: AWS_REGION}
+            - name: CACHE_PREFIX
+              value: vllm-cache/v0.33.0-gemma4-31b-fp8-l40s
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: vllm-cache
+              mountPath: /vllm-cache
+              readOnly: true
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+      volumes:
+        - name: vllm-cache
+          hostPath:
+            path: /var/cache/vllm
+            type: Directory
+        - name: scripts
+          configMap:
+            name: cache-publish
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cache-publish-qwen
+  labels:
+    model: qwen
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        model: qwen
+    spec:
+      serviceAccountName: cache-publish
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              namespaces: ["inference"]
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: vllm-qwen
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: publish
+          image: vllm/vllm-openai:v0.33.0
+          command: ["python3", "/scripts/cache-publish.py"]
+          env:
+            - name: MODEL_BUCKET
+              valueFrom:
+                configMapKeyRef: {name: platform, key: MODEL_BUCKET}
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef: {name: platform, key: AWS_REGION}
+            - name: CACHE_PREFIX
+              value: vllm-cache/v0.33.0-qwen38-27b-fp8-l40s
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: vllm-cache
+              mountPath: /vllm-cache
+              readOnly: true
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+      volumes:
+        - name: vllm-cache
+          hostPath:
+            path: /var/cache/vllm
+            type: Directory
+        - name: scripts
+          configMap:
+            name: cache-publish

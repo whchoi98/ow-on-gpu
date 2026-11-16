@@ -1,0 +1,534 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"decider"},"name":"decider","namespace":"inference"},"spec":{"replicas":1,"selector":{"matchLabels":{"app.kubernetes.io/name":"decider"}},"strategy":{"type":"Recreate"},"template":{"metadata":{"labels":{"app.kubernetes.io/name":"decider"}},"spec":{"automountServiceAccountToken":false,"containers":[{"env":[{"name":"DECIDER_CHECKPOINT","value":"/opt/ml/model/strands-decider-2B-qwen3.5-v1-2610"},{"name":"DECIDER_MAX_CONCURRENCY","value":"1"}],"image":"763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/strands-decider@sha256:c11c41913c586c98635f1aa7e9c5bcfb0e588292674f34858c825805f2bf7987","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":"http"},"periodSeconds":10},"name":"decider","ports":[{"containerPort":8080,"name":"http"}],"readinessProbe":{"httpGet":{"path":"/health","port":"http"},"periodSeconds":2},"resources":{"limits":{"memory":"12Gi","nvidia.com/gpu":1},"requests":{"cpu":"2","memory":"8Gi"}},"startupProbe":{"failureThreshold":900,"httpGet":{"path":"/health","port":"http"},"periodSeconds":1},"volumeMounts":[{"mountPath":"/opt/ml/model","name":"model"}]}],"initContainers":[{"args":["set -eu\nMODEL=strands-decider-2B-qwen3.5-v1-2610\naws s3 sync \"s3://$MODEL_BUCKET/models/$MODEL/\" \"/opt/ml/model/$MODEL/\" --only-show-errors\naws s3 sync \"s3://$MODEL_BUCKET/models/Qwen3.5-2B-Base/\" /opt/ml/model/base/ --only-show-errors\nsed -i 's#\"base_model\": *\"[^\"]*\"#\"base_model\": \"/opt/ml/model/base\"#' \"/opt/ml/model/$MODEL/strands_decider_config.json\"\ngrep '\"base_model\"' \"/opt/ml/model/$MODEL/strands_decider_config.json\"\ndu -sh /opt/ml/model/*\n"],"command":["/bin/sh","-c"],"env":[{"name":"MODEL_BUCKET","valueFrom":{"configMapKeyRef":{"key":"MODEL_BUCKET","name":"platform"}}},{"name":"AWS_DEFAULT_REGION","valueFrom":{"configMapKeyRef":{"key":"AWS_REGION","name":"platform"}}}],"image":"public.ecr.aws/aws-cli/aws-cli:2.40.3","name":"model-fetch","volumeMounts":[{"mountPath":"/opt/ml/model","name":"model"}]}],"nodeSelector":{"karpenter.sh/nodepool":"decider"},"serviceAccountName":"decider","tolerations":[{"effect":"NoSchedule","key":"nvidia.com/gpu","operator":"Exists"}],"volumes":[{"emptyDir":{},"name":"model"}]}}}}
+    creationTimestamp: "2026-11-14T11:59:45Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/name: decider
+    name: decider
+    namespace: inference
+    resourceVersion: "39368"
+    uid: 5845cf12-a803-4877-812a-cfd9cc72a312
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: decider
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: decider
+      spec:
+        automountServiceAccountToken: false
+        containers:
+        - env:
+          - name: DECIDER_CHECKPOINT
+            value: /opt/ml/model/strands-decider-2B-qwen3.5-v1-2610
+          - name: DECIDER_MAX_CONCURRENCY
+            value: "1"
+          image: 763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/strands-decider@sha256:c11c41913c586c98635f1aa7e9c5bcfb0e588292674f34858c825805f2bf7987
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: decider
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 12Gi
+              nvidia.com/gpu: "1"
+            requests:
+              cpu: "2"
+              memory: 8Gi
+          startupProbe:
+            failureThreshold: 900
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/ml/model
+            name: model
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            set -eu
+            MODEL=strands-decider-2B-qwen3.5-v1-2610
+            aws s3 sync "s3://$MODEL_BUCKET/models/$MODEL/" "/opt/ml/model/$MODEL/" --only-show-errors
+            aws s3 sync "s3://$MODEL_BUCKET/models/Qwen3.5-2B-Base/" /opt/ml/model/base/ --only-show-errors
+            sed -i 's#"base_model": *"[^"]*"#"base_model": "/opt/ml/model/base"#' "/opt/ml/model/$MODEL/strands_decider_config.json"
+            grep '"base_model"' "/opt/ml/model/$MODEL/strands_decider_config.json"
+            du -sh /opt/ml/model/*
+          command:
+          - /bin/sh
+          - -c
+          env:
+          - name: MODEL_BUCKET
+            valueFrom:
+              configMapKeyRef:
+                key: MODEL_BUCKET
+                name: platform
+          - name: AWS_DEFAULT_REGION
+            valueFrom:
+              configMapKeyRef:
+                key: AWS_REGION
+                name: platform
+          image: public.ecr.aws/aws-cli/aws-cli:2.40.3
+          imagePullPolicy: IfNotPresent
+          name: model-fetch
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/ml/model
+            name: model
+        nodeSelector:
+          karpenter.sh/nodepool: decider
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: decider
+        serviceAccountName: decider
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - effect: NoSchedule
+          key: nvidia.com/gpu
+          operator: Exists
+        volumes:
+        - emptyDir: {}
+          name: model
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-11-14T12:06:08Z"
+      lastUpdateTime: "2026-11-14T12:06:08Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-11-14T11:59:45Z"
+      lastUpdateTime: "2026-11-14T12:06:08Z"
+      message: ReplicaSet "decider-7fd85dcb85" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-11-14T12:04:24Z"
+    generateName: decider-7fd85dcb85-
+    generation: 1
+    labels:
+      app.kubernetes.io/name: decider
+      eks.amazonaws.com/pod-identity: enabled
+      pod-template-hash: 7fd85dcb85
+      topology.kubernetes.io/region: ap-northeast-2
+      topology.kubernetes.io/zone: ap-northeast-2a
+    name: decider-7fd85dcb85-lpss6
+    namespace: inference
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: decider-7fd85dcb85
+      uid: a44d5b82-677d-4188-95e8-ce01fefcf5b2
+    resourceVersion: "39364"
+    uid: ed4503f2-d3a5-42b8-bad4-86b5c5a51939
+  spec:
+    automountServiceAccountToken: false
+    containers:
+    - env:
+      - name: DECIDER_CHECKPOINT
+        value: /opt/ml/model/strands-decider-2B-qwen3.5-v1-2610
+      - name: DECIDER_MAX_CONCURRENCY
+        value: "1"
+      - name: AWS_STS_REGIONAL_ENDPOINTS
+        value: regional
+      - name: AWS_DEFAULT_REGION
+        value: ap-northeast-2
+      - name: AWS_REGION
+        value: ap-northeast-2
+      - name: AWS_CONTAINER_CREDENTIALS_FULL_URI
+        value: http://169.254.170.23/v1/credentials
+      - name: AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE
+        value: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token
+      image: 763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/strands-decider@sha256:c11c41913c586c98635f1aa7e9c5bcfb0e588292674f34858c825805f2bf7987
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: http
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: decider
+      ports:
+      - containerPort: 8080
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: http
+          scheme: HTTP
+        periodSeconds: 2
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          memory: 12Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "2"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+      startupProbe:
+        failureThreshold: 900
+        httpGet:
+          path: /health
+          port: http
+          scheme: HTTP
+        periodSeconds: 1
+        successThreshold: 1
+        timeoutSeconds: 1
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /opt/ml/model
+        name: model
+      - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+        name: eks-pod-identity-token
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - args:
+      - |
+        set -eu
+        MODEL=strands-decider-2B-qwen3.5-v1-2610
+        aws s3 sync "s3://$MODEL_BUCKET/models/$MODEL/" "/opt/ml/model/$MODEL/" --only-show-errors
+        aws s3 sync "s3://$MODEL_BUCKET/models/Qwen3.5-2B-Base/" /opt/ml/model/base/ --only-show-errors
+        sed -i 's#"base_model": *"[^"]*"#"base_model": "/opt/ml/model/base"#' "/opt/ml/model/$MODEL/strands_decider_config.json"
+        grep '"base_model"' "/opt/ml/model/$MODEL/strands_decider_config.json"
+        du -sh /opt/ml/model/*
+      command:
+      - /bin/sh
+      - -c
+      env:
+      - name: MODEL_BUCKET
+        valueFrom:
+          configMapKeyRef:
+            key: MODEL_BUCKET
+            name: platform
+      - name: AWS_DEFAULT_REGION
+        valueFrom:
+          configMapKeyRef:
+            key: AWS_REGION
+            name: platform
+      - name: AWS_STS_REGIONAL_ENDPOINTS
+        value: regional
+      - name: AWS_CONTAINER_CREDENTIALS_FULL_URI
+        value: http://169.254.170.23/v1/credentials
+      - name: AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE
+        value: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token
+      image: public.ecr.aws/aws-cli/aws-cli:2.40.3
+      imagePullPolicy: IfNotPresent
+      name: model-fetch
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /opt/ml/model
+        name: model
+      - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+        name: eks-pod-identity-token
+        readOnly: true
+    nodeName: ip-10-200-16-182.ap-northeast-2.compute.internal
+    nodeSelector:
+      karpenter.sh/nodepool: decider
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: decider
+    serviceAccountName: decider
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: eks-pod-identity-token
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            audience: pods.eks.amazonaws.com
+            expirationSeconds: 83753
+            path: eks-pod-identity-token
+    - emptyDir: {}
+      name: model
+  status:
+    allocatedResources:
+      cpu: "2"
+      memory: 8Gi
+      nvidia.com/gpu: "1"
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-11-14T12:04:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-11-14T12:04:40Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-11-14T12:06:08Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-11-14T12:06:08Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-11-14T12:04:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: "2"
+        memory: 8Gi
+        nvidia.com/gpu: "1"
+      allocatedResourcesStatus:
+      - name: nvidia.com/gpu
+        resources:
+        - health: Healthy
+          resourceID: GPU-e5d21f02-6d62-a487-60ab-711d850f2b16
+      containerID: containerd://6e6791369e6c7d1dfb1eabe44610304a4e13dd7474e2bfc22d5a533ba6ab3914
+      image: sha256:9e2e99cc8249cc79c4a7be06941f27816e986c228e8eb8ce68db21f5d040ea82
+      imageID: 763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/strands-decider@sha256:c11c41913c586c98635f1aa7e9c5bcfb0e588292674f34858c825805f2bf7987
+      lastState: {}
+      name: decider
+      ready: true
+      resources:
+        limits:
+          memory: 12Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "2"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-11-14T12:04:41Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /opt/ml/model
+        name: model
+      - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+        name: eks-pod-identity-token
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.200.16.182
+    hostIPs:
+    - ip: 10.200.16.182
+    initContainerStatuses:
+    - containerID: containerd://fc4d183a988de07bbe1d1208cfa68b96308d39662e66fdf4496d6291e10b3f14
+      image: public.ecr.aws/aws-cli/aws-cli:2.40.3
+      imageID: public.ecr.aws/aws-cli/aws-cli@sha256:33a16c53ea442e918b58df67301ad76a8fb57082c39f7e78753b898c3f3e87c2
+      lastState: {}
+      name: model-fetch
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://fc4d183a988de07bbe1d1208cfa68b96308d39662e66fdf4496d6291e10b3f14
+          exitCode: 0
+          finishedAt: "2026-11-14T12:04:39Z"
+          reason: Completed
+          startedAt: "2026-11-14T12:04:25Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /opt/ml/model
+        name: model
+      - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+        name: eks-pod-identity-token
+        readOnly: true
+        recursiveReadOnly: Disabled
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.200.17.84
+    podIPs:
+    - ip: 10.200.17.84
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 12Gi
+      requests:
+        cpu: 1999m
+        memory: 8Gi
+    startTime: "2026-11-14T12:04:25Z"
+- apiVersion: gateway.networking.k8s.io/v1
+  kind: HTTPRoute
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"gateway.networking.k8s.io/v1","kind":"HTTPRoute","metadata":{"annotations":{},"name":"decider","namespace":"inference"},"spec":{"parentRefs":[{"name":"inference-gateway"}],"rules":[{"backendRefs":[{"name":"decider","port":8080}],"filters":[{"type":"URLRewrite","urlRewrite":{"path":{"replaceFullPath":"/v1/systemone","type":"ReplaceFullPath"}}}],"matches":[{"method":"POST","path":{"type":"Exact","value":"/decide"}}],"timeouts":{"request":"30s"}}]}}
+    creationTimestamp: "2026-11-14T11:59:45Z"
+    generation: 1
+    name: decider
+    namespace: inference
+    resourceVersion: "36786"
+    uid: 393d4180-5091-4c92-979f-d197059050a5
+  spec:
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: inference-gateway
+    rules:
+    - backendRefs:
+      - group: ""
+        kind: Service
+        name: decider
+        port: 8080
+        weight: 1
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            replaceFullPath: /v1/systemone
+            type: ReplaceFullPath
+      matches:
+      - method: POST
+        path:
+          type: Exact
+          value: /decide
+      timeouts:
+        request: 30s
+  status:
+    parents:
+    - conditions:
+      - lastTransitionTime: "2026-11-14T11:59:45Z"
+        message: ""
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:59:45Z"
+        message: ""
+        observedGeneration: 1
+        reason: ResolvedRefs
+        status: "True"
+        type: ResolvedRefs
+      controllerName: agentgateway.dev/agentgateway
+      parentRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: inference-gateway
+        namespace: inference
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"decider"},"name":"decider","namespace":"inference"},"spec":{"ports":[{"name":"http","port":8080,"targetPort":"http"}],"selector":{"app.kubernetes.io/name":"decider"}}}
+    creationTimestamp: "2026-11-14T11:59:45Z"
+    labels:
+      app.kubernetes.io/name: decider
+    name: decider
+    namespace: inference
+    resourceVersion: "36775"
+    uid: 4d428554-c69a-44b3-a0b4-1ead24a1b668
+  spec:
+    clusterIP: 172.20.254.72
+    clusterIPs:
+    - 172.20.254.72
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+    selector:
+      app.kubernetes.io/name: decider
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""

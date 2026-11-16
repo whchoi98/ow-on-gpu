@@ -1,0 +1,10 @@
+2026-11-14T15:40:13Z	FailedScheduling	0/8 nodes are available: 1 Insufficient cpu, 1 Insufficient memory, 1 Insufficient nvidia.com/gpu, 3 node(s) had untolerated taint(s), 4 node(s) didn't match Pod's node affinity/selector. preemption: 0/8 nodes are available: 1 No preemption victims found for incoming pod, 7 Preemption is not helpful for scheduling.
+2026-11-14T15:40:14Z	FailedScheduling	Failed to schedule pod, incompatible requirements, key karpenter.sh/nodepool, karpenter.sh/nodepool In [qwen-od] not in karpenter.sh/nodepool In [system]; all available instance types exceed limits for nodepool (NodePool=qwen-od); all available instance types exceed limits for nodepool (NodePool=gemma-od); incompatible requirements, key karpenter.sh/nodepool, karpenter.sh/nodepool In [qwen-od] not in karpenter.sh/nodepool In [gemma-noprepull]; all available instance types exceed limits for nodepool (NodePool=decider); all available instance types exceed limits for nodepool (NodePool=bench)
+2026-11-14T15:40:14Z	Scheduled	Successfully assigned inference/vllm-qwen-5fc4d6cfd-47sj8 to ip-10-200-27-13.ap-northeast-2.compute.internal
+2026-11-14T15:40:15Z	Pulled	Container image "vllm/vllm-openai:v0.33.0" already present on machine and can be accessed by the pod
+2026-11-14T15:40:15Z	Created	Container created
+2026-11-14T15:40:16Z	Started	Container started
+2026-11-14T15:40:18Z	Pulled	Container image "vllm/vllm-openai:v0.33.0" already present on machine and can be accessed by the pod
+2026-11-14T15:40:18Z	Created	Container created
+2026-11-14T15:40:18Z	Started	Container started
+2026-11-14T15:40:19Z	Unhealthy	Startup probe failed: Get "http://10.200.23.87:8000/health": dial tcp 10.200.23.87:8000: connect: connection refused

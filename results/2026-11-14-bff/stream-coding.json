@@ -1,0 +1,203 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "coding",
+ "prompt": "파이썬으로 리스트의 중복을 순서를 유지하면서 제거하는 함수를 작성해 주세요.",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "99f2d4db06c44c7281d5ab294fbe7b3e",
+  "x-bff-model": "qwen38-27b",
+  "x-bff-decision": "task",
+  "x-bff-sensitive": "false",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 77598db0c99afb20a70a6e3ccfa9a9c6.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 49.0,
+ "first_content_ms": 198.2,
+ "last_content_ms": 3052.7,
+ "total_ms": 3053.8,
+ "content_events": 42,
+ "gap_ms": {
+  "median": 69.7,
+  "max": 112.7,
+  "min": 38.2,
+  "share_under_1ms": 0.0
+ },
+ "text": "# 리스트 중복 제거 (순서 유지)\n\n## 함수 구현\n\n```python\ndef remove_duplicates(lst: list) -> list:\n    \"\"\"\n    리스트에서 중복 요소를 제거하되, 처음 등장한 순서를 유지한다.\n    \n    Args:\n        lst: 중복 제거할 리스트\n        \n    Returns:\n        중복이 제거된 리스트 (순서 유지)\n    \"\"\"\n    seen = set()\n    result = []\n    for item in lst:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n```\n\n## 동작",
+ "events": [
+  {
+   "ms": 198.2,
+   "content": "#"
+  },
+  {
+   "ms": 267.0,
+   "content": " 리스트"
+  },
+  {
+   "ms": 336.8,
+   "content": " 중복"
+  },
+  {
+   "ms": 406.6,
+   "content": " 제거 ("
+  },
+  {
+   "ms": 481.3,
+   "content": "순서 유지)"
+  },
+  {
+   "ms": 545.3,
+   "content": "\n\n##"
+  },
+  {
+   "ms": 614.8,
+   "content": " 함수 구현"
+  },
+  {
+   "ms": 684.5,
+   "content": "\n\n```python\n"
+  },
+  {
+   "ms": 754.2,
+   "content": "def remove_duplicates(lst"
+  },
+  {
+   "ms": 825.3,
+   "content": ":"
+  },
+  {
+   "ms": 893.8,
+   "content": " list) -> list"
+  },
+  {
+   "ms": 962.6,
+   "content": ":\n    \"\"\""
+  },
+  {
+   "ms": 1033.0,
+   "content": "\n    리스트"
+  },
+  {
+   "ms": 1102.4,
+   "content": "에서"
+  },
+  {
+   "ms": 1175.8,
+   "content": " 중복 요"
+  },
+  {
+   "ms": 1241.8,
+   "content": "소를 제거하"
+  },
+  {
+   "ms": 1311.6,
+   "content": "되, 처음"
+  },
+  {
+   "ms": 1381.2,
+   "content": " 등장"
+  },
+  {
+   "ms": 1450.4,
+   "content": "한 순서를 유지"
+  },
+  {
+   "ms": 1519.9,
+   "content": "한다.\n    \n"
+  },
+  {
+   "ms": 1590.8,
+   "content": "    Args:\n"
+  },
+  {
+   "ms": 1659.9,
+   "content": "        lst: 중복"
+  },
+  {
+   "ms": 1730.1,
+   "content": " 제거"
+  },
+  {
+   "ms": 1799.6,
+   "content": "할"
+  },
+  {
+   "ms": 1869.7,
+   "content": " 리스트"
+  },
+  {
+   "ms": 1939.1,
+   "content": "\n        \n    Returns:"
+  },
+  {
+   "ms": 2008.9,
+   "content": "\n        중복이"
+  },
+  {
+   "ms": 2080.7,
+   "content": " 제거된 리스트"
+  },
+  {
+   "ms": 2147.7,
+   "content": " (순서 유지"
+  },
+  {
+   "ms": 2217.5,
+   "content": ")\n    \"\"\""
+  },
+  {
+   "ms": 2286.8,
+   "content": "\n    seen ="
+  },
+  {
+   "ms": 2356.8,
+   "content": " set()\n   "
+  },
+  {
+   "ms": 2430.5,
+   "content": " result = []\n"
+  },
+  {
+   "ms": 2495.6,
+   "content": "    for item in"
+  },
+  {
+   "ms": 2565.6,
+   "content": " lst:\n       "
+  },
+  {
+   "ms": 2678.3,
+   "content": " if item not in"
+  },
+  {
+   "ms": 2716.5,
+   "content": " seen:\n           "
+  },
+  {
+   "ms": 2775.9,
+   "content": " seen.add(item)"
+  },
+  {
+   "ms": 2843.9,
+   "content": "\n            result.append"
+  },
+  {
+   "ms": 2914.0,
+   "content": "(item)\n   "
+  },
+  {
+   "ms": 2984.0,
+   "content": " return result\n```"
+  },
+  {
+   "ms": 3052.7,
+   "content": "\n\n## 동작"
+  }
+ ]
+}

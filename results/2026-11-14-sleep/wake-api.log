@@ -1,0 +1,6 @@
+Found 2 pods, using pod/qwen-wake-api-566769c46-rbtxv
+[pod/qwen-wake-api-566769c46-rbtxv/wake-api] {"event": "wake", "was_sleeping": false, "awake": true}
+[pod/qwen-wake-api-566769c46-rbtxv/wake-api] {"event": "wake", "was_sleeping": true, "awake": true, "wake_seconds": 3.639}
+[pod/qwen-wake-api-566769c46-rbtxv/wake-api] {"event": "wake", "was_sleeping": true, "awake": true, "wake_seconds": 3.639}
+[pod/qwen-wake-api-566769c46-rbtxv/wake-api] {"event": "wake", "was_sleeping": true, "awake": true, "wake_seconds": 3.637}
+[pod/qwen-wake-api-566769c46-rbtxv/wake-api] {"event": "wake", "was_sleeping": true, "awake": true, "wake_seconds": 3.641}

@@ -1,0 +1,90 @@
+# 콜드 스타트의 기준 구성. 1부의 기준 구성(Mountpoint FUSE 마운트, vLLM 기본 로더, 캐시 없음)을
+# 이 환경의 Gemma에 옮긴 것이다. k8s/gemma/deployment.yaml과 다른 점은 다음 네 가지뿐이다.
+#   1. 가중치: s3:// 주소와 runai_streamer 대신 Mountpoint로 마운트한 /data를 기본 로더로 읽는다
+#   2. compile 캐시: VLLM_CACHE_ROOT와 hostPath, 캐시 복원 initContainer가 없다. 캐시는 컨테이너 안에 생기고 파드와 함께 사라진다
+#   3. 이미지: 사전 pull을 하지 않는 노드 풀(gemma-noprepull)을 고른다
+#   4. runai_streamer용 환경 변수가 없다
+# Deployment 이름이 같으므로 적용하면 서빙 중인 Gemma가 이 구성으로 바뀐다. 되돌릴 때는 `kubectl apply -k k8s/gemma`를 쓴다.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-gemma
+  namespace: inference
+  labels:
+    app.kubernetes.io/name: vllm-gemma
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 1800
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vllm-gemma
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vllm-gemma
+    spec:
+      serviceAccountName: gemma
+      automountServiceAccountToken: false
+      nodeSelector:
+        karpenter.sh/nodepool: gemma-noprepull
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:v0.33.0
+          args:
+            - /data/gemma-4-31B-it-FP8-dynamic
+            - --served-model-name=gemma-4-31b
+            - --language-model-only
+            - --max-model-len=16384
+            - --kv-cache-dtype=fp8
+            - --gpu-memory-utilization=0.90
+            - --enable-prefix-caching
+            - --scheduling-policy=priority
+            - --enable-auto-tool-choice
+            - --tool-call-parser=gemma4
+            - --reasoning-parser=gemma4
+          env:
+            - name: HF_HUB_OFFLINE
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8000
+          resources:
+            requests:
+              cpu: "12"
+              memory: 64Gi
+            limits:
+              memory: 110Gi
+              nvidia.com/gpu: 1
+          startupProbe:
+            httpGet: {path: /health, port: http}
+            periodSeconds: 1
+            failureThreshold: 1800
+          readinessProbe:
+            httpGet: {path: /health, port: http}
+            periodSeconds: 2
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+            periodSeconds: 10
+            failureThreshold: 3
+          volumeMounts:
+            - name: models
+              mountPath: /data
+              readOnly: true
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: models-s3
+            readOnly: true
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi

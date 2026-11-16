@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: inference
+
+resources:
+  - wake-api.yaml
+  - cronjobs.yaml
+  - networkpolicies.yaml
+
+configMapGenerator:
+  - name: sleep-controller-scripts
+    files:
+      - wake-api.py
+      - cron.py

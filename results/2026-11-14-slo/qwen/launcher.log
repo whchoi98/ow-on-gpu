@@ -1,0 +1,5 @@
+Job slo-qwen을 만들었습니다. 측정 노드와 이미지를 기다립니다
+파드 slo-qwen-n4v2r에서 실행 중입니다. 로그: results/2026-11-14-slo/qwen/job.log
+tar: Removing leading `/' from member names
+끝났습니다(종료 코드 0). 결과: results/2026-11-14-slo/qwen
+exit=0

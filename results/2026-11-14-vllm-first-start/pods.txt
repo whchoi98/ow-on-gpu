@@ -1,0 +1,7 @@
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                     SELECTOR
+deployment.apps/vllm-gemma   1/1     1            1           18m   vllm         vllm/vllm-openai:v0.33.0   app.kubernetes.io/name=vllm-gemma
+deployment.apps/vllm-qwen    1/1     1            1           15m   vllm         vllm/vllm-openai:v0.33.0   app.kubernetes.io/name=vllm-qwen
+
+NAME                             READY   STATUS    RESTARTS   AGE     IP             NODE                                               NOMINATED NODE   READINESS GATES
+pod/vllm-gemma-96db4d976-lp9gk   1/1     Running   0          18m     10.200.41.88   ip-10-200-43-168.ap-northeast-2.compute.internal   <none>           <none>
+pod/vllm-qwen-5fc4d6cfd-s5pzs    1/1     Running   0          4m13s   10.200.27.93   ip-10-200-16-234.ap-northeast-2.compute.internal   <none>           <none>

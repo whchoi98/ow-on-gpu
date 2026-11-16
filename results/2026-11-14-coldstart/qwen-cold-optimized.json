@@ -1,0 +1,53 @@
+{
+ "label": "qwen-cold-optimized",
+ "scenario": "cold-optimized",
+ "pod": "vllm-qwen-5fc4d6cfd-c5x69",
+ "node": "ip-10-200-27-13.ap-northeast-2.compute.internal",
+ "instance_type": "g6e.4xlarge",
+ "capacity_type": "on-demand",
+ "zone": "ap-northeast-2a",
+ "nodepool": "qwen-od",
+ "new_node": true,
+ "restart_count": 0,
+ "timestamps": {
+  "pod_created": "2026-11-14T15:33:33Z",
+  "nodeclaim_created": "2026-11-14T15:33:35Z",
+  "node_ready": "2026-11-14T15:34:38+00:00",
+  "pod_scheduled": "2026-11-14T15:34:49+00:00",
+  "pod_initialized": "2026-11-14T15:36:23+00:00",
+  "container_started": "2026-11-14T15:36:24Z",
+  "pod_ready": "2026-11-14T15:38:23+00:00"
+ },
+ "segments_s": {
+  "total": 290.0,
+  "node_provisioning": 63.0,
+  "image_pull": 77.5,
+  "weight_load": 34.878809,
+  "engine_init": 42.49,
+  "other": 72.1
+ },
+ "detail_s": {
+  "pod_created_to_scheduled": 76.0,
+  "scheduled_to_container_start": 95.0,
+  "container_start_to_ready": 119.0,
+  "compilation": 0.82,
+  "loading_weights_took": null,
+  "init_containers": [
+   {
+    "name": "cache-restore",
+    "seconds": 10.0
+   }
+  ]
+ },
+ "weight_load_marker": "Model loading took",
+ "image_pulls": [
+  {
+   "seconds": 77.5,
+   "message": "Successfully pulled image \"vllm/vllm-openai:v0.33.0\" in 1m17.515s (1m17.515s including waiting). Image size: 9738549569 bytes."
+  },
+  {
+   "seconds": 0.0,
+   "message": "Container image \"vllm/vllm-openai:v0.33.0\" already present on machine and can be accessed by the pod"
+  }
+ ]
+}

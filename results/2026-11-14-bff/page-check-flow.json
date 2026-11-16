@@ -1,0 +1,168 @@
+{
+ "layout": {
+  "consoleWidth": 1760,
+  "examples": 19,
+  "tasks": 5,
+  "flowNodes": 12,
+  "flowEdges": 13
+ },
+ "supportStreaming": {
+  "nodes": {
+   "user": "is-on",
+   "cf": "is-on",
+   "bff": "is-on",
+   "gw": "is-on",
+   "decider": "is-off",
+   "wake": "is-off",
+   "gemma": "is-now",
+   "qwen": "is-off"
+  },
+  "edges": {
+   "user-cf": "is-stream",
+   "gw-gemma": "is-stream",
+   "gw-qwen": "is-off",
+   "gw-decider": "is-off",
+   "bff-wake": "is-off"
+  },
+  "values": {
+   "user": "첫 토큰 1.68초",
+   "bff": "판단 0.5ms, 주문 조회 1회",
+   "gw": "첫 응답 23.2ms",
+   "gemma": "조각 6개, 54ms"
+  },
+  "status": "응답 조각이 모델에서 브라우저로 돌아오고 있습니다."
+ },
+ "supportDone": {
+  "flow": {
+   "nodes": {
+    "user": "is-on",
+    "cf": "is-on",
+    "bff": "is-on",
+    "gw": "is-on",
+    "decider": "is-off",
+    "wake": "is-off",
+    "gemma": "is-on",
+    "qwen": "is-off"
+   },
+   "edges": {
+    "user-cf": "is-on",
+    "gw-gemma": "is-on",
+    "gw-qwen": "is-off",
+    "gw-decider": "is-off",
+    "bff-wake": "is-off"
+   },
+   "values": {
+    "user": "첫 토큰 1.68초",
+    "bff": "판단 0.5ms, 주문 조회 1회",
+    "gw": "첫 응답 23.2ms",
+    "gemma": "조각 54개, 54ms"
+   },
+   "status": "요청이 끝났습니다. 표시한 경로와 시간은 이 요청의 값입니다."
+  },
+  "record": {
+   "head": "기록 1 | 상담 | Gemma 4 31B | 업무 종류로 결정 | 경로 표시 중 | 접기",
+   "reason": "결정 이유 업무 종류(상담)의 배정표에 따라 보냈습니다. Decider에는 묻지 않았습니다.",
+   "readouts": "응답 헤더 229ms 첫 토큰 1,684ms 조각 간격 54ms 조각 수 54개 전체 4.59초",
+   "strong": 2,
+   "rawStars": 0,
+   "reasoning": false,
+   "cut": ""
+  }
+ },
+ "decider": {
+  "flow": {
+   "nodes": {
+    "user": "is-on",
+    "cf": "is-on",
+    "bff": "is-on",
+    "gw": "is-on",
+    "decider": "is-on",
+    "wake": "is-on",
+    "gemma": "is-off",
+    "qwen": "is-on"
+   },
+   "edges": {
+    "user-cf": "is-on",
+    "gw-gemma": "is-off",
+    "gw-qwen": "is-on",
+    "gw-decider": "is-on",
+    "bff-wake": "is-on"
+   },
+   "values": {
+    "user": "첫 토큰 385.8ms",
+    "bff": "Decider 판단 채택",
+    "decider": "판단 152ms",
+    "wake": "확인 16ms",
+    "gw": "첫 응답 13.9ms",
+    "qwen": "조각 48개, 70ms"
+   },
+   "status": "요청이 끝났습니다. 표시한 경로와 시간은 이 요청의 값입니다."
+  },
+  "record": {
+   "head": "기록 2 | 자동 | Qwen3.8-27B | Decider가 결정 | 경로 표시 중 | 접기",
+   "reason": "결정 이유 Decider가 Qwen을 골랐습니다. 신뢰도는 0.95로 기준 0.60 이상입니다. 개인정보가 들어 있을 확률은 0.07로 낮게 보았습니다. 여러 단계의 추론이 필요할 확률은 0.42여서 thinking을 껐습니다.",
+   "readouts": "응답 헤더 385ms 첫 토큰 386ms 조각 간격 70ms 조각 수 48개 전체 3.73초",
+   "strong": 4,
+   "rawStars": 0,
+   "reasoning": false,
+   "cut": ""
+  }
+ },
+ "fallback": {
+  "flow": {
+   "user": "is-on",
+   "cf": "is-on",
+   "bff": "is-on",
+   "gw": "is-on",
+   "decider": "is-on",
+   "wake": "is-off",
+   "gemma": "is-on",
+   "qwen": "is-off"
+  },
+  "record": {
+   "head": "기록 3 | 자동 | Gemma 4 31B | 판단 실패, 기본값 사용 | 민감 정보 | 경로 표시 중 | 접기",
+   "reason": "결정 이유 Decider에 물었지만 모델 선택의 신뢰도(0.33)가 기준 0.60보다 낮아 그 판단을 쓰지 않았습니다. Decider의 답은 Gemma로 보내기, 개인정보일 확률 0.07, 추론이 필요할 확률 0.72였습니다. 그래서 기본값인 Gemma, thinking 끔, 민감 정보 있음으로 처리했습니다.",
+   "readouts": "응답 헤더 225ms 첫 토큰 226ms 조각 간격 54ms 조각 수 209개 전체 11.46초",
+   "strong": 9,
+   "rawStars": 0,
+   "reasoning": false,
+   "cut": ""
+  }
+ },
+ "rule": {
+  "record": {
+   "head": "기록 4 | 코딩 | Gemma 4 31B | 민감 정보 규칙으로 결정 | 민감 정보 | 경로 표시 중 | 접기",
+   "reason": "결정 이유 요청에 주민등록번호 형식이 있어 Decider에 묻지 않고 Gemma로 보냈습니다. 민감 정보가 든 요청은 Gemma로만 보냅니다.",
+   "readouts": "응답 헤더 80ms 첫 토큰 81ms 조각 간격 54ms 조각 수 966개 전체 52.30초",
+   "strong": 6,
+   "rawStars": 0,
+   "reasoning": false,
+   "cut": ""
+  }
+ },
+ "folded": {
+  "folded": 4,
+  "brief": "첫 토큰 81ms, 조각 966개, 전체 52.30초"
+ },
+ "focusOld": {
+  "title": "기록 1",
+  "flow": {
+   "user": "첫 토큰 1.68초",
+   "bff": "판단 0.5ms, 주문 조회 1회",
+   "gw": "첫 응답 23.2ms",
+   "gemma": "조각 54개, 54ms"
+  }
+ },
+ "compare": [
+  "보낸 요청 | 1건 | 1건",
+  "첫 토큰 (중앙값) | 186ms | 382ms",
+  "첫 토큰 (가장 느린 요청) | 186ms | 382ms",
+  "조각 간격 (중앙값) | 54ms | 70ms",
+  "조각 간격 (95%) | 57ms | 74ms",
+  "요청 하나의 생성 속도 | 초당 19.6토큰 | 초당 39.3토큰",
+  "모델 전체 처리량 | 초당 16.7토큰 | 초당 24.6토큰",
+  "출력 토큰 (중앙값) | 21개 | 31개",
+  "전체 시간 (중앙값) | 1.26초 | 1.22초"
+ ],
+ "problems": []
+}

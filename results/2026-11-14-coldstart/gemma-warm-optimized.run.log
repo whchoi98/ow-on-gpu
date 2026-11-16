@@ -1,0 +1,5 @@
+[17:35:38] 파드를 지웁니다: vllm-gemma-96db4d976-th9jn (노드 ip-10-200-36-101.ap-northeast-2.compute.internal)
+[17:35:39] 파드 vllm-gemma-96db4d976-hxwwh이 Ready가 될 때까지 기다립니다(최대 30분)
+{"total": 86.0, "node_provisioning": 0.0, "image_pull": 0.0, "weight_load": 19.61355, "engine_init": 23.69, "other": 42.7}
+[17:37:07] 저장: results/2026-11-14-coldstart/gemma-warm-optimized.json
+exit=0

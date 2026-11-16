@@ -1,0 +1,227 @@
+{
+ "url": "https://<cloudfront-domain>",
+ "task": "",
+ "prompt": "요금제 A는 월 9,900원이고 요금제 B는 연 99,000원입니다. 2년 동안 쓰면 어느 쪽이 얼마나 쌉니까?",
+ "checks": {
+  "post_without_token": 401,
+  "post_with_bad_token": 401,
+  "get_unknown_path_with_token": 404
+ },
+ "status": 200,
+ "response_headers": {
+  "Content-Type": "text/event-stream",
+  "Transfer-Encoding": "chunked",
+  "x-request-id": "d0ef370e9a8842fbbbfadecb6a5e986a",
+  "x-bff-model": "gemma-4-31b",
+  "x-bff-decision": "fallback",
+  "x-bff-sensitive": "true",
+  "X-Cache": "Miss from cloudfront",
+  "Via": "1.1 710d4241a504d54d8727cf0ca0752a1a.cloudfront.net (CloudFront)"
+ },
+ "headers_ms": 172.1,
+ "first_content_ms": 241.0,
+ "last_content_ms": 2744.4,
+ "total_ms": 2745.1,
+ "content_events": 48,
+ "gap_ms": {
+  "median": 53.4,
+  "max": 84.8,
+  "min": 21.9,
+  "share_under_1ms": 0.0
+ },
+ "text": "결론부터 말씀드리면, **요금제 B가 2년 동안 총 39,400원 더 저렴합니다.**\n\n상세 계산 내역은 다음과 같습니다.\n\n**1. 요금제",
+ "events": [
+  {
+   "ms": 241.0,
+   "content": "결"
+  },
+  {
+   "ms": 291.9,
+   "content": "론"
+  },
+  {
+   "ms": 340.9,
+   "content": "부터"
+  },
+  {
+   "ms": 395.0,
+   "content": " 말씀"
+  },
+  {
+   "ms": 447.7,
+   "content": "드"
+  },
+  {
+   "ms": 501.6,
+   "content": "리면"
+  },
+  {
+   "ms": 555.1,
+   "content": ","
+  },
+  {
+   "ms": 608.6,
+   "content": " **"
+  },
+  {
+   "ms": 693.4,
+   "content": "요"
+  },
+  {
+   "ms": 715.3,
+   "content": "금"
+  },
+  {
+   "ms": 768.6,
+   "content": "제"
+  },
+  {
+   "ms": 821.9,
+   "content": " B"
+  },
+  {
+   "ms": 875.4,
+   "content": "가"
+  },
+  {
+   "ms": 928.2,
+   "content": " "
+  },
+  {
+   "ms": 982.3,
+   "content": "2"
+  },
+  {
+   "ms": 1039.8,
+   "content": "년"
+  },
+  {
+   "ms": 1090.0,
+   "content": " 동안"
+  },
+  {
+   "ms": 1142.3,
+   "content": " 총"
+  },
+  {
+   "ms": 1196.0,
+   "content": " "
+  },
+  {
+   "ms": 1249.1,
+   "content": "3"
+  },
+  {
+   "ms": 1302.7,
+   "content": "9"
+  },
+  {
+   "ms": 1355.4,
+   "content": ","
+  },
+  {
+   "ms": 1409.3,
+   "content": "4"
+  },
+  {
+   "ms": 1462.7,
+   "content": "0"
+  },
+  {
+   "ms": 1516.4,
+   "content": "0"
+  },
+  {
+   "ms": 1569.4,
+   "content": "원"
+  },
+  {
+   "ms": 1622.8,
+   "content": " 더"
+  },
+  {
+   "ms": 1676.1,
+   "content": " 저"
+  },
+  {
+   "ms": 1729.9,
+   "content": "렴"
+  },
+  {
+   "ms": 1789.6,
+   "content": "합니다"
+  },
+  {
+   "ms": 1841.1,
+   "content": ".**"
+  },
+  {
+   "ms": 1891.3,
+   "content": "\n\n"
+  },
+  {
+   "ms": 1942.5,
+   "content": "상"
+  },
+  {
+   "ms": 1996.1,
+   "content": "세"
+  },
+  {
+   "ms": 2049.7,
+   "content": " 계산"
+  },
+  {
+   "ms": 2103.9,
+   "content": " 내"
+  },
+  {
+   "ms": 2156.6,
+   "content": "역"
+  },
+  {
+   "ms": 2211.1,
+   "content": "은"
+  },
+  {
+   "ms": 2264.2,
+   "content": " 다음과"
+  },
+  {
+   "ms": 2317.5,
+   "content": " 같습니다"
+  },
+  {
+   "ms": 2370.5,
+   "content": "."
+  },
+  {
+   "ms": 2424.0,
+   "content": "\n\n"
+  },
+  {
+   "ms": 2477.7,
+   "content": "**"
+  },
+  {
+   "ms": 2530.9,
+   "content": "1"
+  },
+  {
+   "ms": 2591.2,
+   "content": "."
+  },
+  {
+   "ms": 2640.5,
+   "content": " 요"
+  },
+  {
+   "ms": 2690.1,
+   "content": "금"
+  },
+  {
+   "ms": 2744.4,
+   "content": "제"
+  }
+ ]
+}

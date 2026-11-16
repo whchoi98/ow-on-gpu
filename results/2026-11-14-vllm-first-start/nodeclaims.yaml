@@ -1,0 +1,281 @@
+apiVersion: v1
+items:
+- apiVersion: karpenter.sh/v1
+  kind: NodeClaim
+  metadata:
+    annotations:
+      compatibility.karpenter.k8s.aws/cluster-name-tagged: "true"
+      karpenter.k8s.aws/ec2nodeclass-hash: "15963766276366239559"
+      karpenter.k8s.aws/ec2nodeclass-hash-version: v6
+      karpenter.k8s.aws/instance-profile-name: ow-on-gpu_14030285985443213689
+      karpenter.k8s.aws/tagged: "true"
+      karpenter.sh/nodeclaim-min-values-relaxed: "false"
+      karpenter.sh/nodepool-hash: "4406661680877273409"
+      karpenter.sh/nodepool-hash-version: v3
+    creationTimestamp: "2026-11-14T10:31:13Z"
+    finalizers:
+    - karpenter.sh/termination
+    generateName: gemma-od-
+    generation: 1
+    labels:
+      karpenter.k8s.aws/ec2nodeclass: vllm
+      karpenter.k8s.aws/instance-capability-flex: "false"
+      karpenter.k8s.aws/instance-category: g
+      karpenter.k8s.aws/instance-cpu: "16"
+      karpenter.k8s.aws/instance-cpu-manufacturer: amd
+      karpenter.k8s.aws/instance-cpu-sustained-clock-speed-mhz: "3400"
+      karpenter.k8s.aws/instance-ebs-bandwidth: "8000"
+      karpenter.k8s.aws/instance-encryption-in-transit-supported: "true"
+      karpenter.k8s.aws/instance-family: g6e
+      karpenter.k8s.aws/instance-generation: "6"
+      karpenter.k8s.aws/instance-gpu-count: "1"
+      karpenter.k8s.aws/instance-gpu-manufacturer: nvidia
+      karpenter.k8s.aws/instance-gpu-memory: "45776"
+      karpenter.k8s.aws/instance-gpu-name: l40s
+      karpenter.k8s.aws/instance-hypervisor: nitro
+      karpenter.k8s.aws/instance-local-nvme: "600"
+      karpenter.k8s.aws/instance-memory: "131072"
+      karpenter.k8s.aws/instance-network-bandwidth: "20000"
+      karpenter.k8s.aws/instance-size: 4xlarge
+      karpenter.k8s.aws/instance-tenancy: default
+      karpenter.sh/capacity-type: on-demand
+      karpenter.sh/nodepool: gemma-od
+      kubernetes.io/arch: amd64
+      kubernetes.io/os: linux
+      node.kubernetes.io/instance-type: g6e.4xlarge
+      topology.k8s.aws/zone-id: apne2-az2
+      topology.kubernetes.io/region: ap-northeast-2
+      topology.kubernetes.io/zone: ap-northeast-2b
+    name: gemma-od-ph825
+    ownerReferences:
+    - apiVersion: karpenter.sh/v1
+      blockOwnerDeletion: true
+      kind: NodePool
+      name: gemma-od
+      uid: ca7ffa3e-241c-4557-a3ab-c6bad7988c1b
+    resourceVersion: "17729"
+    uid: fc27446c-e969-4b2d-bff4-b205fde04286
+  spec:
+    expireAfter: 720h
+    nodeClassRef:
+      group: karpenter.k8s.aws
+      kind: EC2NodeClass
+      name: vllm
+    requirements:
+    - key: karpenter.sh/capacity-type
+      operator: In
+      values:
+      - on-demand
+    - key: karpenter.k8s.aws/ec2nodeclass
+      operator: In
+      values:
+      - vllm
+    - key: karpenter.sh/nodepool
+      operator: In
+      values:
+      - gemma-od
+    - key: node.kubernetes.io/instance-type
+      operator: In
+      values:
+      - g6e.4xlarge
+    resources:
+      requests:
+        cpu: 350m
+        memory: 256Mi
+        nvidia.com/gpu: "1"
+        pods: "6"
+    taints:
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      value: "true"
+  status:
+    allocatable:
+      cpu: 15890m
+      ephemeral-storage: "538926258176"
+      memory: 118312Mi
+      nvidia.com/gpu: "1"
+      pods: "234"
+      vpc.amazonaws.com/pod-eni: "54"
+    capacity:
+      cpu: "16"
+      ephemeral-storage: 600G
+      memory: 121241Mi
+      nvidia.com/gpu: "1"
+      pods: "234"
+      vpc.amazonaws.com/pod-eni: "54"
+    conditions:
+    - lastTransitionTime: "2026-11-14T10:31:15Z"
+      message: ""
+      observedGeneration: 1
+      reason: Launched
+      status: "True"
+      type: Launched
+    - lastTransitionTime: "2026-11-14T10:32:10Z"
+      message: ""
+      observedGeneration: 1
+      reason: Registered
+      status: "True"
+      type: Registered
+    - lastTransitionTime: "2026-11-14T10:33:11Z"
+      message: ""
+      observedGeneration: 1
+      reason: Initialized
+      status: "True"
+      type: Initialized
+    - lastTransitionTime: "2026-11-14T10:41:15Z"
+      message: ""
+      observedGeneration: 1
+      reason: ConsistentStateFound
+      status: "True"
+      type: ConsistentStateFound
+    - lastTransitionTime: "2026-11-14T10:33:11Z"
+      message: ""
+      observedGeneration: 1
+      reason: Ready
+      status: "True"
+      type: Ready
+    imageID: ami-07d5517d656985a67
+    lastPodEventTime: "2026-11-14T10:54:08Z"
+    nodeName: ip-10-200-43-168.ap-northeast-2.compute.internal
+    providerID: aws:///ap-northeast-2b/<instance-id>
+- apiVersion: karpenter.sh/v1
+  kind: NodeClaim
+  metadata:
+    annotations:
+      compatibility.karpenter.k8s.aws/cluster-name-tagged: "true"
+      karpenter.k8s.aws/ec2nodeclass-hash: "15963766276366239559"
+      karpenter.k8s.aws/ec2nodeclass-hash-version: v6
+      karpenter.k8s.aws/instance-profile-name: ow-on-gpu_14030285985443213689
+      karpenter.k8s.aws/tagged: "true"
+      karpenter.sh/nodeclaim-min-values-relaxed: "false"
+      karpenter.sh/nodepool-hash: "4406661680877273409"
+      karpenter.sh/nodepool-hash-version: v3
+    creationTimestamp: "2026-11-14T10:39:00Z"
+    finalizers:
+    - karpenter.sh/termination
+    generateName: qwen-od-
+    generation: 1
+    labels:
+      karpenter.k8s.aws/ec2nodeclass: vllm
+      karpenter.k8s.aws/instance-capability-flex: "false"
+      karpenter.k8s.aws/instance-category: g
+      karpenter.k8s.aws/instance-cpu: "16"
+      karpenter.k8s.aws/instance-cpu-manufacturer: amd
+      karpenter.k8s.aws/instance-cpu-sustained-clock-speed-mhz: "3400"
+      karpenter.k8s.aws/instance-ebs-bandwidth: "8000"
+      karpenter.k8s.aws/instance-encryption-in-transit-supported: "true"
+      karpenter.k8s.aws/instance-family: g6e
+      karpenter.k8s.aws/instance-generation: "6"
+      karpenter.k8s.aws/instance-gpu-count: "1"
+      karpenter.k8s.aws/instance-gpu-manufacturer: nvidia
+      karpenter.k8s.aws/instance-gpu-memory: "45776"
+      karpenter.k8s.aws/instance-gpu-name: l40s
+      karpenter.k8s.aws/instance-hypervisor: nitro
+      karpenter.k8s.aws/instance-local-nvme: "600"
+      karpenter.k8s.aws/instance-memory: "131072"
+      karpenter.k8s.aws/instance-network-bandwidth: "20000"
+      karpenter.k8s.aws/instance-size: 4xlarge
+      karpenter.k8s.aws/instance-tenancy: default
+      karpenter.sh/capacity-type: on-demand
+      karpenter.sh/nodepool: qwen-od
+      kubernetes.io/arch: amd64
+      kubernetes.io/os: linux
+      node.kubernetes.io/instance-type: g6e.4xlarge
+      topology.k8s.aws/zone-id: apne2-az1
+      topology.kubernetes.io/region: ap-northeast-2
+      topology.kubernetes.io/zone: ap-northeast-2a
+    name: qwen-od-8t6ch
+    ownerReferences:
+    - apiVersion: karpenter.sh/v1
+      blockOwnerDeletion: true
+      kind: NodePool
+      name: qwen-od
+      uid: ed86901a-bc1d-4d1a-823c-87d573d02a19
+    resourceVersion: "17802"
+    uid: 26b1d4c0-f8ec-4dfd-8ba0-de2cf2652fca
+  spec:
+    expireAfter: 720h
+    nodeClassRef:
+      group: karpenter.k8s.aws
+      kind: EC2NodeClass
+      name: vllm
+    requirements:
+    - key: node.kubernetes.io/instance-type
+      operator: In
+      values:
+      - g6e.4xlarge
+    - key: karpenter.sh/capacity-type
+      operator: In
+      values:
+      - on-demand
+    - key: karpenter.sh/nodepool
+      operator: In
+      values:
+      - qwen-od
+    - key: karpenter.k8s.aws/ec2nodeclass
+      operator: In
+      values:
+      - vllm
+    resources:
+      requests:
+        cpu: 12350m
+        memory: 65792Mi
+        nvidia.com/gpu: "1"
+        pods: "6"
+    taints:
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      value: "true"
+  status:
+    allocatable:
+      cpu: 15890m
+      ephemeral-storage: "538926258176"
+      memory: 127147340Ki
+      nvidia.com/gpu: "1"
+      pods: "234"
+      vpc.amazonaws.com/pod-eni: "54"
+    capacity:
+      cpu: "16"
+      ephemeral-storage: 600G
+      memory: 130146636Ki
+      nvidia.com/gpu: "1"
+      pods: "234"
+      vpc.amazonaws.com/pod-eni: "54"
+    conditions:
+    - lastTransitionTime: "2026-11-14T10:39:03Z"
+      message: ""
+      observedGeneration: 1
+      reason: Launched
+      status: "True"
+      type: Launched
+    - lastTransitionTime: "2026-11-14T10:39:35Z"
+      message: ""
+      observedGeneration: 1
+      reason: Registered
+      status: "True"
+      type: Registered
+    - lastTransitionTime: "2026-11-14T10:40:16Z"
+      message: ""
+      observedGeneration: 1
+      reason: Initialized
+      status: "True"
+      type: Initialized
+    - lastTransitionTime: "2026-11-14T10:49:03Z"
+      message: ""
+      observedGeneration: 1
+      reason: ConsistentStateFound
+      status: "True"
+      type: ConsistentStateFound
+    - lastTransitionTime: "2026-11-14T10:40:16Z"
+      message: ""
+      observedGeneration: 1
+      reason: Ready
+      status: "True"
+      type: Ready
+    imageID: ami-07d5517d656985a67
+    lastPodEventTime: "2026-11-14T10:54:19Z"
+    nodeName: ip-10-200-16-234.ap-northeast-2.compute.internal
+    providerID: aws:///ap-northeast-2a/<instance-id>
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,147 @@
+# infra/terraform/storage.tf가 이 ServiceAccount에 S3 읽기 전용 역할을 Pod Identity로 연결한다.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: qwen
+automountServiceAccountToken: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-qwen
+  labels:
+    app.kubernetes.io/name: vllm-qwen
+spec:
+  replicas: 1
+  # startupProbe가 기다리는 최대 시간과 맞춘다. 기본값 600초는 콜드 스타트보다 짧을 수 있다.
+  progressDeadlineSeconds: 1800
+  # GPU 1장에 파드 1개이므로 새 파드를 띄우기 전에 기존 파드를 내린다.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vllm-qwen
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vllm-qwen
+    spec:
+      serviceAccountName: qwen
+      automountServiceAccountToken: false
+      nodeSelector:
+        karpenter.sh/nodepool: qwen-od
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      terminationGracePeriodSeconds: 60
+      initContainers:
+        # 노드에 이미 있는 vLLM 이미지를 써서 이미지 pull을 늘리지 않는다.
+        - name: cache-restore
+          image: vllm/vllm-openai:v0.33.0
+          command: ["python3", "/scripts/cache-restore.py"]
+          env:
+            - name: MODEL_BUCKET
+              valueFrom:
+                configMapKeyRef: {name: platform, key: MODEL_BUCKET}
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef: {name: platform, key: AWS_REGION}
+            - name: CACHE_PREFIX
+              value: vllm-cache/v0.33.0-qwen38-27b-fp8-l40s
+          volumeMounts:
+            - name: vllm-cache
+              mountPath: /vllm-cache
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:v0.33.0
+          # 이미지의 ENTRYPOINT가 `vllm serve`다.
+          args:
+            - s3://$(MODEL_BUCKET)/models/Qwen3.8-27B-FP8-dynamic
+            - --served-model-name=qwen38-27b
+            - --load-format=runai_streamer
+            - --max-model-len=32768
+            # 하이브리드 모델은 max-num-seqs가 Mamba 캐시 블록 수보다 크면 엔진이 시작하지 못한다.
+            - --max-num-seqs=32
+            - --kv-cache-dtype=fp8
+            # 0.85로는 KV 캐시에 0.24GiB만 남아 시작하지 못했다(2026-11-14, docs/03-vllm.md).
+            - --gpu-memory-utilization=0.90
+            - --enable-sleep-mode
+            - --enable-prefix-caching
+            - --scheduling-policy=priority
+            - '--speculative-config={"method":"mtp","num_speculative_tokens":3}'
+            - --reasoning-parser=qwen3
+            - --enable-auto-tool-choice
+            - --tool-call-parser=qwen3_coder
+          env:
+            - name: MODEL_BUCKET
+              valueFrom:
+                configMapKeyRef: {name: platform, key: MODEL_BUCKET}
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef: {name: platform, key: AWS_REGION}
+            - name: VLLM_CACHE_ROOT
+              value: /vllm-cache
+            # /sleep, /wake_up, /is_sleeping은 이 값이 있어야 등록된다.
+            - name: VLLM_SERVER_DEV_MODE
+              value: "1"
+            # runai-model-streamer는 기본값으로 C++ 계층이 자격 증명을 찾는다. EKS Pod Identity를
+            # 확실히 쓰도록 boto3가 자격 증명을 받아 넘기게 한다.
+            - name: RUNAI_STREAMER_NO_BOTO3_SESSION
+              value: "0"
+            # 서빙 파드가 Hugging Face에서 내려받으려 하면 실패하게 한다.
+            - name: HF_HUB_OFFLINE
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8000
+          resources:
+            requests:
+              cpu: "12"
+              memory: 64Gi
+            # level 1 sleep은 가중치를 호스트 메모리에 둔다.
+            limits:
+              memory: 110Gi
+              nvidia.com/gpu: 1
+          # Ready 시각을 1초 단위로 잡기 위해 시작 확인 주기를 1초로 둔다. 최대 30분을 기다린다.
+          startupProbe:
+            httpGet: {path: /health, port: http}
+            periodSeconds: 1
+            failureThreshold: 1800
+          # /health는 sleep 중에도 200이므로, 잠든 파드가 트래픽을 받지 않게 /is_sleeping으로 판정한다.
+          # sys.exit(True)는 종료 코드 1, sys.exit(False)는 0이다.
+          readinessProbe:
+            exec:
+              command:
+                - python3
+                - -c
+                - |
+                  import json, sys, urllib.request
+                  with urllib.request.urlopen("http://127.0.0.1:8000/is_sleeping", timeout=2) as r:
+                      sys.exit(json.load(r)["is_sleeping"])
+            periodSeconds: 2
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+            periodSeconds: 10
+            failureThreshold: 3
+          volumeMounts:
+            - name: vllm-cache
+              mountPath: /vllm-cache
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: vllm-cache
+          hostPath:
+            path: /var/cache/vllm
+            type: DirectoryOrCreate
+        - name: scripts
+          configMap:
+            name: vllm-cache-restore
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi

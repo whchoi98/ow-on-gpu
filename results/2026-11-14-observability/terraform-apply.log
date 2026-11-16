@@ -1,0 +1,38 @@
+aws_prometheus_workspace.this: Creating...
+aws_iam_role.metrics_collector: Creating...
+aws_cloudfront_response_headers_policy.server_timing: Creating...
+aws_s3_bucket.alb_logs: Creating...
+aws_lb_target_group.bff: Modifying... [id=<id>]
+aws_eks_addon.s3_csi: Creating...
+aws_lb_target_group.bff: Modifications complete after 0s [id=<id>]
+aws_cloudfront_response_headers_policy.server_timing: Creation complete after 1s [id=<id>]
+aws_s3_bucket.alb_logs: Creation complete after 1s [id=<id>]
+aws_s3_bucket_policy.alb_logs: Creating...
+aws_s3_bucket_public_access_block.alb_logs: Creating...
+aws_s3_bucket_lifecycle_configuration.alb_logs: Creating...
+aws_prometheus_workspace.this: Creation complete after 1s [id=<id>]
+aws_s3_bucket_public_access_block.alb_logs: Creation complete after 0s [id=<id>]
+aws_iam_role.metrics_collector: Creation complete after 1s [id=<id>]
+aws_iam_role_policy.metrics_collector: Creating...
+aws_eks_pod_identity_association.metrics_collector: Creating...
+aws_s3_bucket_policy.alb_logs: Creation complete after 0s [id=<id>]
+aws_lb.bff: Modifying... [id=<id>]
+aws_iam_role_policy.metrics_collector: Creation complete after 1s [id=<id>]
+aws_eks_pod_identity_association.metrics_collector: Creation complete after 1s [id=<id>]
+aws_eks_addon.s3_csi: Still creating... [00m10s elapsed]
+aws_s3_bucket_lifecycle_configuration.alb_logs: Still creating... [00m10s elapsed]
+aws_eks_addon.s3_csi: Still creating... [00m20s elapsed]
+aws_s3_bucket_lifecycle_configuration.alb_logs: Still creating... [00m20s elapsed]
+aws_eks_addon.s3_csi: Creation complete after 25s [id=<id>]
+aws_s3_bucket_lifecycle_configuration.alb_logs: Still creating... [00m30s elapsed]
+aws_s3_bucket_lifecycle_configuration.alb_logs: Still creating... [00m40s elapsed]
+aws_s3_bucket_lifecycle_configuration.alb_logs: Still creating... [00m50s elapsed]
+aws_s3_bucket_lifecycle_configuration.alb_logs: Creation complete after 56s [id=<id>]
+
+Error: modifying ELBv2 Load Balancer (<arn>) attributes: operation error Elastic Load Balancing v2: ModifyLoadBalancerAttributes, https response error StatusCode: 400, RequestID: 92233c60-a539-4c5b-93a9-2d8fd1d88176, InvalidConfigurationRequest: Access Denied for bucket: ow-on-gpu-alb-logs-<suffix>. Please check S3bucket permission
+
+  with aws_lb.bff,
+  on app.tf line 344, in resource "aws_lb" "bff":
+ 344: resource "aws_lb" "bff" {
+
+exit=1
