@@ -33,7 +33,7 @@ tests/                  하네스 시험(훅, 설정, 구조, 문서의 포인�
 tools/prompts/          프롬프트를 둘 자리(지금은 비어 있음. 단계별 프롬프트는 루트의 prompts.md)
 docs/architecture.md    전체 구조와 Mermaid 그림(영어와 한국어)
 docs/reference/         층별 구현 참조(infrastructure, api, iac, frontend, ui, security, agent-llm)
-docs/decisions/         ADR. 지금은 템플릿만 있음
+docs/decisions/         ADR. ADR-001(Decider 기본값 처리의 범위)
 docs/runbooks/          런북. 지금은 템플릿만 있음
 docs/onboarding.md      처음 작업하는 사람을 위한 안내
 docs/api-reference.md   BFF의 경로, 요청 헤더, 응답 헤더
@@ -95,6 +95,7 @@ kubectl -n app exec -i <BFF 파드> -- python - < bench/bff/lang_check_in_pod.py
 
 - `terraform plan`을 `-target` 없이 실행하면 `helm_release.karpenter`의 레지스트리 로그인에서 실패합니다. 앱 변경은 `-target`으로 좁힙니다
 - `kubectl diff`는 서버 dry-run이라 클러스터의 웹훅이 더하는 줄까지 보여 줍니다. 내가 쓰지 않은 줄이 있으면 적용하기 전에 무엇이 더하는지 확인합니다(`docs/07-bff.md`)
+- `k8s/bff/install.sh`는 자기 디렉터리로 옮겨 가 실행하므로 `KUBECONFIG`를 절대 경로로 줍니다(`export KUBECONFIG="$PWD/infra/terraform/.kubeconfig"`). 상대 경로면 kubectl이 `localhost:8080`에 붙으려다 실패합니다
 - `/deploy`, `/test-all`, `/review` 명령과 `project-review`, `sync-docs`, `refactor`, `release` 스킬이 위 절차를 담고 있습니다
 
 ---

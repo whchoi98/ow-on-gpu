@@ -72,7 +72,7 @@ No ADR has been written yet. The confirmed decisions are recorded in `AGENT.md`.
 - GPU 한 장에 파드 하나라 vLLM Deployment는 Recreate 전략입니다.
 - Qwen은 업무 시간 밖에 잠듭니다(평일 19:00에서 08:30, Asia/Seoul).
 
-ADR은 아직 없습니다. 확정된 결정은 `AGENT.md`에 적혀 있습니다.
+ADR은 `docs/decisions/ADR-001-narrow-decider-fallback.md` 하나입니다(Decider 기본값 처리의 범위). 그 밖의 확정된 결정은 `AGENT.md`에 적혀 있습니다.
 
 ### 4. 코드 포인터
 - `k8s/base/nodepools.yaml`: NodePool의 요구 조건과 한도

@@ -61,11 +61,11 @@ BFF는 CloudFront와 내부 ALB 뒤에서 OpenAI 호환 chat completions 경로�
 ### 3. 주요 결정
 - `/healthz`를 뺀 모든 경로가 Cognito 액세스 토큰을 요구합니다.
 - 결정적 규칙이 먼저입니다. Decider에는 규칙이 없을 때만, 세션마다 한 번 묻습니다.
-- Decider가 답하지 않거나 신뢰도가 기준보다 낮으면 Gemma, thinking 끔, 민감 정보 있음으로 처리합니다.
+- Decider가 답하지 않거나 신뢰도가 기준보다 낮으면 Gemma, thinking 끔, 민감 정보 있음으로 처리합니다. 모델 선택의 신뢰도만 낮고 개인정보가 없다는 판단이 기준 이상이면 민감 정보 요청으로 다루지 않습니다.
 - SSE는 청크 단위로 그대로 전달합니다. 모아서 내보내면 스트리밍이 깨집니다.
 - 응답 헤더(`x-bff-*`)에 결정, 근거, 구간 시간을 실어 화면이 요청마다 설명할 수 있게 합니다.
 
-ADR은 아직 없습니다. 확정된 결정은 `AGENT.md`에 적혀 있습니다.
+ADR은 `docs/decisions/ADR-001-narrow-decider-fallback.md` 하나입니다(Decider 기본값 처리의 범위). 그 밖의 확정된 결정은 `AGENT.md`에 적혀 있습니다.
 
 ### 4. 코드 포인터
 - `app/bff/bff.py`: `create_app`에 경로 목록, `chat`에 응답 헤더

@@ -45,7 +45,7 @@ Three infographics show the environment from different angles. Each figure follo
 ## Features
 
 - **Two models behind one gateway** — Gemma 4 31B and Qwen3.8-27B run on separate g6e.4xlarge nodes, and Gateway API Inference Extension with agentgateway routes each request by the `model` field of its body.
-- **Request routing in a BFF** — Deterministic rules send requests with sensitive data to Gemma, task types pick a model directly, and a 2B Decider model is asked once per session for the rest.
+- **Request routing in a BFF** — Deterministic rules send requests with sensitive data to Gemma, task types pick a model directly, and a 2B Decider model is asked once per session for the rest. When the Decider is unsure only about the model, the request goes to Gemma and can still use web search.
 - **Shorter cold start** — Loading weights from Amazon S3 and restoring the compile cache cut the Gemma cold start from 394 s to 260 s and the warm restart from 214 s to 86 s.
 - **Sleep mode for the internal model** — Qwen sleeps outside working hours and wakes in 3.66 s when the BFF calls the wake API.
 - **Priority scheduling** — With batch load running, engine priority brought the median time to first token of interactive requests from 30.9 s to 0.19 s.
@@ -173,7 +173,7 @@ ow-on-gpu/
 │   └── web/                # Check page (React, Vite)
 ├── bench/                  # Measurement and post-deploy check scripts
 ├── results/                # Raw measurement data
-├── docs/                   # Stage records, architecture, API reference, layer references
+├── docs/                   # Stage records, architecture, API reference, layer references, ADRs
 │   └── infographic/        # Infographic sources and the built figures (build/)
 ├── blog/                   # Working folders of the three blog drafts
 ├── reference/              # Reference figures for the infographics
@@ -199,7 +199,7 @@ npm test --prefix app/web
 
 # BFF, inside its image: every test, or one class
 docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff
-# Ran 34 tests ... OK
+# Ran 35 tests ... OK
 docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff.RoutingRules
 ```
 
@@ -225,6 +225,8 @@ GET  /healthz
 5. Open a pull request that says what was changed and how it was checked.
 
 Changes that touch AWS resources follow the working rules in `AGENT.md`: show the plan or diff first and apply after approval. Numbers in documents must come from measurements stored under `results/`.
+
+Changes are recorded in [CHANGELOG.md](CHANGELOG.md), and decisions made by comparing alternatives in `docs/decisions/`.
 
 ## License
 
@@ -275,7 +277,7 @@ ow-on-gpu는 블로그 시리즈 "EKS 기반 vLLM 서빙 최적화" 3부의 측�
 ## 주요 기능
 
 - **게이트웨이 하나 뒤의 두 모델** — Gemma 4 31B와 Qwen3.8-27B가 각자의 g6e.4xlarge 노드에서 실행되고, Gateway API Inference Extension과 agentgateway가 요청 본문의 `model` 값으로 경로를 고릅니다.
-- **BFF의 요청 경로 결정** — 결정적 규칙이 민감 정보가 있는 요청을 Gemma로 보내고, 업무 종류가 있으면 모델을 바로 정하고, 나머지는 2B Decider 모델에 세션마다 한 번 묻습니다.
+- **BFF의 요청 경로 결정** — 결정적 규칙이 민감 정보가 있는 요청을 Gemma로 보내고, 업무 종류가 있으면 모델을 바로 정하고, 나머지는 2B Decider 모델에 세션마다 한 번 묻습니다. Decider가 모델 선택만 확신하지 못한 요청은 Gemma로 보내고 웹 검색을 그대로 쓸 수 있습니다.
 - **짧아진 콜드 스타트** — Amazon S3에서 가중치를 읽고 compile 캐시를 복원해 Gemma의 콜드 스타트가 394초에서 260초로, 웜 재시작이 214초에서 86초로 줄었습니다.
 - **내부 업무 모델의 sleep mode** — Qwen은 업무 시간 밖에 잠들고, BFF가 깨우기 API를 부르면 3.66초에 깨어납니다.
 - **우선순위 스케줄링** — 배치 부하가 있을 때 엔진 우선순위가 상담 요청의 첫 토큰까지 시간(중앙값)을 30.9초에서 0.19초로 줄였습니다.
@@ -403,7 +405,7 @@ ow-on-gpu/
 │   └── web/                # 확인용 페이지 (React, Vite)
 ├── bench/                  # 측정 스크립트와 배포 뒤 확인 스크립트
 ├── results/                # 측정 원시 자료
-├── docs/                   # 단계별 기록, 아키텍처, API 참조, 층별 참조
+├── docs/                   # 단계별 기록, 아키텍처, API 참조, 층별 참조, ADR
 │   └── infographic/        # 인포그래픽 소스와 만든 그림(build/)
 ├── blog/                   # 블로그 원고 3부작의 작업 폴더
 ├── reference/              # 인포그래픽의 참조 그림
@@ -429,7 +431,7 @@ npm test --prefix app/web
 
 # BFF. 이미지 안에서 실행: 시험 전부, 또는 클래스 하나
 docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff
-# Ran 34 tests ... OK
+# Ran 35 tests ... OK
 docker run --rm -v "$PWD/app/bff":/app:ro -w /app <bff-image> python -m unittest test_bff.RoutingRules
 ```
 
@@ -455,6 +457,8 @@ GET  /healthz
 5. 무엇을 바꿨고 어떻게 확인했는지 적어 Pull Request를 엽니다.
 
 AWS 리소스를 건드리는 변경은 `AGENT.md`의 작업 규칙을 따릅니다. plan이나 diff를 먼저 보여 주고 승인 뒤에 적용합니다. 문서의 수치는 `results/`에 저장한 측정에서 나와야 합니다.
+
+변경은 [CHANGELOG.md](CHANGELOG.md)에, 대안을 견줘 내린 결정은 `docs/decisions/`에 기록합니다.
 
 ## 라이선스
 

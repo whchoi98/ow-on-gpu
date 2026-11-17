@@ -76,8 +76,8 @@ export default function Route({ session, onExpired }) {
           </label>
           <p className="form-note">
             {tr(
-              '판단 순서는 민감 정보 규칙, 업무 종류, 이미지 첨부, Decider입니다. Decider의 신뢰도가 0.6보다 낮으면 기본값(Gemma, thinking 끔, 민감 처리)을 씁니다.',
-              'The order is sensitive data rule, task type, image attachment, then Decider. If its confidence is below 0.6, the defaults are used (Gemma, thinking off, treated as sensitive).',
+              '판단 순서는 민감 정보 규칙, 업무 종류, 이미지 첨부, Decider입니다. Decider의 신뢰도가 0.6보다 낮으면 기본값(Gemma, thinking 끔, 민감 처리)을 씁니다. 모델 선택의 신뢰도만 낮으면 민감 처리는 하지 않습니다.',
+              'The order is sensitive data rule, task type, image attachment, then Decider. If its confidence is below 0.6, the defaults are used (Gemma, thinking off, treated as sensitive). If only the model choice confidence is low, the request is not treated as sensitive.',
             )}
           </p>
         </div>
@@ -119,7 +119,7 @@ export default function Route({ session, onExpired }) {
                         {row.sensitive && <span className="chip chip--flag">{tr('민감 정보', 'Sensitive data')}</span>}
                       </td>
                       <td>{DECISIONS[row.decision] ?? row.decision}{row.thinking ? tr(', thinking 켬', ', thinking on') : ''}</td>
-                      <td className="grid-table__text">{explain(row.decision, row.reason).join(' ')}</td>
+                      <td className="grid-table__text">{explain(row.decision, row.reason, row.sensitive).join(' ')}</td>
                       <td className="grid-table__number">{ms(row.decide_ms)}</td>
                     </tr>
                   );

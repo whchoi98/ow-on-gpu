@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Opt the BFF pods out of the automatic instrumentation added by a cluster webhook
 - Track placeholder-only `*.example` files instead of the five files that hold environment-specific values
 - Write the streaming unit as "Chunk" instead of a Korean word in the Korean texts of the check page, the infographic and the documents
+- Stop treating a request as sensitive when only the Decider's model choice is below the confidence threshold, so web search is attached to it
 
 ### Removed
 
@@ -84,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 클러스터 웹훅이 붙이는 자동 계측을 BFF 파드가 받지 않도록 변경
 - 환경별 값이 든 파일 다섯 개 대신 자리 표시만 든 `*.example` 파일을 추적하도록 변경
 - 확인용 페이지, 인포그래픽, 문서의 한국어 문구에서 스트리밍 전송 단위를 "조각" 대신 "Chunk"로 표기하도록 변경
+- Decider의 모델 선택 신뢰도만 기준보다 낮은 요청은 민감 정보 요청으로 다루지 않고 웹 검색을 붙이도록 변경
 
 ### Removed
 

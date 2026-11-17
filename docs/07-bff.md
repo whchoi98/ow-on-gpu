@@ -92,7 +92,7 @@ EKS: BFF 파드 2개 (네임스페이스 app, Graviton NodePool app, arm64)
    - 주민등록번호나 카드번호(Luhn 검사 통과) 형식이 있으면 Gemma로 보내고 민감으로 표시합니다. Decider를 부르지 않습니다.
    - 업무 종류(`x-task`)가 있으면 배정표를 따릅니다. 상담, 번역, 요약은 Gemma이고 이미지 이해, OCR, 코딩은 Qwen입니다.
    - 업무 종류가 없고 이미지가 첨부되어 있으면 Qwen입니다.
-   - 그 밖에는 게이트웨이의 `/decide`로 Decider에 묻습니다. 응답 실패, 2초 초과, 신뢰도 0.6 미만은 Gemma, thinking off, 민감으로 처리합니다.
+   - 그 밖에는 게이트웨이의 `/decide`로 Decider에 묻습니다. 응답 실패, 2초 초과, 신뢰도 0.6 미만은 Gemma, thinking off, 민감으로 처리합니다. 모델 선택의 신뢰도만 0.6 미만이고 개인정보가 없다는 판단이 0.6 이상이면 Gemma, thinking off로 보내되 민감으로 처리하지 않습니다(2026-11-17 변경, `docs/10-web-search.md`).
 4. 본문의 `model`, `priority`, `chat_template_kwargs.enable_thinking`과 헤더 `x-llm-d-inference-objective`를 채웁니다.
 5. Qwen으로 갈 요청이면 깨우기 API를 먼저 부릅니다. 잠들어 있었다면 게이트웨이의 503을 최대 10초 동안 0.2초 간격으로 다시 시도합니다.
 6. 응답을 받은 그대로 흘려보냅니다. 상담 요청에는 `get_order` 도구를 넣고, 모델이 도구를 부르면 고정 데이터로 답한 뒤 이어서 묻습니다.

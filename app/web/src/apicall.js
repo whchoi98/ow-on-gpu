@@ -51,7 +51,7 @@ const SEARCH_STATES = localized(() => ({
   on: tr('모델 요청에 붙임', 'Attached to model request'),
   off: tr('요청이 켜지 않음', 'Not turned on by request'),
   sensitive: tr('민감 정보 요청이라 붙이지 않음', 'Not attached (sensitive data)'),
-  fallback: tr('모델을 정하지 못해 붙이지 않음', 'Not attached (decision failed)'),
+  fallback: tr('개인정보 판단을 얻지 못해 붙이지 않음', 'Not attached (personal data unconfirmed)'),
   disabled: tr('이 환경에 설정되지 않음', 'Not configured here'),
 }));
 const DECISIONS = localized(() => ({

@@ -50,6 +50,13 @@ assert.match(text('decider', { route: 'qwen', route_confidence: 0.9, policy: 0.9
 assert.match(text('fallback', { why: 'low_confidence', low: ['route'], route: 'gemma', route_confidence: 0.3, policy: 0.05,
   policy_confidence: 0.9, thinking: 0.54, min_confidence: 0.6 }), /모델 선택의 신뢰도\(0\.30\)가 기준 0\.60보다 낮아.*기본값인 Gemma/);
 assert.match(text('fallback', { why: 'decider_unavailable', detail: 'timeout', timeout_s: 2 }), /2초 안에 답하지 않았습니다/);
+// 모델 선택만 불확실했던 요청은 민감 정보 요청으로 다루지 않는다. BFF가 x-bff-sensitive로 알린 값(셋째 인자)을 따른다.
+const lowRoute = { why: 'low_confidence', low: ['route'], route: 'gemma', route_confidence: 0.539, policy: 0.07,
+  policy_confidence: 0.859, thinking: 0.342, min_confidence: 0.6 };
+assert.match(explain('fallback', lowRoute, false).join(' '),
+  /낮아 모델 선택은 쓰지 않았습니다.*기본값인 Gemma, thinking 끔으로 보냈습니다.*민감 정보 요청으로 다루지 않았습니다/);
+assert.doesNotMatch(explain('fallback', lowRoute, false).join(' '), /민감 정보 있음/);
+assert.match(explain('fallback', lowRoute, true).join(' '), /그 판단을 쓰지 않았습니다.*민감 정보 있음으로 처리했습니다/);
 assert.match(text('rule', { pattern: 'rrn' }), /주민등록번호 형식이 있어 Decider에 묻지 않고 Gemma로/);
 assert.match(text('task', { task: 'coding' }), /업무 종류\(코딩\)의 배정표/);
 assert.match(text('decider', { route: 'gemma', route_confidence: 0.9, policy: 0.1, thinking: 0.1, min_confidence: 0.6, cached: true }),

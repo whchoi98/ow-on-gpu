@@ -133,7 +133,7 @@ export default function Chat({ session, onExpired }) {
                       {DECISIONS[turn.meta.decision] ?? turn.meta.decision}
                       {turn.firstMs != null && tr(`, 첫 토큰 ${ms(turn.firstMs)}`, `, first token ${ms(turn.firstMs)}`)}
                       {'. '}
-                      {explain(turn.meta.decision, turn.meta.reason).join(' ')}
+                      {explain(turn.meta.decision, turn.meta.reason, turn.meta.sensitive).join(' ')}
                       {turn.asked && SEARCH_OFF[turn.meta.search] && ` ${SEARCH_OFF[turn.meta.search]}`}
                     </p>
                   )}

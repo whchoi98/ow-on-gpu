@@ -25,8 +25,10 @@ export const DECISIONS = localized(() => ({
 // 요청이 웹 검색을 켰는데 BFF가 도구를 붙이지 않은 이유(x-bff-search)
 export const SEARCH_OFF = localized(() => ({
   sensitive: tr('민감 정보가 있는 요청이라 웹 검색을 쓰지 않았습니다.', 'Web search was not used because the request contains sensitive data.'),
-  // 모델을 정하지 못해 기본값(Gemma, 민감 정보 요청으로 다룸)으로 보낸 요청. 민감 정보가 있어서가 아니다.
-  fallback: tr('모델을 정하지 못해 웹 검색을 쓰지 않았습니다.', 'Web search was not used because the model decision failed.'),
+  // Decider가 답하지 않았거나 개인정보 판단의 신뢰도가 낮아 기본값(Gemma, 민감 정보 요청으로 다룸)으로 보낸 요청.
+  // 민감 정보가 있어서가 아니다. 모델 선택만 불확실했던 요청에는 검색이 붙으므로 이 값이 오지 않는다.
+  fallback: tr('개인정보가 없다는 판단을 얻지 못해 웹 검색을 쓰지 않았습니다.',
+    'Web search was not used because the request could not be confirmed free of personal data.'),
   disabled: tr('이 환경에는 웹 검색이 설정되어 있지 않습니다.', 'Web search is not configured in this environment.'),
 }));
 
@@ -240,7 +242,8 @@ const below = (value, limit) => (score(value) === score(limit) ? Number(value).t
 
 // BFF가 응답 헤더(x-bff-reason)로 준 근거를 문장으로 푼다. Decider는 이유를 글로 돌려주지 않고
 // 모델 선택과 신뢰도, 개인정보일 확률, 추론이 필요할 확률을 돌려준다.
-export function explain(decision, reason) {
+// sensitive는 BFF가 알린 민감 정보 여부(x-bff-sensitive)다. 기본값으로 보낸 요청 가운데 모델 선택만 불확실했던 것은 false로 온다.
+export function explain(decision, reason, sensitive = true) {
   if (!reason) return [];
   const lines = [];
   const route = NAMES[reason.route] ?? reason.route;
@@ -284,10 +287,15 @@ export function explain(decision, reason) {
         short.push(tr(`개인정보 판단의 신뢰도(${below(reason.policy_confidence, reason.min_confidence)})`,
           `the personal data confidence (${below(reason.policy_confidence, reason.min_confidence)})`));
       }
-      lines.push(tr(
-        `Decider에 물었지만 ${short.join('와 ')}가 기준 ${score(reason.min_confidence)}보다 낮아 그 판단을 쓰지 않았습니다.`,
-        `Decider was asked, but ${short.join(' and ')} ${short.length > 1 ? 'were' : 'was'} below the threshold of ${score(reason.min_confidence)}, so its decision was not used.`,
-      ));
+      lines.push(sensitive
+        ? tr(
+          `Decider에 물었지만 ${short.join('와 ')}가 기준 ${score(reason.min_confidence)}보다 낮아 그 판단을 쓰지 않았습니다.`,
+          `Decider was asked, but ${short.join(' and ')} ${short.length > 1 ? 'were' : 'was'} below the threshold of ${score(reason.min_confidence)}, so its decision was not used.`,
+        )
+        : tr(
+          `Decider에 물었지만 ${short.join('와 ')}가 기준 ${score(reason.min_confidence)}보다 낮아 모델 선택은 쓰지 않았습니다.`,
+          `Decider was asked, but ${short.join(' and ')} was below the threshold of ${score(reason.min_confidence)}, so its model choice was not used.`,
+        ));
       lines.push(tr(
         `Decider의 답은 ${TO[reason.route] ?? reason.route} 보내기, 개인정보일 확률 ${score(reason.policy)}, 추론이 필요할 확률 ${score(reason.thinking)}였습니다.`,
         `Decider answered: send to ${route}, personal data probability ${score(reason.policy)}, reasoning probability ${score(reason.thinking)}.`,
@@ -299,8 +307,11 @@ export function explain(decision, reason) {
     } else {
       lines.push(tr('Decider의 답을 받지 못했습니다.', 'No answer was received from Decider.'));
     }
-    lines.push(tr('그래서 기본값인 Gemma, thinking 끔, 민감 정보 있음으로 처리했습니다.',
-      'So the defaults were used: Gemma, thinking off, treated as containing sensitive data.'));
+    lines.push(sensitive
+      ? tr('그래서 기본값인 Gemma, thinking 끔, 민감 정보 있음으로 처리했습니다.',
+        'So the defaults were used: Gemma, thinking off, treated as containing sensitive data.')
+      : tr('그래서 기본값인 Gemma, thinking 끔으로 보냈습니다. 개인정보 판단은 신뢰도가 기준 이상이어서 그대로 썼고 민감 정보 요청으로 다루지 않았습니다.',
+        'So the defaults were used: Gemma, thinking off. The personal data judgment met the threshold and was kept, so the request was not treated as containing sensitive data.'));
   }
   if (reason.cached && !reason.during_session) {
     lines.push(tr('이 세션에서 앞서 내린 결정을 다시 썼습니다.', 'The decision made earlier in this session was reused.'));

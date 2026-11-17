@@ -158,9 +158,9 @@ assert.equal(budgetRows('qwen', searched)[1].parts[2].name, '게이트웨이, vL
 // 민감 정보 요청에는 도구를 붙이지 않는다. 모델이 검색을 부르지 않은 요청도 구분한다.
 const refused = summarizeLive({ ...live, asked: true, info: { ...live.info, search: 'sensitive' }, notes: [] });
 assert.deepEqual(liveRows(4, refused).at(-1), ['웹 검색 도구', '민감 정보 요청이라 붙이지 않음']);
-// 모델을 정하지 못해 기본값으로 보낸 요청은 민감 정보 요청과 다른 말로 알린다.
+// 개인정보가 없다는 판단을 얻지 못해 기본값으로 보낸 요청은 민감 정보 요청과 다른 말로 알린다.
 const undecided = summarizeLive({ ...live, asked: true, info: { ...live.info, search: 'fallback' }, notes: [] });
-assert.deepEqual(liveRows(4, undecided).at(-1), ['웹 검색 도구', '모델을 정하지 못해 붙이지 않음']);
+assert.deepEqual(liveRows(4, undecided).at(-1), ['웹 검색 도구', '개인정보 판단을 얻지 못해 붙이지 않음']);
 assert.deepEqual(liveRows(6, summarizeLive({ ...live, asked: true, info: { ...live.info, search: 'on' } })).at(-1), ['웹 검색', '모델이 부르지 않음']);
 // 진행 중의 지도: 알림이 오면 Web Search를 지나온 곳으로, 도구가 붙지 않았으면 흐리게 한다.
 const running = { ...live, phase: 'engine', asked: true, info: { ...live.info, search: 'on' }, ticks: [] };

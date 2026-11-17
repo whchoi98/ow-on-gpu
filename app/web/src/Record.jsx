@@ -62,7 +62,7 @@ function Record({ record, folded, focused, onFold, onShowPath, onTranslate }) {
   const summary = summarize(record.ticks);
   const live = record.state === 'streaming';
   const waiting = live && record.ticks.length === 0;
-  const reasons = explain(record.decision, record.reason);
+  const reasons = explain(record.decision, record.reason, record.sensitive);
   const error = record.error ? failure(record.error) : null;
 
   return (

@@ -70,7 +70,7 @@ VPC는 AWS CDK 스택 하나(EksVpcStack)입니다. 그 밖의 리소스는 로�
 - Cognito 사용자는 스크립트로 만들어 비밀번호가 Terraform 상태에 들어가지 않게 합니다.
 - 앱 계층 변경은 `-target`으로 plan합니다. `-target` 없는 plan은 Karpenter Helm 릴리스의 레지스트리 로그인에서 실패합니다.
 
-ADR은 아직 없습니다. 확정된 결정은 `AGENT.md`에 적혀 있습니다.
+ADR은 `docs/decisions/ADR-001-narrow-decider-fallback.md` 하나입니다(Decider 기본값 처리의 범위). 그 밖의 확정된 결정은 `AGENT.md`에 적혀 있습니다.
 
 ### 4. 코드 포인터
 - `infra/terraform/app.tf`: CloudFront behavior, WAF 속도 규칙, Cognito 클라이언트

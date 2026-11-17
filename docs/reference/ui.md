@@ -65,7 +65,7 @@ No ADR has been written yet. The confirmed decisions are recorded in `AGENT.md`.
 - 본문은 굵기 400이나 500, 강조는 800입니다. 700까지는 Bold 파일이, 800부터는 ExtraBold 파일이 받습니다.
 - 지도의 노드 칸에 써넣는 값은 영어가 칸을 넘지 않게 짧게 씁니다.
 
-ADR은 아직 없습니다. 확정된 결정은 `AGENT.md`에 적혀 있습니다.
+ADR은 `docs/decisions/ADR-001-narrow-decider-fallback.md` 하나입니다(Decider 기본값 처리의 범위). 그 밖의 확정된 결정은 `AGENT.md`에 적혀 있습니다.
 
 ### 4. 코드 포인터
 - `app/web/src/styles.css`: `@font-face`와 공통 레이아웃

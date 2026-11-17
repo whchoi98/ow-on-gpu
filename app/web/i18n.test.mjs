@@ -71,11 +71,12 @@ for (const [name, value] of Object.entries(DATA)) {
     assert.ok(!HANGUL.test(text), `${where}: 영어에 한글이 남았다: ${text}`);
   }
 }
-// 웹 검색을 쓰지 않은 이유는 BFF가 알리는 값마다 있다. 모델을 정하지 못한 요청의 문구는 민감 정보를 이유로 들지 않는다.
+// 웹 검색을 쓰지 않은 이유는 BFF가 알리는 값마다 있다. 기본값으로 보낸 요청의 문구는 민감 정보가 있다고 말하지 않고,
+// 모델을 정하지 못한 것을 이유로 들지도 않는다(모델 선택만 불확실한 요청에는 검색이 붙는다).
 for (const lang of ['ko', 'en']) {
   const off = inLang(lang, () => SEARCH_OFF);
   assert.deepEqual(Object.keys(off).sort(), ['disabled', 'fallback', 'sensitive']);
-  assert.ok(!/민감|sensitive/i.test(off.fallback), off.fallback);
+  assert.ok(!/민감|sensitive|모델을 정하지|model decision/i.test(off.fallback), off.fallback);
 }
 // 영어 화면에서 측정용 질문에 덧붙이는 풀이가 있다. 한국어 화면에서는 비어 있다.
 for (const side of ['gemma', 'qwen']) {
@@ -110,10 +111,13 @@ const reasons = [
   ['decider', { route: 'gemma', route_confidence: 0.9, policy: 0.1, thinking: 0.1, min_confidence: 0.6, cached: true }],
   ['fallback', { why: 'low_confidence', low: ['route'], route: 'gemma', route_confidence: 0.3, policy: 0.05,
     policy_confidence: 0.9, thinking: 0.54, min_confidence: 0.6 }],
+  // 셋째 값은 BFF가 알린 민감 정보 여부. 모델 선택만 불확실했던 요청은 false로 온다.
+  ['fallback', { why: 'low_confidence', low: ['route'], route: 'gemma', route_confidence: 0.3, policy: 0.05,
+    policy_confidence: 0.9, thinking: 0.54, min_confidence: 0.6 }, false],
   ['fallback', { why: 'decider_unavailable', detail: 'timeout', timeout_s: 2 }],
 ];
 const made = () => ({
-  explain: reasons.map(([decision, reason]) => explain(decision, reason)),
+  explain: reasons.map(([decision, reason, sensitive]) => explain(decision, reason, sensitive)),
   flows: [
     buildFlow(record),
     buildFlow({ ...record, state: 'streaming' }),

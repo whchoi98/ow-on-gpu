@@ -68,7 +68,7 @@ vLLM v0.33.0이 언어 모델 둘을 서빙합니다. Gemma 4 31B는 고객 경�
 - 추론은 Gemma와 Qwen이 합니다. 웹 검색은 서울에 API가 없어 us-east-1에서 실행합니다.
 - Qwen은 추측 토큰 3개의 MTP를 씁니다. Gemma는 추측 디코딩 없이 실행합니다.
 
-ADR은 아직 없습니다. 확정된 결정은 `AGENT.md`에 적혀 있습니다.
+ADR은 `docs/decisions/ADR-001-narrow-decider-fallback.md` 하나입니다(Decider 기본값 처리의 범위). 그 밖의 확정된 결정은 `AGENT.md`에 적혀 있습니다.
 
 ### 4. 코드 포인터
 - `app/bff/bff.py`: `DECIDER_QUESTIONS`, `ask_decider`, `relay_with_tools`

@@ -72,7 +72,7 @@ No ADR has been written yet. The confirmed decisions are recorded in `AGENT.md`.
 - 모델 응답은 react-markdown과 remark-gfm으로 렌더링합니다.
 - 새 헤더 값은 BFF가 보내기 전에 화면부터 배포합니다.
 
-ADR은 아직 없습니다. 확정된 결정은 `AGENT.md`에 적혀 있습니다.
+ADR은 `docs/decisions/ADR-001-narrow-decider-fallback.md` 하나입니다(Decider 기본값 처리의 범위). 그 밖의 확정된 결정은 `AGENT.md`에 적혀 있습니다.
 
 ### 4. 코드 포인터
 - `app/web/src/App.jsx`: 보기 목록

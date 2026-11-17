@@ -70,7 +70,7 @@ No ADR has been written yet. The confirmed decisions are recorded in `AGENT.md`.
 - 민감 정보 요청에는 웹 검색을 붙이지 않습니다. 개인정보가 든 검색어가 리전 밖으로 나가지 않습니다.
 - 환경 식별 값(계정 ID, ARN, CloudFront와 로드 밸런서 주소, 리소스 ID, 공인 IP)은 커밋하지 않습니다. 커밋 전 검사가 막고, 결과 파일은 `scripts/mask-identifiers.py`로 가립니다.
 
-ADR은 아직 없습니다. 확정된 결정은 `AGENT.md`에 적혀 있습니다.
+ADR은 `docs/decisions/ADR-001-narrow-decider-fallback.md` 하나입니다(Decider 기본값 처리의 범위). 그 밖의 확정된 결정은 `AGENT.md`에 적혀 있습니다.
 
 ### 4. 코드 포인터
 - `app/bff/auth.py`: `CognitoVerifier.verify`

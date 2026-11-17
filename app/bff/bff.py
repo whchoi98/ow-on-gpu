@@ -312,12 +312,13 @@ async def chat(request):
         body["messages"] = with_korean_thinking(messages)
     # BFF가 실행하는 도구: 상담 업무의 주문 조회, 그리고 요청이 켰을 때의 웹 검색.
     # 민감 정보가 있는 요청은 검색어가 리전 밖으로 나가지 않도록 웹 검색을 붙이지 않는다.
-    # 모델을 정하지 못해 기본값으로 보낸 요청(fallback)도 민감 정보 요청으로 다뤄 붙이지 않는다.
+    # 기본값으로 보낸 요청(fallback) 가운데 개인정보가 없다는 판단을 얻지 못한 것은 민감 정보 요청으로 다뤄 붙이지 않는다.
     # 민감 정보가 있어서가 아니므로 화면이 이유를 구분하도록 값만 따로 알린다.
+    # 모델 선택만 불확실했던 요청은 민감 정보 요청이 아니므로 붙인다(routing.from_decider).
     managed = "tools" not in body and decision.source != "eval"
     wants_search = request.headers.get("x-web-search") == "on"
     search = ("off" if not wants_search else "disabled" if not websearch.enabled() else
-              "fallback" if decision.source == "fallback" else
+              "fallback" if decision.source == "fallback" and decision.sensitive else
               "sensitive" if decision.sensitive else "on" if managed else "off")
     sources = websearch.Sources() if search == "on" else None
     tools = (([order_tool(lang)] if managed and task == "support" else [])
@@ -343,7 +344,8 @@ async def chat(request):
     extra = {"x-request-id": request_id, "x-bff-model": decision.model_name, "x-bff-decision": decision.source,
              "x-bff-sensitive": str(decision.sensitive).lower(),
              "x-bff-thinking": str(decision.thinking).lower(),
-             # on: 검색 도구를 붙임, off: 요청하지 않음, sensitive: 민감 정보라 붙이지 않음, disabled: 설정되지 않음
+             # on: 검색 도구를 붙임, off: 요청하지 않음, sensitive: 민감 정보라 붙이지 않음,
+             # fallback: 개인정보가 없다는 판단을 얻지 못해 붙이지 않음, disabled: 설정되지 않음
              "x-bff-search": search,
              "x-bff-reason": json.dumps({**decision.reason, "cached": cached}, separators=(",", ":")),
              "x-bff-timing": json.dumps({"decide_ms": decide_ms, "wake_ms": wake_ms, "upstream_ms": upstream_headers_ms,

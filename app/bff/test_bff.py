@@ -88,7 +88,7 @@ class Stub:
         route = {"choice": "qwen" if "코드" in state else "gemma", "confidence": 0.3 if "애매" in state else 0.9}
         return web.json_response({"answers": {
             "route": {"type": "choice", **route},
-            "policy": {"type": "noul", "noul": 0.95 if "제 이름은" in state else 0.05},
+            "policy": {"type": "noul", "noul": 0.95 if "제 이름은" in state else 0.5 if "모호" in state else 0.05},
             "thinking": {"type": "noul", "noul": 0.9 if "코드" in state else 0.1},
         }})
 
@@ -163,10 +163,14 @@ class RoutingRules(unittest.TestCase):
     def test_decider_confidence(self):
         ok = {"route": {"choice": "qwen", "confidence": 0.9}, "policy": {"noul": 0.05}, "thinking": {"noul": 0.8}}
         self.assertEqual(routing.from_decider(ok, 0.6), routing.Decision("qwen", "interactive", True, False, "decider"))
+        # 모델 선택만 불확실하면 기본 모델로 보내되, 개인정보가 없다는 판단은 그대로 쓴다.
         low_route = {**ok, "route": {"choice": "qwen", "confidence": 0.5}}
-        self.assertEqual(routing.from_decider(low_route, 0.6), routing.FALLBACK)
+        self.assertEqual(routing.from_decider(low_route, 0.6),
+                         routing.Decision("gemma", "interactive", False, False, "fallback"))
+        self.assertEqual(routing.from_decider({**low_route, "policy": {"noul": 0.95}}, 0.6), routing.FALLBACK)
         low_policy = {**ok, "policy": {"noul": 0.6}}  # 0.5에서 0.1 떨어져 신뢰도 0.2
         self.assertEqual(routing.from_decider(low_policy, 0.6), routing.FALLBACK)
+        self.assertEqual(routing.from_decider({**low_route, "policy": {"noul": 0.6}}, 0.6), routing.FALLBACK)
         pii = {**ok, "policy": {"noul": 0.95}}
         self.assertEqual(routing.from_decider(pii, 0.6).model, "gemma")
         self.assertEqual(routing.from_decider({}, 0.6), routing.FALLBACK)
@@ -248,11 +252,13 @@ class BffHttp(unittest.IsolatedAsyncioTestCase):
         self.assertEqual((self.stub.decides, self.stub.chats[-1]["body"]["model"]), (1, "gemma-4-31b"))
 
     async def test_decider_low_confidence_or_failure_falls_back(self):
-        for text in ("애매한 요청", "장애 상황"):
+        # 애매: 모델 선택의 신뢰도만 낮음. 모호: 개인정보 판단의 신뢰도가 낮음. 장애: Decider가 답하지 않음.
+        for text, sensitive in (("애매한 요청", "false"), ("모호한 요청", "true"), ("애매하고 모호한 요청", "true"),
+                                ("장애 상황", "true")):
             _, headers, _ = await self.post(user(text))
             sent = self.stub.chats[-1]["body"]
             self.assertEqual((sent["model"], sent["chat_template_kwargs"]["enable_thinking"]), ("gemma-4-31b", False))
-            self.assertEqual((headers["x-bff-decision"], headers["x-bff-sensitive"]), ("fallback", "true"))
+            self.assertEqual((headers["x-bff-decision"], headers["x-bff-sensitive"]), ("fallback", sensitive), text)
 
     async def test_decider_policy_sends_personal_data_to_gemma(self):
         await self.post(user("제 이름은 홍길동이고 코드 좀 봐 주세요"))
@@ -368,17 +374,27 @@ class BffHttp(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("tools", self.stub.chats[-1]["body"])
         self.assertEqual(queries, [])
 
-    async def test_web_search_on_a_fallback_request_is_reported_as_fallback(self):
-        """모델을 정하지 못한 요청은 민감 정보 요청과 똑같이 다루되, 화면이 이유를 구분하도록 값만 다르게 알린다."""
+    async def test_web_search_runs_when_only_the_model_choice_is_uncertain(self):
+        """모델 선택만 불확실하고 개인정보가 없다는 판단이 기준 이상이면 기본 모델(Gemma)에 검색 도구를 붙인다."""
         queries = self.search_with()
-        for text in ("애매한 요청", "장애 상황"):
+        _, headers, data = await self.post({**user("애매한 검색 요청"), "stream": True}, **{"x-web-search": "on"})
+        self.assertEqual((headers["x-bff-search"], headers["x-bff-decision"], headers["x-bff-sensitive"]),
+                         ("on", "fallback", "false"))
+        self.assertEqual(self.stub.chats[0]["body"]["model"], "gemma-4-31b")
+        self.assertEqual(queries, ["서울 날씨"])
+        self.assertEqual(len(self.notes(data)[0]["sources"]), 2)
+
+    async def test_web_search_on_a_fallback_request_is_reported_as_fallback(self):
+        """개인정보가 없다는 판단을 얻지 못한 요청은 민감 정보 요청과 똑같이 다루되, 화면이 이유를 구분하도록 값만 다르게 알린다."""
+        queries = self.search_with()
+        for text in ("모호한 검색 요청", "애매하고 모호한 검색 요청", "장애 상황 검색"):
             _, headers, _ = await self.post(user(text), **{"x-web-search": "on"})
             self.assertEqual((headers["x-bff-search"], headers["x-bff-decision"], headers["x-bff-sensitive"]),
-                             ("fallback", "fallback", "true"))
+                             ("fallback", "fallback", "true"), text)
             self.assertEqual(self.stub.chats[-1]["body"]["model"], "gemma-4-31b")
             self.assertNotIn("tools", self.stub.chats[-1]["body"])
-        # 검색을 켜지 않은 요청은 모델을 정하지 못했어도 off다.
-        _, headers, _ = await self.post(user("애매한 요청"))
+        # 검색을 켜지 않은 요청은 기본값으로 보냈어도 off다.
+        _, headers, _ = await self.post(user("모호한 요청"))
         self.assertEqual((headers["x-bff-search"], headers["x-bff-decision"]), ("off", "fallback"))
         self.assertEqual(queries, [])
 

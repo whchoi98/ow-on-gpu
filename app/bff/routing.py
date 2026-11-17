@@ -61,7 +61,8 @@ class Decision:
         return f"{self.model}-{self.priority}"
 
 
-# Decider가 답하지 않거나 신뢰도가 낮을 때: Gemma, thinking off, 민감 정보 있음
+# Decider가 답하지 않거나 신뢰도가 낮을 때: Gemma, thinking off, 민감 정보 있음.
+# 모델 선택의 신뢰도만 낮은 경우는 from_decider가 민감 정보 여부를 Decider의 판단대로 둔다.
 FALLBACK = Decision("gemma", "interactive", False, True, "fallback", {"why": "decider_unavailable"})
 
 
@@ -85,7 +86,12 @@ def has_image(messages):
 
 
 def from_decider(answers, min_confidence):
-    """Decider의 세 판단(route, policy, thinking)을 결정으로 바꾼다. 신뢰도가 낮으면 FALLBACK."""
+    """Decider의 세 판단(route, policy, thinking)을 결정으로 바꾼다. 신뢰도가 낮으면 FALLBACK.
+
+    모델 선택만 불확실하고 개인정보가 없다는 판단이 기준 이상이면 기본 모델로 보내되 민감 정보 요청으로 다루지 않는다.
+    일반 질문은 route의 두 선택지 어디에도 뚜렷이 들지 않아 신뢰도가 낮게 나오는데, 그 이유만으로 웹 검색까지
+    막지 않기 위해서다(2026-11-17).
+    """
     try:
         route, policy, thinking = answers["route"], answers["policy"]["noul"], answers["thinking"]["noul"]
         choice, confidence = route["choice"], route["confidence"]
@@ -98,8 +104,9 @@ def from_decider(answers, min_confidence):
     low = [name for name, short in (("route", choice not in MODELS or confidence < min_confidence),
                                     ("policy", policy_confidence < min_confidence)) if short]
     if low:
-        return replace(FALLBACK, reason={"why": "low_confidence", "low": low,
-                                         "policy_confidence": round(policy_confidence, 3), **judged})
+        return replace(FALLBACK, sensitive=low != ["route"] or policy >= 0.5,
+                       reason={"why": "low_confidence", "low": low,
+                               "policy_confidence": round(policy_confidence, 3), **judged})
     sensitive = policy >= 0.5
     return Decision("gemma" if sensitive else choice, "interactive", thinking >= 0.5, sensitive, "decider", judged)
 

@@ -177,7 +177,7 @@ The BFF asks the Decider only when no rule decides the model, and calls the wake
 - Recreate strategy for the vLLM Deployments: one GPU holds one pod.
 - No zone requirement on the GPU NodePools: Karpenter picks an AZ that has capacity.
 - Deterministic rules before the Decider: fixed-format sensitive data (resident registration numbers, card numbers) is filtered by rules first, and the Decider is only an aid for cases without a format.
-- When the Decider is silent or below the confidence threshold, the request is handled as Gemma, thinking off, sensitive.
+- When the Decider is silent or below the confidence threshold, the request is handled as Gemma, thinking off, sensitive. If only the model choice is below the threshold and the no-personal-data judgment meets it, the request is not treated as sensitive.
 - The BFF relays SSE chunk by chunk: collecting the response breaks streaming.
 - Gateway and endpoint picker replicas spread over AZs: when they stop, neither model answers.
 - Batch work bypasses CloudFront and calls the gateway through an internal NLB: the CloudFront origin response timeout does not fit long batch requests.
@@ -366,7 +366,7 @@ BFF는 규칙으로 모델이 정해지지 않을 때만 Decider에 묻고, Qwen
 - vLLM Deployment는 Recreate 전략입니다. GPU 한 장에 파드 하나이기 때문입니다.
 - GPU NodePool에 zone 요구 조건을 두지 않습니다. Karpenter가 용량이 있는 AZ를 고릅니다.
 - 결정적 규칙이 Decider보다 먼저입니다. 형식이 정해진 민감 정보(주민등록번호, 카드번호)는 규칙으로 먼저 거르고, Decider는 형식이 없는 경우의 보조 판단에만 씁니다.
-- Decider가 답하지 않거나 신뢰도가 기준보다 낮으면 Gemma, thinking 끔, 민감 정보 있음으로 처리합니다.
+- Decider가 답하지 않거나 신뢰도가 기준보다 낮으면 Gemma, thinking 끔, 민감 정보 있음으로 처리합니다. 모델 선택의 신뢰도만 낮고 개인정보가 없다는 판단이 기준 이상이면 민감 정보 요청으로 다루지 않습니다.
 - BFF는 SSE를 청크 단위로 전달합니다. 응답을 모으면 스트리밍이 깨집니다.
 - 게이트웨이와 엔드포인트 선택기의 복제본을 AZ에 나눠 둡니다. 이들이 멈추면 두 모델 모두 응답하지 못합니다.
 - 배치 작업은 CloudFront를 거치지 않고 내부 NLB로 게이트웨이를 부릅니다. CloudFront의 오리진 응답 타임아웃이 긴 배치 요청에 맞지 않습니다.

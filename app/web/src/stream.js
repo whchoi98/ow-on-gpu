@@ -78,7 +78,7 @@ export async function streamChat({ token, task, prompt, messages, sessionId, eva
     model: response.headers.get('x-bff-model'),
     decision: response.headers.get('x-bff-decision'),
     sensitive: response.headers.get('x-bff-sensitive') === 'true',
-    // on, off, sensitive(민감 정보라 붙이지 않음), disabled(설정되지 않음)
+    // on, off, sensitive(민감 정보라 붙이지 않음), fallback(개인정보가 없다는 판단을 얻지 못해 붙이지 않음), disabled(설정되지 않음)
     search: response.headers.get('x-bff-search'),
     reason: parseReason(response.headers.get('x-bff-reason')),
     // BFF 안에서 구간마다 걸린 시간과, CloudFront가 붙인 Server-Timing(설정되어 있을 때만 온다)

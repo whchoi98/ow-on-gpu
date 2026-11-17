@@ -1,0 +1,145 @@
+{
+ "results": [
+  {
+   "case": "en search gemma",
+   "question": "What is the latest stable Kubernetes release? Search the web and answer in two sentences.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "task",
+   "x-bff-search": "on",
+   "x-bff-reason": "{\"task\":\"summarize\",\"cached\":false}",
+   "tool_calls": [
+    {
+     "event": "tool_call",
+     "name": "web_search",
+     "ms": 2250.9,
+     "query": "latest stable Kubernetes release version",
+     "sources": [
+      {
+       "n": 1,
+       "title": "Kubernetes",
+       "url": "https://kubernetes.io/releases/",
+       "published_at": "2026-01-16"
+      },
+      {
+       "n": 2,
+       "title": "Kubernetes v1.37: Garhwal",
+       "url": "https://kubernetes.io/blog/2026/08/26/kubernetes-v1-37-release/",
+       "published_at": "2026-09-02"
+      },
+      {
+       "n": 3,
+       "title": "Kubernetes 1.35",
+       "url": "https://kubernetes.io/releases/1.35/",
+       "published_at": null
+      },
+      {
+       "n": 4,
+       "title": "Kubernetes v1.38 Release Information",
+       "url": "https://www.kubernetes.dev/resources/release/",
+       "published_at": null
+      },
+      {
+       "n": 5,
+       "title": "Kubernetes",
+       "url": "https://en.wikipedia.org/wiki/Kubernetes",
+       "published_at": "2026-11-07"
+      }
+     ],
+     "search_ms": 1179.6
+    }
+   ],
+   "answer": "The latest stable Kubernetes release is version 1.37.1, which was released on September 15, 2026 [1]. This version is part of the v1.37 \"Garhwal\" release cycle [2].",
+   "sources": 5,
+   "cited": [
+    1,
+    2
+   ],
+   "cited_within_sources": true
+  },
+  {
+   "case": "ko search gemma",
+   "question": "쿠버네티스 최신 안정 버전이 무엇인지 웹에서 찾아 두 문장으로 답해 주세요.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "task",
+   "x-bff-search": "on",
+   "x-bff-reason": "{\"task\":\"summarize\",\"cached\":false}",
+   "tool_calls": [
+    {
+     "event": "tool_call",
+     "name": "web_search",
+     "ms": 1696.6,
+     "query": "latest stable kubernetes version",
+     "sources": [
+      {
+       "n": 1,
+       "title": "Kubernetes",
+       "url": "https://kubernetes.io/releases/",
+       "published_at": "2026-01-16"
+      },
+      {
+       "n": 2,
+       "title": "Kubernetes v1.37: Garhwal",
+       "url": "https://kubernetes.io/blog/2026/08/26/kubernetes-v1-37-release/",
+       "published_at": "2026-09-02"
+      },
+      {
+       "n": 3,
+       "title": "Kubernetes 1.35",
+       "url": "https://kubernetes.io/ko/releases/1.35/",
+       "published_at": null
+      },
+      {
+       "n": 4,
+       "title": "Kubernetes v1.38 Release Information",
+       "url": "https://www.kubernetes.dev/resources/release/",
+       "published_at": null
+      },
+      {
+       "n": 5,
+       "title": "Kubernetes",
+       "url": "https://en.wikipedia.org/wiki/Kubernetes",
+       "published_at": "2026-11-07"
+      }
+     ],
+     "search_ms": 612.4
+    }
+   ],
+   "answer": "쿠버네티스의 최신 안정 버전은 1.37.1(2026년 9월 15일 릴리스)입니다 [1]. 현재 쿠버네티스 프로젝트는 1.35, 1.36, 1.37의 최신 세 가지 마이너 릴리스 버전에 대해 릴리스 브랜치를 유지하고 있습니다 [1].",
+   "sources": 5,
+   "cited": [
+    1
+   ],
+   "cited_within_sources": true
+  },
+  {
+   "case": "en search no task",
+   "question": "What is the latest stable Kubernetes release? Search the web and answer in two sentences.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "fallback",
+   "x-bff-search": "fallback",
+   "x-bff-reason": "{\"why\":\"low_confidence\",\"low\":[\"route\"],\"policy_confidence\":0.872,\"route\":\"gemma\",\"route_confidence\":0.175,\"policy\":0.064,\"thinking\":0.48,\"min_confidence\":0.6,\"cached\":false}",
+   "tool_calls": [],
+   "answer": "I do not have access to Google Search or any other internet search tools to provide the real-time latest version. Please check the official Kubernetes website or documentation for the most current stable release.",
+   "sources": 0,
+   "cited": [],
+   "cited_within_sources": null
+  },
+  {
+   "case": "ko search no task",
+   "question": "쿠버네티스 최신 안정 버전이 무엇인지 웹에서 찾아 두 문장으로 답해 주세요.",
+   "status": 200,
+   "x-bff-model": "gemma-4-31b",
+   "x-bff-decision": "fallback",
+   "x-bff-search": "fallback",
+   "x-bff-reason": "{\"why\":\"low_confidence\",\"low\":[\"route\"],\"policy_confidence\":0.88,\"route\":\"gemma\",\"route_confidence\":0.341,\"policy\":0.06,\"thinking\":0.404,\"min_confidence\":0.6,\"cached\":false}",
+   "tool_calls": [],
+   "answer": "저는 실시간 웹 검색 기능이 없으므로 최신 버전을 직접 조회할 수 없지만, 일반적으로 쿠버네티스는 3개월마다 새로운 마이너 버전을 출시합니다. 정확한 최신 안정 버전은 쿠버네티스 공식 홈페이지(kubernetes.io)나 릴리스 노트를 통해 확인하시기 바랍니다.",
+   "sources": 0,
+   "cited": [],
+   "cited_within_sources": null
+  }
+ ]
+}
