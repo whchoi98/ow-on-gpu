@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-17
+
 ### Added
 
 - Add the EKS cluster, the Karpenter NodePools and the S3 model bucket for serving on g6e.4xlarge nodes
@@ -30,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a web search tool that calls Amazon Bedrock AgentCore Web Search and numbers its sources
 - Add the API call view, the build steps view and a Korean and English switch to the check page
 - Add English texts in the BFF, selected by the `x-lang` request header
-- Add the `fallback` value of the `x-bff-search` response header for requests whose model could not be decided
+- Add the `fallback` value of the `x-bff-search` response header for requests sent with the default handling
 - Add `scripts/mask-identifiers.py` and a pre-commit check that keep environment identifiers such as account IDs, ARNs and CloudFront addresses out of committed files
 
 ### Changed
@@ -46,7 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove the ECS Fargate service, the Terraform-managed ALB and the NLB of the wake API
 
-[Unreleased]: https://github.com/whchoi98/ow-on-gpu/commits/main
+[Unreleased]: https://github.com/whchoi98/ow-on-gpu/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/whchoi98/ow-on-gpu/releases/tag/v1.0.0
 
 ---
 
@@ -59,6 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)을 따릅니다.
 
 ## [Unreleased]
+
+## [1.0.0] - 2026-11-17
 
 ### Added
 
@@ -75,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Amazon Bedrock AgentCore Web Search를 부르고 출처에 번호를 붙이는 웹 검색 도구 추가
 - 확인용 페이지에 API 호출 보기, 구축 과정 보기, 한영 전환 추가
 - 요청 헤더 `x-lang`으로 고르는 BFF의 영어 문구 추가
-- 모델을 정하지 못한 요청을 알리는 응답 헤더 `x-bff-search`의 `fallback` 값 추가
+- 기본값으로 보낸 요청을 알리는 응답 헤더 `x-bff-search`의 `fallback` 값 추가
 - 계정 ID, ARN, CloudFront 주소 같은 환경 식별 값이 커밋에 들어가지 않도록 `scripts/mask-identifiers.py`와 커밋 전 검사 추가
 
 ### Changed
@@ -91,4 +96,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ECS Fargate 서비스, Terraform이 만든 ALB, 깨우기 API의 NLB 제거
 
-[Unreleased]: https://github.com/whchoi98/ow-on-gpu/commits/main
+[Unreleased]: https://github.com/whchoi98/ow-on-gpu/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/whchoi98/ow-on-gpu/releases/tag/v1.0.0
