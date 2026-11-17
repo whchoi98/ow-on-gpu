@@ -225,6 +225,20 @@
   min-width: 0;
 }
 
+/* 여덟 단계의 설명 칸을 차례로 모두 둔다. 재생이나 요청이 지나간 단계도 그대로 남는다. */
+.apicall__cards {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.apicall__cards > li {
+  min-width: 0;
+}
+
 .apicall__detail {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
@@ -233,9 +247,19 @@
   min-width: 0;
   padding: 16px 20px 18px;
   border: 1px solid var(--rule);
-  border-top: 3px solid var(--now);
+  border-top: 3px solid var(--rule);
   border-radius: 6px;
   background: #fff;
+  transition: border-color 160ms ease;
+}
+
+/* 단계 띠와 같은 표시: 지나온 단계는 초록, 지금 단계는 주황 */
+.apicall__detail.is-on {
+  border-top-color: var(--on);
+}
+
+.apicall__detail.is-now {
+  border-top-color: var(--now);
 }
 
 .apicall__main,
@@ -261,11 +285,40 @@
   background: var(--ink);
   color: var(--raised);
   font: 500 0.9rem/1 var(--font-mono);
+  transition: background-color 160ms ease;
+}
+
+.apicall__detail.is-on .apicall__badge {
+  background: var(--on);
+  color: #fff;
+}
+
+.apicall__detail.is-now .apicall__badge {
+  background: var(--now);
+  color: #fff;
 }
 
 .apicall__detail-ko {
   color: var(--ink-soft);
   font-size: 0.87rem;
+}
+
+/* 색만으로 구분하지 않도록 상태를 글로도 적는다. */
+.apicall__state {
+  margin-left: auto;
+  padding: 2px 8px;
+  border: 1px solid var(--on);
+  border-radius: 999px;
+  color: #3b6a0b;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.apicall__detail.is-now .apicall__state {
+  border-color: var(--now);
+  background: var(--now-bg);
+  color: #a04d00;
 }
 
 .apicall__lead {
@@ -344,12 +397,15 @@
 
 /* ---------------------------------------------------------------- 시간 띠 */
 
+/* 여덟 단계에 걸친 값이라 설명 칸 안이 아닌 단계 목록 아래에 한 번만 둔다. */
 .apicall__budget {
   display: grid;
   gap: 8px;
-  padding: 12px 14px;
-  border: 1px solid var(--rule-soft);
+  min-width: 0;
+  padding: 14px 20px 16px;
+  border: 1px solid var(--rule);
   border-radius: 6px;
+  background: #fff;
 }
 
 .apicall__budget-title {
@@ -550,6 +606,8 @@
   .apicall__pen,
   .apicall__seg,
   .apicall__step,
+  .apicall__detail,
+  .apicall__badge,
   .apicall__spot {
     transition: none;
   }

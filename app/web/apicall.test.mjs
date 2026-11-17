@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import data from './src/apicall-data.js';
 import {
   REGIONS, SIDES, STAGES, budgetRows, liveRows, mapFor, mapForLive, measuredRows, railStates, searchRows, sideOf,
-  summarizeLive,
+  stageCards, summarizeLive,
 } from './src/apicall.js';
 
 // 이 보기가 쓰는 지도(flow-map.svg)의 id. 여기에 없는 이름을 쓰면 오타다.
@@ -124,6 +124,30 @@ assert.deepEqual(liveRows(3, summary), []);
 assert.deepEqual(liveRows(4, summary).map((row) => row[0]), ['결정 방식', 'BFF의 판단', '깨우기 확인']);
 assert.equal(liveRows(7, summary)[0][1], '1.18초');
 assert.deepEqual(liveRows(5, null), []);
+
+// 지도 아래의 설명 칸: 지금 단계 하나가 아니라 여덟 단계가 모두 나온다. 재생이 3단계에 있어도 앞뒤 단계의 설명과 측정값이 남는다.
+{
+  const cards = stageCards(railStates(3, null), 'gemma', null, true);
+  assert.deepEqual(cards.map((card) => card.stage.n), [1, 2, 3, 4, 5, 6, 7, 8]);
+  assert.deepEqual(cards.map((card) => card.state), ['on', 'on', 'now', '', '', '', '', '']);
+  for (const card of cards) {
+    assert.deepEqual(card.measured, measuredRows(card.stage.n, 'gemma'));
+    assert.deepEqual(card.request, []);  // 요청을 보내지 않았다
+  }
+  // 웹 검색에서 잰 값은 켰을 때만, 6단계와 7단계에 나온다.
+  assert.deepEqual(cards.map((card) => card.search.length > 0), [false, false, false, false, false, true, true, false]);
+  assert.ok(stageCards(railStates(3, null), 'gemma', null, false).every((card) => card.search.length === 0));
+  // 끝난 요청: 브라우저가 알 수 없는 토큰화(3단계)를 뺀 모든 단계에 그 요청의 값이 함께 남는다.
+  const done = stageCards(railStates(7, live), 'qwen', summary, false);
+  assert.deepEqual(done.map((card) => card.state), ['on', 'on', 'on', 'on', 'on', 'on', 'now', 'on']);
+  assert.deepEqual(done.map((card) => card.request.length > 0), [true, true, false, true, true, true, true, true]);
+  assert.deepEqual(done[6].request, liveRows(7, summary));
+  // 요청이 진행 중일 때: 지나온 단계와 진행 중인 단계를 단계 띠와 같이 표시한다.
+  assert.deepEqual(
+    stageCards(railStates(1, { phase: 'engine' }), 'gemma', null, false).map((card) => card.state),
+    ['on', 'on', 'on', 'on', 'now', '', '', ''],
+  );
+}
 
 // 시간 띠: 측정값 한 줄, 요청을 보냈으면 두 줄. 가장 긴 줄이 100%다.
 assert.equal(budgetRows('gemma', null).length, 1);

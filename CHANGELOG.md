@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Keep the descriptions of all eight steps below the map in the API call view instead of showing only the current step
+
 ## [1.0.0] - 2026-11-17
 
 ### Added
@@ -62,6 +66,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)을 따릅니다.
 
 ## [Unreleased]
+
+### Changed
+
+- API 호출 보기의 지도 아래에 지금 단계 하나가 아닌 여덟 단계의 설명을 모두 두도록 변경
 
 ## [1.0.0] - 2026-11-17
 

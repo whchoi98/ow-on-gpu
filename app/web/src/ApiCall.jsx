@@ -9,8 +9,8 @@ import mapEn from './flow-map.en.svg?raw';
 import map from './flow-map.svg?raw';
 import { explainFailure } from './api.js';
 import {
-  REGIONS, SIDES, STAGES, budgetRows, duration, liveRows, mapFor, mapForLive, measuredRows, railStates, searchRows,
-  sideOf, stageOfPhase, summarizeLive,
+  REGIONS, SIDES, STAGES, budgetRows, duration, mapFor, mapForLive, railStates, sideOf, stageCards, stageOfPhase,
+  summarizeLive,
 } from './apicall.js';
 import { linkCitations } from './citations.js';
 import { tr, useLang } from './i18n.js';
@@ -102,9 +102,10 @@ export default function ApiCall({ session, onExpired }) {
     [running, live, shown, side, summary, webSearch, lang],
   );
   const budget = budgetRows(side, summary);
-  const fromSearch = webSearch ? searchRows(shown, side) : [];
-  // Chunk가 올 때마다 설명 칸이 바뀌지 않도록, 요청의 값은 요청이 끝난 뒤에 적는다. 진행 중의 값은 지도에 나온다.
-  const fromRequest = running ? [] : liveRows(shown, summary);
+  // 끝난 요청의 값. Chunk가 올 때마다 설명 칸이 바뀌지 않도록, 요청의 값은 요청이 끝난 뒤에 적는다. 진행 중의 값은 지도에 나온다.
+  const finished = running ? null : summary;
+  // 설명 칸은 지금 단계만이 아니라 여덟 단계를 모두 그린다. 재생이나 요청이 지나간 단계의 설명과 값이 그대로 남는다.
+  const cards = stageCards(states, side, finished, webSearch);
 
   useEffect(() => {
     if (!playing) return undefined;
@@ -230,8 +231,8 @@ export default function ApiCall({ session, onExpired }) {
       ? explainFailure(live.error)
       : live?.phase === 'done'
         ? tr(
-            `요청이 끝났습니다. 전체 시간은 ${duration(summary.totalMs)}입니다. 단계를 누르면 그 단계에서 이 요청이 보여 준 값이 나옵니다.`,
-            `Request finished. Total time was ${duration(summary.totalMs)}. Select a step to see the values this request showed at that step.`,
+            `요청이 끝났습니다. 전체 시간은 ${duration(summary.totalMs)}입니다. 지도 아래의 여덟 단계에 이 요청이 보여 준 값을 함께 적었습니다.`,
+            `Request finished. Total time was ${duration(summary.totalMs)}. The eight steps below the map now include the values this request showed.`,
           )
         : playing
           ? tr('단계를 차례로 보여 주고 있습니다.', 'Showing the steps in order.')
@@ -339,90 +340,109 @@ export default function ApiCall({ session, onExpired }) {
             </p>
           </figure>
 
-          <article className="apicall__detail" aria-live="polite">
-            <div className="apicall__main">
-              <header className="apicall__detail-head">
-                <span className="apicall__badge">{stage.n}</span>
-                <h3>{stage.en}</h3>
-                <span className="apicall__detail-ko">{stage.ko}</span>
-              </header>
-              <p className="apicall__lead">{stage.lead}</p>
-              <h4>{tr('이 환경에서 이 일을 하는 것', 'Components that do this work here')}</h4>
-              <dl className="apicall__here">
-                {stage.here.map(([name, text]) => (
-                  <div key={name}>
-                    <dt>{name}</dt>
-                    <dd>{text}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <div className="apicall__side-col">
-              <div className="apicall__values">
-                <section>
-                  <h4>{tr('8단계 측정 중앙값', 'Build step 8 medians')} <span>{SIDES[side].name}</span></h4>
-                  <Rows rows={measuredRows(shown, side)} />
-                </section>
-                {fromSearch.length > 0 && (
-                  <section>
-                    <h4>{tr('웹 검색', 'Web search')} <span>{tr('작업 장비와 BFF에서 잰 값', 'Measured from the work machine and at the BFF')}</span></h4>
-                    <Rows rows={fromSearch} />
-                  </section>
-                )}
-                <section>
-                  <h4>{tr('이 요청의 값', 'Values from this request')}</h4>
-                  {fromRequest.length ? (
-                    <Rows rows={fromRequest} />
-                  ) : (
-                    <p className="apicall__none">
-                      {running
-                        ? tr(
-                            '요청이 끝나면 이 단계에서 보여 준 값이 여기에 나옵니다. 진행 중의 값은 지도에 표시됩니다.',
-                            'When the request finishes, the values it showed at this step appear here. Values in progress are shown on the map.',
-                          )
-                        : summary
-                          ? tr(
-                              '이 단계의 시간은 브라우저에서 알 수 없습니다. 왼쪽의 측정값은 vLLM 지표와 로그로 잰 값입니다.',
-                              'The browser cannot see the time of this step. The measured values on the left come from vLLM metrics and logs.',
-                            )
-                          : tr(
-                              '실제 요청 보내기를 누르면 그 요청이 이 단계에서 보여 준 값이 여기에 나옵니다.',
-                              'Press Send a real request, and the values that request showed at this step appear here.',
-                            )}
-                    </p>
+          <p className="form-note">
+            {running
+              ? tr(
+                  '요청이 끝나면 아래의 단계마다 이 요청이 보여 준 값이 함께 나옵니다. 진행 중의 값은 지도에 표시됩니다.',
+                  'When the request finishes, each step below also shows the values this request showed. Values in progress are shown on the map.',
+                )
+              : finished
+                ? tr(
+                    '아래는 여덟 단계의 설명입니다. 단계마다 8단계 측정 중앙값과 이 요청이 보여 준 값을 함께 적었습니다.',
+                    'Below are the eight steps. Each one lists the build step 8 medians together with the values this request showed.',
+                  )
+                : tr(
+                    '아래는 여덟 단계의 설명과 8단계 측정 중앙값입니다. 실제 요청 보내기를 누르면 그 요청이 단계마다 보여 준 값이 함께 나옵니다.',
+                    'Below are the eight steps with the build step 8 medians. Press Send a real request, and the values that request showed at each step are added.',
                   )}
-                </section>
-              </div>
+          </p>
 
-              <div className="apicall__budget">
-                <p className="apicall__budget-title">
-                  {tr('첫 내용까지의 시간', 'Time to first content')} <span>{SIDES[side].name}, {tr('두 줄은 같은 눈금', 'both rows on the same scale')}</span>
-                </p>
-                {budget.map((row) => (
-                  <div key={row.key} className="apicall__bar-row">
-                    <span className="apicall__bar-label">{row.label} <b>{duration(row.total)}</b></span>
-                    <span className="apicall__bar" role="img"
-                      aria-label={row.parts.map((part) => `${part.name} ${duration(part.value)}`).join(', ')}>
-                      {row.parts.map((part) => (
-                        <span key={part.key} className={`apicall__seg apicall__seg--${part.key}`} style={{ width: `${part.percent}%` }} />
-                      ))}
-                    </span>
-                    <span className="apicall__bar-text">
-                      {row.parts.map((part) => (
-                        <span key={part.key}>
-                          <i className={`apicall__dot apicall__seg--${part.key}`} aria-hidden="true" />
-                          {part.name} {duration(part.value)}
+          <ol className="apicall__cards">
+            {cards.map(({ stage: item, state, measured, search, request }) => (
+              <li key={item.n}>
+                <article className={`apicall__detail${state ? ` is-${state}` : ''}`} aria-current={item.n === shown ? 'step' : undefined}>
+                  <div className="apicall__main">
+                    <header className="apicall__detail-head">
+                      <span className="apicall__badge">{item.n}</span>
+                      <h3>{item.en}</h3>
+                      <span className="apicall__detail-ko">{item.ko}</span>
+                      {state && (
+                        <span className="apicall__state">
+                          {state === 'now' ? tr('지금 단계', 'Current step') : tr('지나온 단계', 'Passed step')}
                         </span>
+                      )}
+                    </header>
+                    <p className="apicall__lead">{item.lead}</p>
+                    <h4>{tr('이 환경에서 이 일을 하는 것', 'Components that do this work here')}</h4>
+                    <dl className="apicall__here">
+                      {item.here.map(([name, text]) => (
+                        <div key={name}>
+                          <dt>{name}</dt>
+                          <dd>{text}</dd>
+                        </div>
                       ))}
-                    </span>
+                    </dl>
                   </div>
-                ))}
-              </div>
 
-              <p className="apicall__note">{stage.note}</p>
-            </div>
-          </article>
+                  <div className="apicall__side-col">
+                    <div className="apicall__values">
+                      <section>
+                        <h4>{tr('8단계 측정 중앙값', 'Build step 8 medians')} <span>{SIDES[side].name}</span></h4>
+                        <Rows rows={measured} />
+                      </section>
+                      {search.length > 0 && (
+                        <section>
+                          <h4>{tr('웹 검색', 'Web search')} <span>{tr('작업 장비와 BFF에서 잰 값', 'Measured from the work machine and at the BFF')}</span></h4>
+                          <Rows rows={search} />
+                        </section>
+                      )}
+                      {finished && (
+                        <section>
+                          <h4>{tr('이 요청의 값', 'Values from this request')}</h4>
+                          {request.length ? (
+                            <Rows rows={request} />
+                          ) : (
+                            <p className="apicall__none">
+                              {tr(
+                                '이 단계의 시간은 브라우저에서 알 수 없습니다. 8단계 측정 중앙값은 vLLM 지표와 로그로 잰 값입니다.',
+                                'The browser cannot see the time of this step. The build step 8 medians come from vLLM metrics and logs.',
+                              )}
+                            </p>
+                          )}
+                        </section>
+                      )}
+                    </div>
+                    <p className="apicall__note">{item.note}</p>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ol>
+
+          <div className="apicall__budget">
+            <p className="apicall__budget-title">
+              {tr('첫 내용까지의 시간', 'Time to first content')} <span>{SIDES[side].name}, {tr('두 줄은 같은 눈금', 'both rows on the same scale')}</span>
+            </p>
+            {budget.map((row) => (
+              <div key={row.key} className="apicall__bar-row">
+                <span className="apicall__bar-label">{row.label} <b>{duration(row.total)}</b></span>
+                <span className="apicall__bar" role="img"
+                  aria-label={row.parts.map((part) => `${part.name} ${duration(part.value)}`).join(', ')}>
+                  {row.parts.map((part) => (
+                    <span key={part.key} className={`apicall__seg apicall__seg--${part.key}`} style={{ width: `${part.percent}%` }} />
+                  ))}
+                </span>
+                <span className="apicall__bar-text">
+                  {row.parts.map((part) => (
+                    <span key={part.key}>
+                      <i className={`apicall__dot apicall__seg--${part.key}`} aria-hidden="true" />
+                      {part.name} {duration(part.value)}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            ))}
+          </div>
 
           {live?.prompt && live.phase !== 'failed' && (
             <section className="apicall__answer" aria-label={tr('이 요청의 질문과 답변', 'Question and answer of this request')}>

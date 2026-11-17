@@ -758,6 +758,19 @@ export function railStates(selected, live) {
   return states;
 }
 
+// 지도 아래의 설명 칸. 지금 단계 하나가 아니라 여덟 단계를 모두 돌려주므로, 재생이나 요청이 지나간 단계의 설명과 값이 남는다.
+//   states   railStates의 값. 설명 칸을 단계 띠와 같이 표시한다
+//   summary  끝난 요청의 값. 요청이 없거나 진행 중이면 null을 준다(Chunk가 올 때마다 칸이 바뀌지 않게)
+export function stageCards(states, side, summary, webSearch = false) {
+  return STAGES.map((stage) => ({
+    stage,
+    state: states[stage.n],
+    measured: measuredRows(stage.n, side),
+    search: webSearch ? searchRows(stage.n, side) : [],
+    request: liveRows(stage.n, summary),
+  }));
+}
+
 // 진행 중인 요청이 지금 보여 줄 단계
 export function stageOfPhase(phase) {
   return phase === 'sending' ? 1 : phase === 'engine' || phase === 'streaming' ? 5 : null;
