@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-17
+
 ### Changed
 
 - Keep the descriptions of all eight steps below the map in the API call view instead of showing only the current step
@@ -52,7 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove the ECS Fargate service, the Terraform-managed ALB and the NLB of the wake API
 
-[Unreleased]: https://github.com/whchoi98/ow-on-gpu/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/whchoi98/ow-on-gpu/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/whchoi98/ow-on-gpu/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/whchoi98/ow-on-gpu/releases/tag/v1.0.0
 
 ---
@@ -66,6 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)을 따릅니다.
 
 ## [Unreleased]
+
+## [1.1.0] - 2026-11-17
 
 ### Changed
 
@@ -104,5 +109,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ECS Fargate 서비스, Terraform이 만든 ALB, 깨우기 API의 NLB 제거
 
-[Unreleased]: https://github.com/whchoi98/ow-on-gpu/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/whchoi98/ow-on-gpu/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/whchoi98/ow-on-gpu/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/whchoi98/ow-on-gpu/releases/tag/v1.0.0
