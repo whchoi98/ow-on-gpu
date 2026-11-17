@@ -11,7 +11,7 @@ const ROW_PITCH = ROW_HEIGHT + AXIS_HEIGHT;
 const MAX_ROWS = 4;
 
 /**
- * 토큰 테이프. 조각이 도착한 시각마다 눈금을 찍는다.
+ * 토큰 테이프. Chunk가 도착한 시각마다 눈금을 찍는다.
  *   ticks      [{ms, kind}]  kind는 content 또는 reasoning
  *   pen        gemma, qwen 또는 null(아직 모름)
  *   startedAt  기록이 진행 중일 때 시작 시각(performance.now 기준). 끝났으면 null

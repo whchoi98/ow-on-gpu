@@ -1,4 +1,4 @@
-// /v1/chat/completions를 스트리밍으로 부르고, 조각이 도착할 때마다 도착 시각과 함께 알려 준다.
+// /v1/chat/completions를 스트리밍으로 부르고, Chunk가 도착할 때마다 도착 시각과 함께 알려 준다.
 import { getLang, tr } from './i18n.js';
 
 // 게이트웨이 경로의 요청 제한 시간이 300초다(k8s/gemma/routes.yaml). 2026-11-14에 잰 생성 속도로
@@ -64,7 +64,7 @@ export async function streamChat({ token, task, prompt, messages, sessionId, eva
         messages: messages ?? [{ role: 'user', content: prompt }],
         stream: true,
         max_tokens: maxTokens,
-        // 마지막 조각에 토큰 수(usage)가 온다.
+        // 마지막 Chunk에 토큰 수(usage)가 온다.
         stream_options: { include_usage: true },
       }),
     });

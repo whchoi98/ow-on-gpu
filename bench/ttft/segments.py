@@ -12,7 +12,7 @@
   ALB                 ALB의 request_processing_time + target_processing_time - BFF가 응답 헤더를 내보내기까지의 시간
                       (ALB 처리와 ALB에서 BFF까지. ALB 접근 로그와 BFF 로그를 X-Amzn-Trace-Id로 이음)
   BFF                 판단 시간 + 깨우기 API 호출 시간 (BFF 로그)
-  게이트웨이           BFF가 게이트웨이에 요청을 보낸 뒤 내용이 담긴 첫 조각을 받기까지의 시간 - vLLM의 TTFT
+  게이트웨이           BFF가 게이트웨이에 요청을 보낸 뒤 내용이 담긴 첫 Chunk를 받기까지의 시간 - vLLM의 TTFT
                       (agentgateway, EPP. BFF 로그와 vLLM 지표. 2026-11-15부터 BFF는 EKS 파드이고 게이트웨이의
                       Service를 직접 부른다. 그전의 측정에는 게이트웨이 NLB가 이 구간에 들어 있었다)
   vLLM                vllm:time_to_first_token_seconds의 합계가 요청 전후로 늘어난 값

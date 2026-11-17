@@ -623,7 +623,7 @@
    "id": 12,
    "type": "timeseries",
    "title": "EPP가 본 TTFT",
-   "description": "EPP가 요청을 받은 뒤 응답의 첫 조각을 보기까지의 시간",
+   "description": "EPP가 요청을 받은 뒤 응답의 첫 Chunk를 보기까지의 시간",
    "datasource": {
     "type": "prometheus",
     "uid": "${datasource}"

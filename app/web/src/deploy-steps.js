@@ -296,7 +296,7 @@ export const DEPLOY = localized(() => ({
           'The BFF picks the model in this order: sensitive data rule, task type, attachment, Decider, default.',
         ),
         tr(
-          'Qwen으로 갈 요청은 깨우기 API를 먼저 부릅니다. SSE 응답은 받은 조각 그대로 흘려보냅니다.',
+          'Qwen으로 갈 요청은 깨우기 API를 먼저 부릅니다. SSE 응답은 받은 Chunk 그대로 흘려보냅니다.',
           'Requests bound for Qwen call the wake API first. SSE responses are relayed chunk by chunk as they arrive.',
         ),
         tr(

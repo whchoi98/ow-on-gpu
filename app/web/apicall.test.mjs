@@ -57,7 +57,7 @@ assert.equal(mapFor(1, 'gemma').edges['bff-gw'], undefined);  // 1단계는 BFF�
 assert.ok(STAGES[1].here.some(([name, text]) => name === 'Service' && text.includes('직접')));
 assert.ok(!STAGES[1].here.some(([name]) => name.includes('NLB')));
 assert.equal(measuredRows(2, 'gemma')[1][0], '게이트웨이 구간 (agentgateway, EPP)');
-// 7단계는 돌아오는 조각을, 8단계는 AMP를 표시한다.
+// 7단계는 돌아오는 Chunk를, 8단계는 AMP를 표시한다.
 assert.equal(mapFor(7, 'gemma').edges['bff-gw'], 'stream');
 assert.equal(mapFor(7, 'gemma').edges['gw-gemma'], 'stream');
 assert.equal(mapFor(8, 'qwen').nodes.amp, 'now');

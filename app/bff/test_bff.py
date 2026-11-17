@@ -583,7 +583,7 @@ class BffHttp(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(started["trace_id"], "Root=1-abc")
         for request_id in ("req-1", "req-2"):
             end = next(e for e in events if e["event"] == "chat_end" and e["request_id"] == request_id)
-            # 첫 내용은 첫 조각보다 먼저일 수 없고, 전체 시간 안에 있다.
+            # 첫 내용은 첫 Chunk보다 먼저일 수 없고, 전체 시간 안에 있다.
             self.assertGreater(end["first_chunk_ms"], 0)
             self.assertGreaterEqual(end["first_content_ms"], end["first_chunk_ms"])
             self.assertGreaterEqual(end["total_ms"], end["first_content_ms"])

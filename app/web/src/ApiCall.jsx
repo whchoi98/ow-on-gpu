@@ -103,7 +103,7 @@ export default function ApiCall({ session, onExpired }) {
   );
   const budget = budgetRows(side, summary);
   const fromSearch = webSearch ? searchRows(shown, side) : [];
-  // 조각이 올 때마다 설명 칸이 바뀌지 않도록, 요청의 값은 요청이 끝난 뒤에 적는다. 진행 중의 값은 지도에 나온다.
+  // Chunk가 올 때마다 설명 칸이 바뀌지 않도록, 요청의 값은 요청이 끝난 뒤에 적는다. 진행 중의 값은 지도에 나온다.
   const fromRequest = running ? [] : liveRows(shown, summary);
 
   useEffect(() => {
@@ -219,11 +219,11 @@ export default function ApiCall({ session, onExpired }) {
           : tr('모델이 첫 토큰을 만들고 있습니다.', 'The model is generating the first token.'),
         streaming: searched
           ? tr(
-              `웹 검색 ${searched}회의 결과로 모델이 답하고 있습니다. 조각이 브라우저로 돌아오고 있습니다.`,
+              `웹 검색 ${searched}회의 결과로 모델이 답하고 있습니다. Chunk가 브라우저로 돌아오고 있습니다.`,
               `The model is answering from the results of ${searchedCount}. Chunks are coming back to the browser.`,
             )
           : tr(
-              '조각이 모델에서 브라우저로 돌아오고 있습니다. 5, 6, 7단계가 조각마다 함께 진행됩니다.',
+              'Chunk가 모델에서 브라우저로 돌아오고 있습니다. 5, 6, 7단계가 Chunk마다 함께 진행됩니다.',
               'Chunks are coming back from the model to the browser. Steps 5, 6, and 7 run together for every chunk.',
             ) }[live.phase]
     : live?.phase === 'failed'

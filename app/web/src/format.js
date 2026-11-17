@@ -329,7 +329,7 @@ export function median(values) {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-// 내용 조각의 도착 시각으로 요약값을 만든다.
+// 내용 Chunk의 도착 시각으로 요약값을 만든다.
 export function summarize(ticks) {
   const content = ticks.filter((tick) => tick.kind === 'content').map((tick) => tick.ms);
   const gaps = content.slice(1).map((value, index) => value - content[index]);
@@ -385,7 +385,7 @@ export function aggregate(results, rounds) {
     firstMedian: median(numbers('firstMs')),
     firstMin: numbers('firstMs').length ? Math.min(...numbers('firstMs')) : null,
     firstMax: numbers('firstMs').length ? Math.max(...numbers('firstMs')) : null,
-    // 조각 하나에 담겨 온 토큰 수. speculative decoding을 쓰는 모델은 1보다 크다.
+    // Chunk 하나에 담겨 온 토큰 수. speculative decoding을 쓰는 모델은 1보다 크다.
     tokensPerChunk: median(ok.filter((result) => result.tokens && result.chunks).map((result) => result.tokens / result.chunks)),
     gapMedian: median(gaps),
     gapP95: percentile(gaps, 0.95),
@@ -448,14 +448,14 @@ export function analyze(summary, { concurrency, rounds }) {
   if (gemma.tokensPerChunk != null && qwen.tokensPerChunk != null && gemma.gapMedian != null && qwen.gapMedian != null) {
     const perToken = (side) => side.gapMedian / side.tokensPerChunk;
     lines.push(tr(
-      `조각 하나에 담겨 온 토큰은 Gemma ${gemma.tokensPerChunk.toFixed(1)}개, Qwen ${qwen.tokensPerChunk.toFixed(1)}개입니다. ` +
-        `조각 간격을 토큰 하나당 간격으로 바꾸면 Gemma ${ms(perToken(gemma))}, Qwen ${ms(perToken(qwen))}입니다.`,
+      `Chunk 하나에 담겨 온 토큰은 Gemma ${gemma.tokensPerChunk.toFixed(1)}개, Qwen ${qwen.tokensPerChunk.toFixed(1)}개입니다. ` +
+        `Chunk 간격을 토큰 하나당 간격으로 바꾸면 Gemma ${ms(perToken(gemma))}, Qwen ${ms(perToken(qwen))}입니다.`,
       `Each chunk carried ${gemma.tokensPerChunk.toFixed(1)} tokens for Gemma and ${qwen.tokensPerChunk.toFixed(1)} for Qwen. ` +
         `Converted to an interval per token, the chunk interval is ${ms(perToken(gemma))} for Gemma and ${ms(perToken(qwen))} for Qwen.`,
     ));
     if (qwen.tokensPerChunk >= 1.5 && qwen.gapMedian > gemma.gapMedian && qwen.tokensPerSecond > gemma.tokensPerSecond) {
       lines.push(tr(
-        'Qwen은 조각 사이의 간격이 더 길지만 한 번에 여러 토큰을 내보내서(speculative decoding) 생성 속도는 더 빠릅니다.',
+        'Qwen은 Chunk 사이의 간격이 더 길지만 한 번에 여러 토큰을 내보내서(speculative decoding) 생성 속도는 더 빠릅니다.',
         'Qwen has a longer interval between chunks, but it emits several tokens at a time (speculative decoding), so its generation speed is higher.',
       ));
     }

@@ -11,7 +11,7 @@ const PHASES = localized(() => ({
     'BFF의 응답 헤더를 기다리는 중입니다. 헤더가 오면 실제로 거친 경로를 표시합니다.',
     'Waiting for the response headers from the BFF. Once they arrive, the map shows the path actually taken.',
   ),
-  streaming: tr('응답 조각이 모델에서 브라우저로 돌아오고 있습니다.', 'Response chunks are coming back from the model to the browser.'),
+  streaming: tr('응답 Chunk가 모델에서 브라우저로 돌아오고 있습니다.', 'Response chunks are coming back from the model to the browser.'),
   done: tr(
     '요청이 끝났습니다. 표시한 경로와 시간은 이 요청의 값입니다.',
     'The request is complete. The path and timing shown are the values of this request.',
@@ -51,7 +51,7 @@ export default function Flow({ flow, title, steps = true }) {
 
   // 5번(추론 요청)을 골랐고 표시할 요청이 있으면 측정값 대신 그 요청의 실제 값을 보인다.
   const live = step == null || (step === 5 && Boolean(flow));
-  // 단계를 보는 동안에는 요청의 조각이 도착해도 그림을 다시 그리지 않는다.
+  // 단계를 보는 동안에는 요청의 Chunk가 도착해도 그림을 다시 그리지 않는다.
   const record = live ? flow : null;
   const shown = useMemo(() => (live ? record : stepFlow(step)), [live, record, step, lang]);
   // 그림의 번호 배지 가운데 강조할 것. 요청을 보이는 중이면 5번이다.

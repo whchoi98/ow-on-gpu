@@ -64,7 +64,7 @@ ROWS = [
         ("EPP가 본 TTFT", "s", [
             ("{{pool}} p50", quantile(0.5, "llm_d_epp_request_ttft_seconds", by="pool", selector='job="epp"')),
             ("{{pool}} p99", quantile(0.99, "llm_d_epp_request_ttft_seconds", by="pool", selector='job="epp"')),
-        ], "EPP가 요청을 받은 뒤 응답의 첫 조각을 보기까지의 시간"),
+        ], "EPP가 요청을 받은 뒤 응답의 첫 Chunk를 보기까지의 시간"),
         ("우선순위별 요청 수", "reqps", [
             ("{{pool}} priority {{priority}}", f'sum by (pool, priority) (rate(llm_d_epp_request_total{{job="epp"}}[{RATE}]))'),
             ("{{pool}} 오류 {{error_code}}",

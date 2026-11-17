@@ -208,7 +208,7 @@ export default function Console({ session, onExpired }) {
             <div className="records__empty">
               <h2>{tr('아직 기록이 없습니다', 'No records yet')}</h2>
               <p>
-                {tr('요청을 보내면 위 그림에 지나가는 구간이 표시되고, 응답 조각이 도착하는 대로 여기 테이프에 눈금이 찍힙니다.',
+                {tr('요청을 보내면 위 그림에 지나가는 구간이 표시되고, 응답 Chunk가 도착하는 대로 여기 테이프에 눈금이 찍힙니다.',
                   'When you send a request, the diagram above shows the segments it passes through, and each response chunk marks a tick on the tape here as it arrives.')}
               </p>
               <ul className="legend">

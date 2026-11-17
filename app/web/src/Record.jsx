@@ -42,7 +42,7 @@ function failure(error) {
     : tr(`서버가 ${error.status}로 응답했습니다.`, `The server responded with ${error.status}.`);
 }
 
-// 영어 문장에 쓰는 조각 수
+// 영어 문장에 쓰는 Chunk 수
 const chunks = (count) => `${count} ${count === 1 ? 'chunk' : 'chunks'}`;
 
 function Readout({ label, value }) {
@@ -96,7 +96,7 @@ function Record({ record, folded, focused, onFold, onShowPath, onTranslate }) {
       {folded && (
         <p className="record__brief">
           {error ||
-            tr(`첫 토큰 ${ms(summary.firstMs)}, 조각 ${summary.count}개, 전체 ${seconds(record.totalMs)}`,
+            tr(`첫 토큰 ${ms(summary.firstMs)}, Chunk ${summary.count}개, 전체 ${seconds(record.totalMs)}`,
               `First token ${ms(summary.firstMs)}, ${chunks(summary.count)}, total ${seconds(record.totalMs)}`)}
         </p>
       )}
@@ -119,7 +119,7 @@ function Record({ record, folded, focused, onFold, onShowPath, onTranslate }) {
         pen={pen}
         startedAt={live ? record.startedAt : null}
         endMs={record.totalMs}
-        label={tr(`기록 ${record.number}의 토큰 테이프: 첫 토큰 ${ms(summary.firstMs)}, 조각 ${summary.count}개`,
+        label={tr(`기록 ${record.number}의 토큰 테이프: 첫 토큰 ${ms(summary.firstMs)}, Chunk ${summary.count}개`,
           `Token tape for record ${record.number}: first token ${ms(summary.firstMs)}, ${chunks(summary.count)}`)}
       />
 
@@ -130,8 +130,8 @@ function Record({ record, folded, focused, onFold, onShowPath, onTranslate }) {
           label={summary.reasoningCount > 0 ? tr('답변의 첫 토큰', 'Answer start') : tr('첫 토큰', 'First token')}
           value={ms(summary.firstMs)}
         />
-        <Readout label={tr('조각 간격', 'Chunk interval')} value={ms(summary.gapMs)} />
-        <Readout label={tr('조각 수', 'Chunks')} value={summary.count ? tr(`${summary.count}개`, `${summary.count}`) : '-'} />
+        <Readout label={tr('Chunk 간격', 'Chunk interval')} value={ms(summary.gapMs)} />
+        <Readout label={tr('Chunk 수', 'Chunks')} value={summary.count ? tr(`${summary.count}개`, `${summary.count}`) : '-'} />
         <Readout label={tr('전체', 'Total')} value={seconds(record.totalMs)} />
       </dl>
 

@@ -183,7 +183,7 @@ export const STAGES = localized(() => [
         'Computes all input tokens in one pass and writes them to the KV cache. This sets the time to first token.',
       )],
       ['B Decode', tr(
-        'KV 캐시를 다시 쓰면서 토큰을 하나씩 만듭니다. 조각 사이 간격을 좌우합니다. Qwen은 MTP로 조각 하나에 여러 토큰을 담습니다.',
+        'KV 캐시를 다시 쓰면서 토큰을 하나씩 만듭니다. Chunk 사이 간격을 좌우합니다. Qwen은 MTP로 Chunk 하나에 여러 토큰을 담습니다.',
         'Generates tokens one at a time while reusing the KV cache. This sets the interval between chunks. Qwen uses MTP to put several tokens in one chunk.',
       )],
       ['C Hardware', tr(
@@ -205,7 +205,7 @@ export const STAGES = localized(() => [
     en: 'Post-processing',
     ko: tr('후처리', 'Detokenize, parse'),
     lead: tr(
-      '생성한 토큰을 텍스트로 되돌리고 추론 과정과 도구 호출을 답변에서 떼어 냅니다. 스트리밍 중에는 조각마다 함께 진행됩니다.',
+      '생성한 토큰을 텍스트로 되돌리고 추론 과정과 도구 호출을 답변에서 떼어 냅니다. 스트리밍 중에는 Chunk마다 함께 진행됩니다.',
       'Turns the generated tokens back into text and separates the reasoning and tool calls from the answer. While streaming, this runs for every chunk.',
     ),
     here: [
@@ -237,15 +237,15 @@ export const STAGES = localized(() => [
     en: 'Response & Billing',
     ko: tr('응답, 비용', 'Response, cost'),
     lead: tr(
-      '조각을 브라우저까지 돌려보내고 요청이 쓴 양을 셉니다.',
+      'Chunk를 브라우저까지 돌려보내고 요청이 쓴 양을 셉니다.',
       'Sends the chunks back to the browser and counts what the request used.',
     ),
     here: [
       ['BFF', tr(
-        '게이트웨이에서 받은 SSE 조각을 모으지 않고 그대로 흘려보냅니다.',
+        '게이트웨이에서 받은 SSE Chunk를 모으지 않고 그대로 흘려보냅니다.',
         'Passes the SSE chunks from the gateway straight through without buffering them.',
       )],
-      ['usage', tr('마지막 조각에 입력과 출력 토큰 수가 담겨 옵니다.', 'The last chunk carries the input and output token counts.')],
+      ['usage', tr('마지막 Chunk에 입력과 출력 토큰 수가 담겨 옵니다.', 'The last chunk carries the input and output token counts.')],
       [tr('출처', 'Sources'), tr(
         '웹 검색을 쓴 답변에는 모델이 [1], [2] 번호를 붙입니다. 화면은 SSE 주석 줄로 받은 출처 목록을 답변 아래에 링크로 보여 줍니다.',
         'In an answer that used web search, the model adds numbers such as [1] and [2]. The page shows the source list, received as SSE comment lines, as links below the answer.',
@@ -278,7 +278,7 @@ export const STAGES = localized(() => [
         'Collects metrics from 2 vLLM pods, 4 EPP pods, and 2 gateway pods and sends them to Amazon Managed Service for Prometheus.',
       )],
       [tr('BFF 로그', 'BFF logs'), tr(
-        '파드의 표준 출력에 요청마다 chat과 chat_end를 남깁니다. 결정 근거, 구간 시간, 첫 조각 시각이 들어 있습니다.',
+        '파드의 표준 출력에 요청마다 chat과 chat_end를 남깁니다. 결정 근거, 구간 시간, 첫 Chunk 시각이 들어 있습니다.',
         'Writes chat and chat_end to the pod standard output for every request. They hold the reason for the decision, the segment times, and the time of the first chunk.',
       )],
       [tr('ALB 접근 로그', 'ALB access logs'), tr('S3 버킷에 쌓입니다.', 'Stored in an S3 bucket.')],
@@ -320,7 +320,7 @@ export function measuredRows(n, side) {
     case 5:
       return [
         ['Prefill', duration(m.prefill)],
-        [tr('조각 간격 (ITL)', 'Chunk interval (ITL)'), duration(m.s1.itl)],
+        [tr('Chunk 간격 (ITL)', 'Chunk interval (ITL)'), duration(m.s1.itl)],
         [tr('토큰당 시간 (TPOT)', 'Time per token (TPOT)'), duration(m.s1.tpot)],
         [tr('가중치, KV 캐시', 'Weights, KV cache'), `${m.weights_gib}GiB, ${m.kv_gib}GiB`],
         [tr('S1에서 동시에 실행한 요청', 'Requests running at once in S1'), tr(`최대 ${m.s1.running_max}건`, `Up to ${m.s1.running_max}`)],
@@ -393,7 +393,7 @@ const median = (values) => {
 
 // 실제 요청 한 건의 기록을 값으로 정리한다. 브라우저가 알 수 있는 것만 담는다.
 //   live.info   streamChat의 onHeaders가 준 값
-//   live.ticks  조각이 도착한 시각 [{ms, kind}]
+//   live.ticks  Chunk가 도착한 시각 [{ms, kind}]
 //   live.result streamChat이 돌려준 값 {totalMs, finishReason, usage}
 //   live.notes  웹 검색 도구 호출 알림(streamChat의 onNote). live.asked는 요청이 웹 검색을 켰는지
 export function summarizeLive(live) {
@@ -467,14 +467,14 @@ export function liveRows(n, summary) {
       }
       break;
     case 5:
-      add(summary.firstKind === 'reasoning' ? tr('첫 조각 (추론)', 'First chunk (reasoning)') : tr('첫 조각 (TTFT)', 'First chunk (TTFT)'), duration(summary.ttft));
-      add(tr('조각 간격 중앙값', 'Median chunk interval'), duration(summary.gap));
+      add(summary.firstKind === 'reasoning' ? tr('첫 Chunk (추론)', 'First chunk (reasoning)') : tr('첫 Chunk (TTFT)', 'First chunk (TTFT)'), duration(summary.ttft));
+      add(tr('Chunk 간격 중앙값', 'Median chunk interval'), duration(summary.gap));
       add(tr('토큰당 시간 (TPOT)', 'Time per token (TPOT)'), duration(summary.tpot));
       break;
     case 6:
       if (summary.chunks) {
-        add(tr('추론 조각', 'Reasoning chunks'), tr(`${count(summary.reasoningChunks)}개`, count(summary.reasoningChunks)));
-        add(tr('답변 조각', 'Answer chunks'), tr(`${count(summary.contentChunks)}개`, count(summary.contentChunks)));
+        add(tr('추론 Chunk', 'Reasoning chunks'), tr(`${count(summary.reasoningChunks)}개`, count(summary.reasoningChunks)));
+        add(tr('답변 Chunk', 'Answer chunks'), tr(`${count(summary.contentChunks)}개`, count(summary.contentChunks)));
       }
       add('finish_reason', summary.finishReason);
       if (summary.searches.length) {
@@ -527,7 +527,7 @@ export function budgetRows(side, summary) {
       parts: [
         { key: 'entry', name: tr('진입 (왕복)', 'Entry (round trip)'), value: summary.entryMs },
         { key: 'bff', name: 'BFF', value: summary.bffMs },
-        // 웹 검색을 부른 요청은 첫 조각 전에 검색과 다시 추론이 끼어들 수 있다. 브라우저는 그 시간을 가르지 못한다.
+        // 웹 검색을 부른 요청은 첫 Chunk 전에 검색과 다시 추론이 끼어들 수 있다. 브라우저는 그 시간을 가르지 못한다.
         { key: 'engine',
           name: summary.searches.length ? tr('게이트웨이, vLLM, 웹 검색', 'Gateway, vLLM, web search') : tr('게이트웨이와 vLLM', 'Gateway and vLLM'),
           value: Math.max(0, summary.ttft - summary.entryMs - summary.bffMs) },
@@ -547,7 +547,7 @@ const PATH_EDGES = ['user-cf', 'cf-alb', 'alb-bff', 'bff-gw'];
 
 // 단계 n을 지도(flow-map.svg)의 노드, 선, 값으로 바꾼다.
 //   now  이 단계의 일을 하는 구성 요소      on  요청이 이 단계까지 지나온 구성 요소
-//   off  이 요청이 쓰지 않는 구성 요소      stream  응답 조각이 돌아오는 선
+//   off  이 요청이 쓰지 않는 구성 요소      stream  응답 Chunk가 돌아오는 선
 // summary(실제 요청의 값)가 있으면 그 요청의 값을 적고, 없으면 8단계 측정 중앙값을 적는다.
 // webSearch가 켜져 있으면 6단계에서 Web Search가 일하고, 꺼져 있으면 4단계부터 쓰지 않는 것으로 흐리게 한다.
 // 값은 지도의 노드 아래 좁은 자리에 들어가므로 영어도 짧게 쓴다.
@@ -622,7 +622,7 @@ export function mapFor(n, side, summary = null, webSearch = false) {
       useOther('off');
       wake('on');
       values[side] = summary?.gap != null
-        ? tr(`조각 간격 ${duration(summary.gap)}`, `Interval ${duration(summary.gap)}`)
+        ? tr(`Chunk 간격 ${duration(summary.gap)}`, `Interval ${duration(summary.gap)}`)
         : `Prefill ${duration(m.prefill)}`;
       break;
     case 6:
@@ -735,8 +735,8 @@ export function mapForLive(live) {
     edges['bff-search'] = 'off';
   }
   if (summary.ttft != null) {
-    const chunks = tr(`조각 ${summary.chunks}개`, plural(summary.chunks, 'chunk'));
-    values.user = tr(`첫 조각 ${duration(summary.ttft)}`, `1st chunk ${duration(summary.ttft)}`);
+    const chunks = tr(`Chunk ${summary.chunks}개`, plural(summary.chunks, 'chunk'));
+    values.user = tr(`첫 Chunk ${duration(summary.ttft)}`, `1st chunk ${duration(summary.ttft)}`);
     values[side] = summary.gap != null ? `${chunks}, ${duration(summary.gap)}` : chunks;
   } else {
     values[side] = tr('첫 토큰 대기', 'Awaiting 1st token');

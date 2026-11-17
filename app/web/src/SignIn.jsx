@@ -47,7 +47,7 @@ export default function SignIn({ notice, onSignedIn }) {
           <h1>{tr('토큰이 도착하는 순간을 기록합니다', 'We record the moment each token arrives')}</h1>
           <p className="lede">
             {tr(
-              '요청은 CloudFront, 내부 ALB, BFF, 게이트웨이를 거쳐 두 모델 중 하나로 갑니다. 어느 모델이 답했는지와 응답 조각이 도착한 시각을 그대로 보여 줍니다.',
+              '요청은 CloudFront, 내부 ALB, BFF, 게이트웨이를 거쳐 두 모델 중 하나로 갑니다. 어느 모델이 답했는지와 응답 Chunk가 도착한 시각을 그대로 보여 줍니다.',
               'A request goes through CloudFront, the internal ALB, the BFF, and the gateway to one of two models. This page shows which model answered and when each response chunk arrived, as recorded.',
             )}
           </p>

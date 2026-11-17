@@ -80,14 +80,14 @@ const { buildFlow } = await import('./src/flow.js');
 const base = { state: 'streaming', ticks: [], model: null, decision: null, reason: null, timing: null, toolCalls: 0 };
 let flow = buildFlow(base);
 assert.deepEqual([flow.phase, flow.nodes.bff, flow.nodes.gw, flow.edges['alb-bff']], ['waiting', 'now', undefined, 'on']);
-// Decider가 고른 Qwen 요청이 응답 조각을 받고 있는 중
+// Decider가 고른 Qwen 요청이 응답 Chunk를 받고 있는 중
 flow = buildFlow({ ...base, model: 'qwen38-27b', decision: 'decider', reason: { route: 'qwen' },
   timing: { decide_ms: 152.3, wake_ms: 3660.9, upstream_ms: 219.6, woke: true },
   ticks: [{ ms: 4050, kind: 'content' }, { ms: 4120, kind: 'content' }, { ms: 4190, kind: 'content' }] });
 assert.deepEqual([flow.phase, flow.nodes.qwen, flow.nodes.gemma, flow.nodes.decider, flow.nodes.wake], ['streaming', 'now', 'off', 'on', 'on']);
 assert.deepEqual([flow.edges['gw-qwen'], flow.edges['gw-gemma'], flow.edges['bff-wake'], flow.edges['user-cf']], ['stream', 'off', 'on', 'stream']);
 assert.deepEqual([flow.values.decider, flow.values.wake, flow.values.gw, flow.values.user, flow.values.qwen],
-  ['판단 152.3ms', '깨움 3.66초', '첫 응답 219.6ms', '첫 토큰 4.05초', '조각 3개, 70ms']);
+  ['판단 152.3ms', '깨움 3.66초', '첫 응답 219.6ms', '첫 토큰 4.05초', 'Chunk 3개, 70ms']);
 // 업무 종류로 정한 Gemma 상담 요청이 끝난 뒤: Decider와 깨우기 API는 쓰지 않았다
 flow = buildFlow({ ...base, state: 'done', model: 'gemma-4-31b', decision: 'task', reason: { task: 'support' }, toolCalls: 1,
   timing: { decide_ms: 0.4, wake_ms: 0, upstream_ms: 15.2, woke: false }, ticks: [{ ms: 1600, kind: 'content' }] });
@@ -114,7 +114,7 @@ let text2 = lines.join(' ');
 assert.match(text2, /첫 토큰은 Gemma가 186ms로 Qwen\(382ms\)보다 196ms 빨랐습니다/);
 assert.match(text2, /생성 속도는 Qwen이 초당 39\.3토큰으로 Gemma\(초당 19\.6토큰\)의 2\.0배/);
 assert.match(text2, /토큰 하나당 간격으로 바꾸면 Gemma 54ms, Qwen 25ms/);
-assert.match(text2, /Qwen은 조각 사이의 간격이 더 길지만/);
+assert.match(text2, /Qwen은 Chunk 사이의 간격이 더 길지만/);
 assert.match(text2, /Gemma는 첫 토큰 충족\(가장 느린 요청 196ms\), 토큰 간격 미충족\(54ms\), Qwen은 첫 토큰 충족\(가장 느린 요청 392ms\), 토큰 간격 충족\(25ms\)/);
 assert.match(text2, /답의 길이가 다릅니다\(Gemma 21토큰, Qwen 31토큰\)/);
 assert.match(text2, /모델마다 요청 3건으로 잰 값/);
@@ -131,7 +131,7 @@ const during = explain('rule', { pattern: 'rrn', during_session: true, cached: t
 assert.ok(during.includes('이 규칙을 먼저 적용했습니다') && !during.includes('다시 썼습니다'));
 flow = buildFlow({ ...base, model: 'qwen38-27b', decision: 'decider', reason: {}, timing: { decide_ms: 150, wake_ms: 16, upstream_ms: 9 },
   ticks: [{ ms: 300, kind: 'reasoning' }, { ms: 370, kind: 'reasoning' }] });
-assert.deepEqual([flow.values.user, flow.values.qwen], ['추론 시작 300ms', '추론 조각 2개']);
+assert.deepEqual([flow.values.user, flow.values.qwen], ['추론 시작 300ms', '추론 Chunk 2개']);
 console.log('fixes: ok');
 
 // 웹 검색 출처: 답변의 [n]을 출처 링크로 바꾼다(src/citations.js).

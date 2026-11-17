@@ -67,7 +67,7 @@ ORDERS = {
 
 sessions = {}  # 세션 ID -> (결정, 만료 시각). 태스크마다 따로 가진다.
 
-# 스트림에서 내용이 담긴 첫 조각을 찾는다. "reasoning_content"와 빈 내용("content":"")은 맞지 않는다.
+# 스트림에서 내용이 담긴 첫 Chunk를 찾는다. "reasoning_content"와 빈 내용("content":"")은 맞지 않는다.
 CONTENT = re.compile(rb'"content":\s?"[^"]')
 
 
@@ -77,7 +77,7 @@ class Timing:
     def __init__(self):
         self.started = time.monotonic()
         self.first_chunk = None    # 게이트웨이에서 본문의 첫 바이트를 받은 시각
-        self.first_content = None  # 내용이 담긴 첫 조각을 클라이언트로 내보낸 시각
+        self.first_content = None  # 내용이 담긴 첫 Chunk를 클라이언트로 내보낸 시각
         self.size = 0
 
     def saw(self, chunk):

@@ -1063,7 +1063,7 @@ textarea {
   fill: var(--flow-on);
 }
 
-/* 응답 조각이 돌아오는 방향(모델에서 브라우저 쪽)으로 점선이 움직인다. */
+/* 응답 Chunk가 돌아오는 방향(모델에서 브라우저 쪽)으로 점선이 움직인다. */
 .fedge.is-stream path:first-of-type {
   stroke: var(--flow-now);
   stroke-dasharray: 7 6;

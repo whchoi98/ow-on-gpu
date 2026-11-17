@@ -1,7 +1,7 @@
 // 기록 하나의 상태를 흐름 그림(flow-map.svg)의 노드, 선, 값으로 바꾼다. 화면과 무관한 순수 함수다.
 //
 // 노드 상태: on(지나옴), now(지금 처리 중), off(이 요청이 쓰지 않음), fail(여기서 막힘)
-// 선 상태:   on(지나옴), stream(응답 조각이 돌아오는 중), off(쓰지 않음)
+// 선 상태:   on(지나옴), stream(응답 Chunk가 돌아오는 중), off(쓰지 않음)
 //
 // 그림에는 요청 경로 말고도 모델과 이미지를 대는 쪽(Hugging Face, 모델 적재 Job, 모델 버킷, Image registry,
 // Karpenter, Pod Identity, compile 캐시)이 있다. 요청 하나를 표시할 때는 그쪽을 흐리게 둔다. 그쪽의 단계별 표시는
@@ -127,11 +127,11 @@ export function buildFlow(record) {
   const thinking = record.ticks.filter((tick) => tick.kind === 'reasoning');
   if (thinking.length && !content.length) values.user = `${tr('추론 시작', 'Reasoning at')} ${duration(thinking[0].ms)}`;
   if (thinking.length && !content.length && live) {
-    values[side] = tr(`추론 조각 ${thinking.length}개`, `${thinking.length} reasoning chunks`);
+    values[side] = tr(`추론 Chunk ${thinking.length}개`, `${thinking.length} reasoning chunks`);
   }
   if (content.length) {
     values.user = `${thinking.length ? tr('답변 시작', 'Answer at') : tr('첫 토큰', 'First token')} ${duration(content[0])}`;
-    const chunks = tr(`조각 ${content.length}개`, `${content.length} chunks`);
+    const chunks = tr(`Chunk ${content.length}개`, `${content.length} chunks`);
     values[side] = gap == null ? chunks : `${chunks}, ${Math.round(gap)}ms`;
   } else if (!thinking.length) {
     values[side] = live ? tr('첫 토큰 대기', 'Awaiting first token') : '';

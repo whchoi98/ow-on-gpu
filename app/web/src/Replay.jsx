@@ -87,14 +87,14 @@ export default function Replay() {
               pen={channel.pen}
               startedAt={startedAt}
               minMs={LENGTH_MS}
-              label={tr(`${channel.title}: 첫 토큰 ${ms(summary.firstMs)}, 조각 ${summary.count}개, 간격 중앙값 ${ms(summary.gapMs)}`,
+              label={tr(`${channel.title}: 첫 토큰 ${ms(summary.firstMs)}, Chunk ${summary.count}개, 간격 중앙값 ${ms(summary.gapMs)}`,
                 `${channel.title}: first token ${ms(summary.firstMs)}, ${summary.count} chunks, median interval ${ms(summary.gapMs)}`)}
             />
           </div>
         );
       })}
       <p className="replay__note">
-        {tr('세로 눈금 하나가 응답 조각 하나입니다. 응답이 중간에서 모였다가 나오면 눈금이 한곳에 뭉칩니다.',
+        {tr('세로 눈금 하나가 응답 Chunk 하나입니다. 응답이 중간에서 모였다가 나오면 눈금이 한곳에 뭉칩니다.',
           'Each vertical tick is one response chunk. If the response is buffered on the way and released at once, the ticks bunch up in one place.')}
         {/* 재생하는 기록은 한국어 질문으로 받은 것이다(recorded.js). 영어 화면에서만 알린다. */}
         {lang === 'en' && ' Recorded on 2026-11-14 with Korean prompts.'}

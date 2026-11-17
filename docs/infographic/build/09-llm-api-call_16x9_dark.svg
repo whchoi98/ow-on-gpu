@@ -193,8 +193,8 @@
 <text x="1231.0" y="631.0" font-size="12" font-weight="700" fill="#E2E4EC" text-anchor="middle" data-box="782,540,546,232">다음 토큰 선택</text>
 <path d="M1231.0,646.0 L1231.0,652.0 Q1231.0,658.0 1225.0,658.0 L884.5,658.0 Q879.0,658.0 879.0,652.5 L879.0,647.0" fill="none" stroke="#FF9900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" marker-end="url(#ah-orange)"/>
 <text x="1055.0" y="676.0" font-size="12" font-weight="700" fill="#A6ABBE" text-anchor="middle" data-box="782,540,546,232">새 토큰을 입력에 더해 반복 (KV 캐시 재사용)</text>
-<text x="802.0" y="708.0" font-size="13" font-weight="800" fill="#FF9900" data-box="782,540,546,232">→ 조각 간격: Gemma 54.0ms (초당 18.5토큰), Qwen 69.8ms</text>
-<text x="802.0" y="730.0" font-size="12.5" font-weight="800" fill="#41B3FF" data-box="782,540,546,232">Qwen은 MTP로 조각에 여러 토큰, 토큰당 26.6ms (초당 32.5토큰)</text>
+<text x="802.0" y="708.0" font-size="13" font-weight="800" fill="#FF9900" data-box="782,540,546,232">→ Chunk 간격: Gemma 54.0ms (초당 18.5토큰), Qwen 69.8ms</text>
+<text x="802.0" y="730.0" font-size="12.5" font-weight="800" fill="#41B3FF" data-box="782,540,546,232">Qwen은 MTP로 Chunk에 여러 토큰, 토큰당 26.6ms (초당 32.5토큰)</text>
 <rect x="1346.0" y="540.0" width="296.0" height="232.0" rx="10.0" fill="#232D3A" stroke="#2E3947" stroke-width="1.2"/>
 <circle cx="1370.0" cy="566.0" r="11.0" fill="#E2E4EC"/>
 <text x="1370.0" y="570.6" font-size="13" font-weight="800" fill="#161D26" text-anchor="middle">C</text>
@@ -226,7 +226,7 @@
 <rect x="344.0" y="882.0" width="87.9" height="24.0" rx="12.0" fill="#AD5CFF" fill-opacity="0.140" stroke="#AD5CFF" stroke-width="1.1"/>
 <text x="387.9" y="898.5" font-size="12.5" font-weight="800" fill="#AD5CFF" text-anchor="middle" data-box="324,812,492,232">Detokenize</text>
 <text x="346.0" y="926.0" font-size="12.5" font-weight="700" fill="#F3F3F7" data-box="324,812,492,232">토큰 ID → 텍스트</text>
-<text x="346.0" y="944.0" font-size="12" font-weight="700" fill="#A6ABBE" data-box="324,812,492,232">vLLM, 조각 단위</text>
+<text x="346.0" y="944.0" font-size="12" font-weight="700" fill="#A6ABBE" data-box="324,812,492,232">vLLM, Chunk 단위</text>
 <rect x="494.7" y="882.0" width="126.1" height="24.0" rx="12.0" fill="#AD5CFF" fill-opacity="0.140" stroke="#AD5CFF" stroke-width="1.1"/>
 <text x="557.7" y="898.5" font-size="12.5" font-weight="800" fill="#AD5CFF" text-anchor="middle" data-box="324,812,492,232">Reasoning parser</text>
 <text x="496.7" y="926.0" font-size="12.5" font-weight="700" fill="#F3F3F7" data-box="324,812,492,232">gemma4, qwen3</text>
@@ -243,9 +243,9 @@
 <text x="886.0" y="850.6" font-size="16" font-weight="800" fill="#161D26" text-anchor="middle">7</text>
 <text x="910.0" y="852.0" data-box="852,812,492,232"><tspan font-size="21" font-weight="800" fill="#F3F3F7" letter-spacing="0.2">Response &amp; Billing</tspan><tspan font-size="15" font-weight="700" fill="#A6ABBE" dx="14">SSE 전달, 과금은 GPU 시간</tspan></text>
 <circle cx="876.0" cy="885.7" r="2.8" fill="#FF9900"/>
-<text x="888.0" y="890.0" font-size="13" font-weight="700" fill="#E2E4EC" data-box="852,812,492,232">stream=true: BFF가 받은 조각을 바로 전달</text>
+<text x="888.0" y="890.0" font-size="13" font-weight="700" fill="#E2E4EC" data-box="852,812,492,232">stream=true: BFF가 받은 Chunk를 바로 전달</text>
 <circle cx="876.0" cy="909.7" r="2.8" fill="#FF9900"/>
-<text x="888.0" y="914.0" font-size="13" font-weight="700" fill="#E2E4EC" data-box="852,812,492,232">마지막 조각의 usage: 입력, 출력 토큰 수</text>
+<text x="888.0" y="914.0" font-size="13" font-weight="700" fill="#E2E4EC" data-box="852,812,492,232">마지막 Chunk의 usage: 입력, 출력 토큰 수</text>
 <circle cx="876.0" cy="933.7" r="2.8" fill="#FF9900"/>
 <text x="888.0" y="938.0" font-size="13" font-weight="700" fill="#E2E4EC" data-box="852,812,492,232">응답 헤더: x-bff-model, x-bff-timing</text>
 <circle cx="876.0" cy="957.7" r="2.8" fill="#FF9900"/>

@@ -48,8 +48,8 @@ const ROWS = localized(() => [
   ],
   [tr('첫 토큰 (중앙값)', 'First token (median)'), (a) => ms(a.firstMedian)],
   [tr('첫 토큰 (가장 느린 요청)', 'First token (slowest)'), (a) => ms(a.firstMax)],
-  [tr('조각 간격 (중앙값)', 'Chunk interval (median)'), (a) => ms(a.gapMedian)],
-  [tr('조각 간격 (95%)', 'Chunk interval (p95)'), (a) => ms(a.gapP95)],
+  [tr('Chunk 간격 (중앙값)', 'Chunk interval (median)'), (a) => ms(a.gapMedian)],
+  [tr('Chunk 간격 (95%)', 'Chunk interval (p95)'), (a) => ms(a.gapP95)],
   [tr('요청 하나의 생성 속도', 'Single-request speed'), (a) => (a.tokensPerSecond == null ? '-' : perSecond(a.tokensPerSecond))],
   [tr('모델 전체 처리량', 'Total throughput per model'), (a) => (a.throughput == null ? '-' : perSecond(a.throughput))],
   [tr('출력 토큰 (중앙값)', 'Output tokens (median)'), (a) => (a.tokens == null ? '-' : tr(`${Math.round(a.tokens)}개`, `${Math.round(a.tokens)}`))],
@@ -244,7 +244,7 @@ export default function Compare({ session, onExpired }) {
             <h2>{tr('아직 측정하지 않았습니다', 'Nothing measured yet')}</h2>
             <p>
               {tr(
-                '측정을 시작하면 두 모델의 응답 조각이 같은 축척의 테이프에 찍히고, 반복한 요청의 값이 표로 정리됩니다. 눈금이 촘촘할수록 생성이 빠른 모델입니다.',
+                '측정을 시작하면 두 모델의 응답 Chunk가 같은 축척의 테이프에 찍히고, 반복한 요청의 값이 표로 정리됩니다. 눈금이 촘촘할수록 생성이 빠른 모델입니다.',
                 'Once you start measuring, the response chunks from both models are marked on tapes drawn to the same scale, and the values from the repeated requests are summarized in a table. The denser the ticks, the faster the model generates.',
               )}
             </p>

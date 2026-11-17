@@ -164,9 +164,9 @@ T = dict(
     b_boxes=[("Attention", "KV 캐시 조회"), ("FFN", "층마다 변환"), ("Sampling", "다음 토큰 선택")],
     b_loop="새 토큰을 입력에 더해 반복 (KV 캐시 재사용)",
     b_lines=[
-        f"→ 조각 간격: Gemma {num(G['s1']['itl'])}ms (초당 {num(G['s1']['tokens_per_s'])}토큰), "
+        f"→ Chunk 간격: Gemma {num(G['s1']['itl'])}ms (초당 {num(G['s1']['tokens_per_s'])}토큰), "
         f"Qwen {num(Q['s1']['itl'])}ms",
-        f"Qwen은 MTP로 조각에 여러 토큰, 토큰당 {num(Q['s1']['tpot'])}ms (초당 {num(Q['s1']['tokens_per_s'])}토큰)",
+        f"Qwen은 MTP로 Chunk에 여러 토큰, 토큰당 {num(Q['s1']['tpot'])}ms (초당 {num(Q['s1']['tokens_per_s'])}토큰)",
     ],
     c=("Hardware", "L40S 48GB 1장"),
     c_caption=f"GDDR6 48GB 중 사용 가능 {M['device_gib']}GiB",
@@ -185,7 +185,7 @@ T = dict(
     ],
     s6=("Post-processing", "텍스트 복원, 추론과 도구 호출 분리"),
     s6_items=[
-        ("Detokenize", "토큰 ID → 텍스트", "vLLM, 조각 단위"),
+        ("Detokenize", "토큰 ID → 텍스트", "vLLM, Chunk 단위"),
         ("Reasoning parser", "gemma4, qwen3", "reasoning_content 분리"),
         ("Tool-call parser", "gemma4, qwen3_coder", "tool_calls 추출"),
     ],
@@ -193,8 +193,8 @@ T = dict(
     s6_line="출력 안전 필터 없음, 도구는 BFF가 실행 후 다시 요청 (최대 3회)",
     s7=("Response & Billing", "SSE 전달, 과금은 GPU 시간"),
     s7_bullets=[
-        "stream=true: BFF가 받은 조각을 바로 전달",
-        "마지막 조각의 usage: 입력, 출력 토큰 수",
+        "stream=true: BFF가 받은 Chunk를 바로 전달",
+        "마지막 Chunk의 usage: 입력, 출력 토큰 수",
         "응답 헤더: x-bff-model, x-bff-timing",
         "웹 검색 답변: [1], [2] 번호와 출처 목록",
     ],
