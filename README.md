@@ -51,7 +51,7 @@ Three infographics show the environment from different angles. Each figure follo
 - **Priority scheduling** — With batch load running, engine priority brought the median time to first token of interactive requests from 30.9 s to 0.19 s.
 - **Tool calls run by the BFF** — An order lookup and a web search through Amazon Bedrock AgentCore Web Search, with numbered sources in the answer.
 - **Login-protected endpoint** — CloudFront with AWS WAF and a Cognito user pool in front, an internal ALB and private pods behind.
-- **Check page** — Eight views that show token arrival, routing reasons and per-segment timings, in Korean and English.
+- **Check page** — Eight views that show token arrival, routing reasons and per-segment timings, in Korean and English. The API call view keeps the description and values of all eight stages on the page while it plays the stages or sends a real request.
 - **Raw measurement data** — Every number in the documents is backed by files under `results/`.
 
 ## Prerequisites
@@ -283,7 +283,7 @@ ow-on-gpu는 블로그 시리즈 "EKS 기반 vLLM 서빙 최적화" 3부의 측�
 - **우선순위 스케줄링** — 배치 부하가 있을 때 엔진 우선순위가 상담 요청의 첫 토큰까지 시간(중앙값)을 30.9초에서 0.19초로 줄였습니다.
 - **BFF가 실행하는 도구 호출** — 주문 조회와 Amazon Bedrock AgentCore Web Search를 통한 웹 검색을 실행하고 답변에 출처 번호를 붙입니다.
 - **로그인으로 보호한 진입점** — 앞에는 AWS WAF가 붙은 CloudFront와 Cognito 사용자 풀, 뒤에는 내부 ALB와 프라이빗 파드가 있습니다.
-- **확인용 페이지** — 토큰이 도착하는 순간, 경로를 정한 이유, 구간별 시간을 보여 주는 보기 여덟 개가 한국어와 영어로 있습니다.
+- **확인용 페이지** — 토큰이 도착하는 순간, 경로를 정한 이유, 구간별 시간을 보여 주는 보기 여덟 개가 한국어와 영어로 있습니다. API 호출 보기는 단계를 재생하거나 실제 요청을 보내는 동안에도 여덟 단계의 설명과 값을 모두 화면에 남깁니다.
 - **측정 원시 자료** — 문서의 모든 수치는 `results/` 아래의 파일로 뒷받침됩니다.
 
 ## 사전 요구 사항
