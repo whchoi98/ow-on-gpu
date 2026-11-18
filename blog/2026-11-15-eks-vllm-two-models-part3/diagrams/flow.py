@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-# 그림 3. BFF의 모델 결정 순서 (aws-diagram-design의 Flowchart 유형, 블로그 프로필 1280x720)
+# 그림 5. BFF의 모델 결정 순서 (aws-diagram-design의 Flowchart 유형, 블로그 프로필 1280x720)
 # 모양이 종류를 나타낸다: 타원 = 시작, 마름모 = 판단, 사각형 = 처리와 결과. 순서는 app/bff/routing.py와 bff.py를 따른다.
+# Decider의 판단을 결정으로 바꾸는 칸은 2026-11-17에 좁힌 기본 처리(routing.from_decider)를 따른다:
+# 모델 선택의 신뢰도만 낮고 개인정보가 없다는 판단이 기준 이상이면 Gemma로 보내되 민감으로 표시하지 않는다.
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from diagram_lib import *
@@ -30,10 +32,27 @@ def oval(c, x, y, w, h, name):
     c.text("nodes", x + w // 2, y + h // 2 + 8, name, size=20, weight=600, anchor="middle")
 
 
-def fig03():
-    c = Canvas(f"{SLUG}-fig03", "BFF의 모델 결정 순서",
+def result_lines(c, x, y, w, h, name, subs):
+    """이름 한 줄과 설명 여러 줄이 든 결과 칸. Canvas.node는 설명을 두 줄까지만 받는다."""
+    for (bx, by, bw, bh, bn) in c.node_boxes:
+        assert not overlap((x, y, w, h), (bx, by, bw, bh)), f"node overlap: {name} vs {bn}"
+    c.node_boxes.append((x, y, w, h, name))
+    c.layers["nodes"].append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{PAPER}" stroke="{INK}" '
+                             f'stroke-width="1"/>')
+    total = 20 + (16 + 8) * len(subs)
+    yy = y + h // 2 - total // 2 + 20
+    c.text("nodes", x + 16, yy // 4 * 4, name, size=20, weight=600)
+    for sub in subs:
+        assert text_w(sub) <= w - 32, f"sub too wide: {sub}"
+        yy += 8 + 16
+        c.text("nodes", x + 16, yy // 4 * 4, sub, size=16, fill=MUTED, mono=True)
+
+
+def fig05():
+    c = Canvas(f"{SLUG}-fig05", "BFF의 모델 결정 순서",
                "세션에 저장된 결정이 없는 요청을 BFF가 어느 모델로 보낼지 정하는 순서를 나타낸 흐름도. 주민등록번호나 "
-               "카드번호 형식, 업무 종류, 이미지 첨부를 차례로 확인하고, 어느 것에도 해당하지 않을 때만 Strands Decider 2B에 묻는다.")
+               "카드번호 형식, 업무 종류, 이미지 첨부를 차례로 확인하고, 어느 것에도 해당하지 않을 때만 Strands Decider 2B에 묻는다. "
+               "Decider의 모델 선택 신뢰도만 낮으면 민감으로 표시하지 않고 Gemma 4 31B로 보낸다.")
     c.text("top", 40, 44, "BFF의 모델 결정 순서 (규칙을 먼저 적용하고, 정해지지 않은 요청만 Decider에 질문)", size=20, weight=600)
 
     oval(c, 60, 72, 360, 40, "세션에 저장된 결정이 없는 요청")
@@ -52,9 +71,11 @@ def fig03():
         c.arrow([(CX, cy + DH // 2), (CX, nxt)], label="없음", side="right")
 
     c.node(CX - DW // 2, 496, DW, 96, "Strands Decider 2B에 질문", sub="게이트웨이 /decide, 제한 2초")
-    c.node(RX, 496, RW, 96, "Decider의 판단을 결정으로 변환",
-           sub="신뢰도 0.6 이상: 고른 모델, thinking 판단 반영",
-           sub2="응답 실패, 2초 초과, 0.6 미만: Gemma, thinking 끔, 민감")
+    result_lines(c, RX, 484, RW, 120, "Decider의 판단을 결정으로 변환", [
+        "모델 선택과 개인정보 판단이 0.6 이상: 고른 모델, thinking 반영",
+        "모델 선택만 0.6 미만, 개인정보 없음: Gemma, thinking 끔",
+        "무응답, 2초 초과, 개인정보 판단 불확실: Gemma, thinking 끔, 민감",
+    ])
     c.arrow([(CX + DW // 2, 544), (RX, 544)], label="응답")
 
     # 범례: 모양이 종류를 나타낸다
@@ -70,9 +91,9 @@ def fig03():
     c.text("top", 420, y + 8, "처리와 결과", size=16, fill=MUTED)
     c.text("top", 560, y + 8, "결정은 세션에 저장하고, 민감 정보 형식만 메시지마다 다시 확인", size=16, fill=MUTED)
     c.check()
-    c.write(os.path.join(OUT, f"{SLUG}-fig03-bff-decision.html"), os.path.join(OUT, f"{SLUG}-fig03-bff-decision.svg"))
-    print("OK fig03")
+    c.write(os.path.join(OUT, f"{SLUG}-fig05-bff-decision.html"), os.path.join(OUT, f"{SLUG}-fig05-bff-decision.svg"))
+    print("OK fig05")
 
 
 if __name__ == "__main__":
-    fig03()
+    fig05()

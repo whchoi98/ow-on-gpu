@@ -1,0 +1,94 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>구간별 TTFT 중앙값</title>
+<style>
+@font-face{font-family:'Amazon Ember';font-weight:400;src:local('Amazon Ember'),local('AmazonEmber-Regular');}
+@font-face{font-family:'Amazon Ember';font-weight:600;src:local('Amazon Ember Medium'),local('Amazon Ember SemiBold'),local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember';font-weight:700;src:local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember Mono';font-weight:400;src:local('Amazon Ember Mono'),local('AmazonEmberMono-Regular');}
+html,body{margin:0;background:#fff;} svg{display:block;width:1280px;height:720px;}
+</style></head><body><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="2026-11-15-eks-vllm-two-models-part3-fig07-title 2026-11-15-eks-vllm-two-models-part3-fig07-desc">
+<title id="2026-11-15-eks-vllm-two-models-part3-fig07-title">구간별 TTFT 중앙값</title>
+<desc id="2026-11-15-eks-vllm-two-models-part3-fig07-desc">사용자가 본 첫 내용까지의 시간을 여섯 구간으로 나눈 가로 막대 그래프. Gemma 4 31B는 중앙값 81.9ms 중 vLLM이 63.2ms, Qwen3.8-27B는 177.5ms 중 vLLM이 147.6ms이고, 나머지 경로 구간은 각각 18.2ms와 29.7ms이다.</desc>
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#545B64"/></marker>
+<marker id="arrow-accent" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#EC7211"/></marker>
+<marker id="arrow-link" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#0972D3"/></marker>
+<marker id="arrow-ink" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#232F3E"/></marker>
+<marker id="arrow-teal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#01A88D"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#8C4FFF"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<line x1="320" y1="84" x2="320" y2="532" stroke="rgba(35,47,62,0.25)" stroke-width="1"/>
+<text x="320" y="560" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">0</text>
+<line x1="480" y1="84" x2="480" y2="532" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="480" y="560" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">40</text>
+<line x1="640" y1="84" x2="640" y2="532" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="640" y="560" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">80</text>
+<line x1="800" y1="84" x2="800" y2="532" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="800" y="560" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">120</text>
+<line x1="960" y1="84" x2="960" y2="532" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="960" y="560" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">160</text>
+<line x1="1120" y1="84" x2="1120" y2="532" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="1120" y="560" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">200</text>
+<text x="1136" y="560" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">ms</text>
+<line x1="320" y1="532" x2="1120" y2="532" stroke="rgba(35,47,62,0.25)" stroke-width="1"/>
+<line x1="40" y1="468" x2="1220" y2="468" stroke="#D5DBDB" stroke-width="1"/>
+<rect x="320" y="92" width="7.2" height="20" fill="#FFFFFF"/>
+<rect x="320" y="92" width="7.2" height="20" fill="#01A88D" fill-opacity="0.22" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="320" y="116" width="7.6" height="20" fill="#FFFFFF"/>
+<rect x="320" y="116" width="7.6" height="20" fill="#8C4FFF" fill-opacity="0.22" stroke="#8C4FFF" stroke-width="1.2"/>
+<rect x="320" y="156" width="20.0" height="20" fill="#FFFFFF"/>
+<rect x="320" y="156" width="20.0" height="20" fill="#01A88D" fill-opacity="0.22" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="320" y="180" width="20.0" height="20" fill="#FFFFFF"/>
+<rect x="320" y="180" width="20.0" height="20" fill="#8C4FFF" fill-opacity="0.22" stroke="#8C4FFF" stroke-width="1.2"/>
+<rect x="320" y="220" width="6.4" height="20" fill="#FFFFFF"/>
+<rect x="320" y="220" width="6.4" height="20" fill="#01A88D" fill-opacity="0.22" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="320" y="244" width="6.4" height="20" fill="#FFFFFF"/>
+<rect x="320" y="244" width="6.4" height="20" fill="#8C4FFF" fill-opacity="0.22" stroke="#8C4FFF" stroke-width="1.2"/>
+<rect x="320" y="284" width="1.2" height="20" fill="#FFFFFF"/>
+<rect x="320" y="284" width="1.2" height="20" fill="#01A88D" fill-opacity="0.22" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="320" y="308" width="51.2" height="20" fill="#FFFFFF"/>
+<rect x="320" y="308" width="51.2" height="20" fill="#8C4FFF" fill-opacity="0.22" stroke="#8C4FFF" stroke-width="1.2"/>
+<rect x="320" y="348" width="38.8" height="20" fill="#FFFFFF"/>
+<rect x="320" y="348" width="38.8" height="20" fill="#01A88D" fill-opacity="0.22" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="320" y="372" width="33.6" height="20" fill="#FFFFFF"/>
+<rect x="320" y="372" width="33.6" height="20" fill="#8C4FFF" fill-opacity="0.22" stroke="#8C4FFF" stroke-width="1.2"/>
+<rect x="320" y="412" width="252.8" height="20" fill="#FFFFFF"/>
+<rect x="320" y="412" width="252.8" height="20" fill="#01A88D" fill-opacity="0.22" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="320" y="436" width="590.4" height="20" fill="#FFFFFF"/>
+<rect x="320" y="436" width="590.4" height="20" fill="#8C4FFF" fill-opacity="0.22" stroke="#8C4FFF" stroke-width="1.2"/>
+<rect x="320" y="476" width="327.6" height="20" fill="#FFFFFF"/>
+<rect x="320" y="476" width="327.6" height="20" fill="#01A88D" fill-opacity="0.45" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="320" y="500" width="710.0" height="20" fill="#FFFFFF"/>
+<rect x="320" y="500" width="710.0" height="20" fill="#8C4FFF" fill-opacity="0.45" stroke="#8C4FFF" stroke-width="1.2"/>
+<text x="40" y="44" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">구간별 TTFT 중앙값 (ms, 요청을 하나씩, 모델마다 20건, 서울 리전)</text>
+<text x="304" y="120" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">사용자와 엣지 사이</text>
+<text x="336" y="108" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">1.8</text>
+<text x="336" y="132" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">1.9</text>
+<text x="304" y="184" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">CloudFront</text>
+<text x="352" y="172" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">5.0</text>
+<text x="352" y="196" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">5.0</text>
+<text x="304" y="248" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">ALB</text>
+<text x="336" y="236" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">1.6</text>
+<text x="336" y="260" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">1.6</text>
+<text x="304" y="312" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">BFF</text>
+<text x="332" y="300" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">0.1</text>
+<text x="380" y="324" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">12.8</text>
+<text x="304" y="376" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">게이트웨이</text>
+<text x="368" y="364" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">9.7</text>
+<text x="364" y="388" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">8.4</text>
+<text x="304" y="440" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">vLLM</text>
+<text x="584" y="428" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">63.2</text>
+<text x="920" y="452" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">147.6</text>
+<text x="304" y="504" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">사용자가 본 첫 내용</text>
+<text x="656" y="492" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">81.9</text>
+<text x="1040" y="516" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">177.5</text>
+<text x="1000" y="428" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">첫 내용의 77%</text>
+<text x="1000" y="452" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="start">첫 내용의 83%</text>
+<line x1="40" y1="648" x2="1240" y2="648" stroke="rgba(35,47,62,0.12)" stroke-width="0.8"/>
+<text x="40" y="676" fill="#545B64" font-size="16" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">범례</text>
+<rect x="120" y="654" width="40" height="24" rx="4" fill="#01A88D" fill-opacity="0.18" stroke="#01A88D"/>
+<text x="172" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Gemma 4 31B (상담 질문)</text>
+<rect x="400" y="654" width="40" height="24" rx="4" fill="#8C4FFF" fill-opacity="0.18" stroke="#8C4FFF"/>
+<text x="452" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">Qwen3.8-27B (코딩 질문)</text>
+<text x="720" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">구간별 중앙값이라 합이 맨 아래 행과 정확히 같지는 않음</text>
+</svg></body></html>

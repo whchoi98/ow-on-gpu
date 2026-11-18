@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# 3부의 차트 두 장(그림 2, 그림 4). 그림 2의 값은 docs/08-results.md의 표에서 옮겼다.
-# 그림 4의 값은 BFF를 EKS 파드로 옮긴 뒤 다시 잰 results/2026-11-15-ttft-segments-eks/summary.json의 중앙값이다.
+# 3부의 차트 두 장(그림 4, 그림 7). 그림 4의 값은 docs/08-results.md의 표에서 옮겼다.
+# 그림 7의 값은 BFF를 EKS 파드로 옮긴 뒤 다시 잰 results/2026-11-15-ttft-segments-eks/summary.json의 중앙값이다.
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from diagram_lib import *
@@ -21,10 +21,10 @@ def legend_fill(c, x, y, color, op, label):
 
 
 # --------------------------------------------------------------------------
-# 그림 2. 배치 부하 중 상담 요청의 TTFT (우선순위 구성별, 로그 눈금)
+# 그림 4. 배치 부하 중 상담 요청의 TTFT (우선순위 구성별, 로그 눈금)
 # --------------------------------------------------------------------------
-def fig02():
-    c = Canvas(f"{SLUG}-fig02", "배치 부하 중 상담 요청의 TTFT (우선순위 구성별)",
+def fig04():
+    c = Canvas(f"{SLUG}-fig04", "배치 부하 중 상담 요청의 TTFT (우선순위 구성별)",
                "Gemma 4 31B에 배치 요청 32개를 계속 보내는 동안 상담 요청의 TTFT를 우선순위 구성 네 가지로 비교한 "
                "로그 눈금 막대 그래프. 우선순위가 없으면 중앙값 30.9초, 게이트웨이만 켜면 11.2초, 엔진 우선순위를 켜면 "
                "0.19초이다.")
@@ -70,15 +70,15 @@ def fig02():
         x = legend_fill(c, x, y, SERIES_TEAL, op, lab)
     c.text("top", x + 8, y + 8, "게이트웨이 = InferenceObjective 헤더, 엔진 = vLLM priority", size=16, fill=MUTED)
     c.check()
-    c.write(os.path.join(OUT, f"{SLUG}-fig02-priority-ttft.html"), os.path.join(OUT, f"{SLUG}-fig02-priority-ttft.svg"))
-    print("OK fig02")
+    c.write(os.path.join(OUT, f"{SLUG}-fig04-priority-ttft.html"), os.path.join(OUT, f"{SLUG}-fig04-priority-ttft.svg"))
+    print("OK fig04")
 
 
 # --------------------------------------------------------------------------
-# 그림 4. 구간별 TTFT (두 모델의 구간 막대)
+# 그림 7. 구간별 TTFT (두 모델의 구간 막대)
 # --------------------------------------------------------------------------
-def fig04():
-    c = Canvas(f"{SLUG}-fig04", "구간별 TTFT 중앙값",
+def fig07():
+    c = Canvas(f"{SLUG}-fig07", "구간별 TTFT 중앙값",
                "사용자가 본 첫 내용까지의 시간을 여섯 구간으로 나눈 가로 막대 그래프. Gemma 4 31B는 중앙값 81.9ms 중 "
                "vLLM이 63.2ms, Qwen3.8-27B는 177.5ms 중 vLLM이 147.6ms이고, 나머지 경로 구간은 각각 18.2ms와 29.7ms이다.")
     c.text("top", 40, 44, "구간별 TTFT 중앙값 (ms, 요청을 하나씩, 모델마다 20건, 서울 리전)", size=20, weight=600)
@@ -124,9 +124,9 @@ def fig04():
     c.legend([("fill-teal", "Gemma 4 31B (상담 질문)"), ("fill-purple", "Qwen3.8-27B (코딩 질문)")], y=664)
     c.text("top", 720, 672, "구간별 중앙값이라 합이 맨 아래 행과 정확히 같지는 않음", size=16, fill=MUTED)
     c.check()
-    c.write(os.path.join(OUT, f"{SLUG}-fig04-ttft-segments.html"), os.path.join(OUT, f"{SLUG}-fig04-ttft-segments.svg"))
-    print("OK fig04")
+    c.write(os.path.join(OUT, f"{SLUG}-fig07-ttft-segments.html"), os.path.join(OUT, f"{SLUG}-fig07-ttft-segments.svg"))
+    print("OK fig07")
 
 
 if __name__ == "__main__":
-    fig02(); fig04()
+    fig04(); fig07()

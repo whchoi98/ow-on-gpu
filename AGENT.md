@@ -165,7 +165,7 @@ results/                측정 원시 데이터
 docs/                   단계별 기록
 docs/infographic/       요청 경로와 기동 흐름(08), LLM API 호출(09), 구축 단계와 아키텍처(10) 인포그래픽(aws-infographic 스킬의 infokit). 한국어판과 영어판(flow_en.py, apicall_en.py, build_steps_en.py). 웹 화면의 흐름 그림과 API 호출 보기의 값도 여기서 만듦
 reference/              인포그래픽의 참조 그림(1부, 2부의 한눈에 보기와 콜드 스타트, LLM API 호출 여정)
-blog/                   블로그 원고 3부작의 작업 폴더(편마다 drafts, diagrams, images, out). aws-blog-skills 스킬로 만든다
+blog/                   블로그 원고 3부작의 작업 폴더(편마다 drafts, diagrams, images, out). aws-blog-skills 스킬로 만든다. 편마다 맨 앞의 한눈에 보기와 본문의 개념 도식은 인포그래픽 스타일이고, diagrams/infographic의 build.sh가 docs/infographic의 infokit으로 그린다
 source-doc/             블로그 원고의 첫 원본(md, images, zip) 사본
 ```
 

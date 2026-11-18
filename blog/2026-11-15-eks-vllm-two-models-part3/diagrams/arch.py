@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 그림 1. 요청 경로와 접근 제한 (aws-diagram 스킬의 공식 아이콘과 중첩 규칙, 블로그 프로필 1280x720)
+# 그림 2. 요청 경로와 접근 제한 (aws-diagram 스킬의 공식 아이콘과 중첩 규칙, 블로그 프로필 1280x720)
 # draft SVG에 bundle: 참조를 쓰고, aws-diagram의 embed.py로 아이콘을 내장한 뒤 HTML로 감싼다.
 import os, subprocess, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -9,7 +9,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.environ.get("BLOG_IMAGES", os.path.join(HERE, "..", "images"))
 EMBED = os.environ["AWS_DIAGRAM_EMBED"]          # aws-diagram 스킬의 scripts/embed.py
 SLUG = "2026-11-15-eks-vllm-two-models-part3"
-NAME = f"{SLUG}-fig01-request-path"
+NAME = f"{SLUG}-fig02-request-path"
 W, H = 1280, 720
 VPC_GREEN, TEAL = "#7AA116", "#00A4A6"
 
@@ -137,10 +137,10 @@ defs = (f'<defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="9" re
         f'<polygon points="0 0, 10 4, 0 8" fill="{MUTED}"/></marker></defs>')
 body = "\n".join(zones + arrows + labels + nodes + top)
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" '
-       f'aria-labelledby="{SLUG}-fig01-title {SLUG}-fig01-desc">\n<title id="{SLUG}-fig01-title">{esc(TITLE)}</title>\n'
-       f'<desc id="{SLUG}-fig01-desc">{esc(DESC)}</desc>\n{defs}\n<rect width="100%" height="100%" fill="{PAPER}"/>\n{body}\n</svg>')
+       f'aria-labelledby="{SLUG}-fig02-title {SLUG}-fig02-desc">\n<title id="{SLUG}-fig02-title">{esc(TITLE)}</title>\n'
+       f'<desc id="{SLUG}-fig02-desc">{esc(DESC)}</desc>\n{defs}\n<rect width="100%" height="100%" fill="{PAPER}"/>\n{body}\n</svg>')
 
-draft = os.path.join(HERE, "fig01-draft.svg")
+draft = os.path.join(HERE, "fig02-draft.svg")
 final = os.path.join(OUT, NAME + ".svg")
 with open(draft, "w", encoding="utf-8") as f:
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n' + svg)
@@ -155,4 +155,4 @@ html,body{{margin:0;background:#fff;}} svg{{display:block;width:{W}px;height:{H}
 </style></head><body>{embedded}</body></html>'''
 with open(os.path.join(OUT, NAME + ".html"), "w", encoding="utf-8") as f:
     f.write(html)
-print("OK fig01")
+print("OK fig02")

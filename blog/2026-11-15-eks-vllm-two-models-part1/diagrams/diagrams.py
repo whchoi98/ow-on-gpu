@@ -57,10 +57,10 @@ def swatch_legend(c, items, y=664):
 
 
 # --------------------------------------------------------------------------
-# 그림 3. 시나리오별 전체 시간
+# 그림 5. 시나리오별 전체 시간
 # --------------------------------------------------------------------------
-def fig03():
-    c = Canvas("part1-fig03", "시나리오별 파드 생성에서 Ready까지의 시간",
+def fig05():
+    c = Canvas("part1-fig05", "시나리오별 파드 생성에서 Ready까지의 시간",
                "Gemma 4 31B는 콜드 스타트가 기준 구성 394초에서 최적화 구성 260초로, 웜 재시작이 214초에서 86초로 줄었고, "
                "Qwen3.8-27B는 최적화 구성만 재서 콜드 스타트 290초, 웜 재시작 123초였다")
     c.text("top", 40, 44, "시나리오별 파드 생성에서 Ready까지의 시간", size=20, weight=600)
@@ -90,16 +90,16 @@ def fig03():
     swatch_legend(c, [(INK, 0.15, "기준 구성 (Mountpoint, 기본 로더)"),
                       (SERIES_TEAL, 0.18, "최적화 구성 (runai_streamer, compile 캐시 복원, 이미지 사전 pull)")])
     c.check()
-    base = os.path.join(OUT, f"{SLUG}-fig03-scenario-totals")
+    base = os.path.join(OUT, f"{SLUG}-fig05-scenario-totals")
     c.write(base + ".html", base + ".svg")
-    print("OK fig03")
+    print("OK fig05")
 
 
 # --------------------------------------------------------------------------
-# 그림 4. Gemma 4 31B 콜드 스타트의 구간별 시간
+# 그림 6. Gemma 4 31B 콜드 스타트의 구간별 시간
 # --------------------------------------------------------------------------
-def fig04():
-    c = Canvas("part1-fig04", "Gemma 4 31B 콜드 스타트의 구간별 시간: 기준 구성과 최적화 구성",
+def fig06():
+    c = Canvas("part1-fig06", "Gemma 4 31B 콜드 스타트의 구간별 시간: 기준 구성과 최적화 구성",
                "노드 프로비저닝 55.0초와 71.0초, 이미지 pull 111.1초와 71.0초, 가중치 로드 59.6초와 19.2초, "
                "엔진 초기화 95.5초와 23.7초, 기타 72.7초와 75.1초. 합계는 기준 구성 394초, 최적화 구성 260초")
     c.text("top", 40, 44, "Gemma 4 31B 콜드 스타트의 구간별 시간", size=20, weight=600)
@@ -139,10 +139,10 @@ def fig04():
     swatch_legend(c, [(INK, 0.15, "기준 구성"), (SERIES_TEAL, 0.18, "최적화 구성"),
                       (INK, 0.35, "엔진 초기화 가운데 torch.compile (최적화 구성은 0.9초)")])
     c.check()
-    base = os.path.join(OUT, f"{SLUG}-fig04-cold-start-segments")
+    base = os.path.join(OUT, f"{SLUG}-fig06-cold-start-segments")
     c.write(base + ".html", base + ".svg")
-    print("OK fig04")
+    print("OK fig06")
 
 
 if __name__ == "__main__":
-    fig03(); fig04()
+    fig05(); fig06()

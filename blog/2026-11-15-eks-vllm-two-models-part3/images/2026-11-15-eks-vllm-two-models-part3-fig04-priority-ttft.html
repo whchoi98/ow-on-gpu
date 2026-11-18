@@ -1,0 +1,85 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>배치 부하 중 상담 요청의 TTFT (우선순위 구성별)</title>
+<style>
+@font-face{font-family:'Amazon Ember';font-weight:400;src:local('Amazon Ember'),local('AmazonEmber-Regular');}
+@font-face{font-family:'Amazon Ember';font-weight:600;src:local('Amazon Ember Medium'),local('Amazon Ember SemiBold'),local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember';font-weight:700;src:local('Amazon Ember Bold');}
+@font-face{font-family:'Amazon Ember Mono';font-weight:400;src:local('Amazon Ember Mono'),local('AmazonEmberMono-Regular');}
+html,body{margin:0;background:#fff;} svg{display:block;width:1280px;height:720px;}
+</style></head><body><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="2026-11-15-eks-vllm-two-models-part3-fig04-title 2026-11-15-eks-vllm-two-models-part3-fig04-desc">
+<title id="2026-11-15-eks-vllm-two-models-part3-fig04-title">배치 부하 중 상담 요청의 TTFT (우선순위 구성별)</title>
+<desc id="2026-11-15-eks-vllm-two-models-part3-fig04-desc">Gemma 4 31B에 배치 요청 32개를 계속 보내는 동안 상담 요청의 TTFT를 우선순위 구성 네 가지로 비교한 로그 눈금 막대 그래프. 우선순위가 없으면 중앙값 30.9초, 게이트웨이만 켜면 11.2초, 엔진 우선순위를 켜면 0.19초이다.</desc>
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#545B64"/></marker>
+<marker id="arrow-accent" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#EC7211"/></marker>
+<marker id="arrow-link" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#0972D3"/></marker>
+<marker id="arrow-ink" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#232F3E"/></marker>
+<marker id="arrow-teal" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#01A88D"/></marker>
+<marker id="arrow-purple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 10 4, 0 8" fill="#8C4FFF"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<line x1="136" y1="552" x2="1240" y2="552" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="124" y="556" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">100ms</text>
+<line x1="136" y1="400" x2="1240" y2="400" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="124" y="404" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">1초</text>
+<line x1="136" y1="248" x2="1240" y2="248" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="124" y="252" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">10초</text>
+<line x1="136" y1="96" x2="1240" y2="96" stroke="rgba(35,47,62,0.08)" stroke-width="0.8"/>
+<text x="124" y="100" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">100초</text>
+<text x="124" y="72" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="end">TTFT</text>
+<line x1="136" y1="552" x2="1240" y2="552" stroke="rgba(35,47,62,0.25)" stroke-width="1"/>
+<line x1="136" y1="96" x2="136" y2="552" stroke="rgba(35,47,62,0.25)" stroke-width="1"/>
+<rect x="180" y="173.5" width="56" height="378.5" fill="#FFFFFF"/>
+<rect x="180" y="173.5" width="56" height="378.5" fill="#01A88D" fill-opacity="0.6" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="244" y="157.9" width="56" height="394.1" fill="#FFFFFF"/>
+<rect x="244" y="157.9" width="56" height="394.1" fill="#01A88D" fill-opacity="0.32" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="308" y="156.8" width="56" height="395.2" fill="#FFFFFF"/>
+<rect x="308" y="156.8" width="56" height="395.2" fill="#01A88D" fill-opacity="0.12" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="456" y="240.6" width="56" height="311.4" fill="#FFFFFF"/>
+<rect x="456" y="240.6" width="56" height="311.4" fill="#01A88D" fill-opacity="0.6" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="520" y="192.8" width="56" height="359.2" fill="#FFFFFF"/>
+<rect x="520" y="192.8" width="56" height="359.2" fill="#01A88D" fill-opacity="0.32" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="584" y="181.1" width="56" height="370.9" fill="#FFFFFF"/>
+<rect x="584" y="181.1" width="56" height="370.9" fill="#01A88D" fill-opacity="0.12" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="732" y="509.6" width="56" height="42.4" fill="#FFFFFF"/>
+<rect x="732" y="509.6" width="56" height="42.4" fill="#01A88D" fill-opacity="0.6" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="796" y="385.6" width="56" height="166.4" fill="#FFFFFF"/>
+<rect x="796" y="385.6" width="56" height="166.4" fill="#01A88D" fill-opacity="0.32" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="860" y="377.4" width="56" height="174.6" fill="#FFFFFF"/>
+<rect x="860" y="377.4" width="56" height="174.6" fill="#01A88D" fill-opacity="0.12" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="1008" y="508.6" width="56" height="43.4" fill="#FFFFFF"/>
+<rect x="1008" y="508.6" width="56" height="43.4" fill="#01A88D" fill-opacity="0.6" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="1072" y="398.0" width="56" height="154.0" fill="#FFFFFF"/>
+<rect x="1072" y="398.0" width="56" height="154.0" fill="#01A88D" fill-opacity="0.32" stroke="#01A88D" stroke-width="1.2"/>
+<rect x="1136" y="376.3" width="56" height="175.7" fill="#FFFFFF"/>
+<rect x="1136" y="376.3" width="56" height="175.7" fill="#01A88D" fill-opacity="0.12" stroke="#01A88D" stroke-width="1.2"/>
+<text x="40" y="44" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">배치 부하 중 상담 요청의 TTFT (Gemma 4 31B, 배치 32개 동시, 90초, 로그 눈금)</text>
+<text x="208" y="160" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">30.9초</text>
+<text x="272" y="144" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">39.2초</text>
+<text x="336" y="144" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">39.8초</text>
+<text x="272" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">우선순위 없음</text>
+<text x="272" y="616" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">배치 429 거절 0건</text>
+<text x="484" y="228" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">11.2초</text>
+<text x="548" y="180" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">23.1초</text>
+<text x="612" y="168" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">27.6초</text>
+<text x="548" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">게이트웨이만</text>
+<text x="548" y="616" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">배치 429 거절 1,907건</text>
+<text x="760" y="496" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">190ms</text>
+<text x="824" y="372" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">1.24초</text>
+<text x="888" y="364" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">1.41초</text>
+<text x="824" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">엔진만</text>
+<text x="824" y="616" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">배치 429 거절 0건</text>
+<text x="1036" y="496" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">193ms</text>
+<text x="1100" y="388" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">1.03초</text>
+<text x="1164" y="364" fill="#232F3E" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">1.43초</text>
+<text x="1100" y="588" fill="#232F3E" font-size="20" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="middle">둘 다</text>
+<text x="1100" y="616" fill="#7D8998" font-size="16" font-weight="400" font-family="'Amazon Ember Mono', 'Noto Sans CJK KR', ui-monospace, monospace" text-anchor="middle">배치 429 거절 1,988건</text>
+<line x1="40" y1="648" x2="1240" y2="648" stroke="rgba(35,47,62,0.12)" stroke-width="0.8"/>
+<text x="40" y="676" fill="#545B64" font-size="16" font-weight="600" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">범례</text>
+<rect x="120" y="654" width="40" height="24" rx="4" fill="#01A88D" fill-opacity="0.6" stroke="#01A88D"/>
+<text x="172" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">상담 TTFT p50</text>
+<rect x="324" y="654" width="40" height="24" rx="4" fill="#01A88D" fill-opacity="0.32" stroke="#01A88D"/>
+<text x="376" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">p90</text>
+<rect x="444" y="654" width="40" height="24" rx="4" fill="#01A88D" fill-opacity="0.12" stroke="#01A88D"/>
+<text x="496" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">p99</text>
+<text x="572" y="672" fill="#545B64" font-size="16" font-weight="400" font-family="'Amazon Ember', 'Noto Sans CJK KR', 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">게이트웨이 = InferenceObjective 헤더, 엔진 = vLLM priority</text>
+</svg></body></html>

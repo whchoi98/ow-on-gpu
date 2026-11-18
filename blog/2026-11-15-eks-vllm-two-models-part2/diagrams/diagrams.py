@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# 2부의 차트 두 장(그림 2, 그림 3). diagram_lib.py(블로그 프로필)로 만든다.
+# 2부의 차트 두 장(그림 4, 그림 5). diagram_lib.py(블로그 프로필)로 만든다.
 #   (cd diagrams && BLOG_IMAGES=../images python3 diagrams.py)
 # 값의 출처
-#   그림 2: results/2026-11-14-vllm-first-start/gemma-0.90.log, results/2026-11-14-coldstart/qwen-warm-optimized.log 의
+#   그림 4: results/2026-11-14-vllm-first-start/gemma-0.90.log, results/2026-11-14-coldstart/qwen-warm-optimized.log 의
 #           "Free memory on device" 줄과 "GPU KV cache size" 줄 (docs/03-vllm.md, docs/08-results.md와 같은 값)
-#   그림 3: results/2026-11-14-slo/{gemma,qwen}/SUMMARY.md 의 S1 표, engine-state.json 의 running_max
+#   그림 5: results/2026-11-14-slo/{gemma,qwen}/SUMMARY.md 의 S1 표, engine-state.json 의 running_max
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from diagram_lib import *
@@ -22,9 +22,9 @@ def r4(v):
 
 
 # --------------------------------------------------------------------------
-# 그림 2. GPU 메모리 배분 (누적 가로 막대)
+# 그림 4. GPU 메모리 배분 (누적 가로 막대)
 # --------------------------------------------------------------------------
-def fig02():
+def fig04():
     TOTAL, TARGET = 44.39, 39.95
     rows = [  # 이름, 가중치와 비 torch, 활성값 최대, KV 캐시, 색, KV 주석
         ("Gemma 4 31B", 31.13, 3.45, 5.37, SERIES_TEAL,
@@ -34,7 +34,7 @@ def fig02():
     ]
     for _, w, a, k, _, _ in rows:  # 세 항목의 합이 0.90 목표와 맞는지 검산
         assert abs((w + a + k) - TARGET) < 0.011, (w, a, k)
-    c = Canvas("p2-fig02", "L40S의 GPU 메모리 배분과 KV 캐시",
+    c = Canvas("p2-fig04", "L40S의 GPU 메모리 배분과 KV 캐시",
                "L40S의 GPU 메모리 44.39GiB 가운데 gpu-memory-utilization 0.90에 해당하는 39.95GiB 안에서, "
                "Gemma 4 31B는 가중치와 비 torch 메모리 31.13GiB와 활성값 최대 3.45GiB를 빼고 KV 캐시 5.37GiB가 남고, "
                "Qwen3.8-27B는 34.74GiB와 2.76GiB를 빼고 KV 캐시 2.45GiB가 남는다")
@@ -95,21 +95,21 @@ def fig02():
         x += 52 + ((text_w(label) + 36 + 3) // 4) * 4
     assert x <= 1240, f"legend overflow: {x}"
     c.check()
-    c.write(os.path.join(OUT, f"{SLUG}-fig02-gpu-memory-split.html"),
-            os.path.join(OUT, f"{SLUG}-fig02-gpu-memory-split.svg"))
-    print("OK fig02")
+    c.write(os.path.join(OUT, f"{SLUG}-fig04-gpu-memory-split.html"),
+            os.path.join(OUT, f"{SLUG}-fig04-gpu-memory-split.svg"))
+    print("OK fig04")
 
 
 # --------------------------------------------------------------------------
-# 그림 3. S1에서 동시성에 따른 출력 처리량과 ITL p99 (선 그래프 두 개)
+# 그림 5. S1에서 동시성에 따른 출력 처리량과 ITL p99 (선 그래프 두 개)
 # --------------------------------------------------------------------------
-def fig03():
+def fig05():
     CONC = [1, 2, 4, 8, 16, 32, 64]
     G_OUT = [18.5, 36.6, 71.5, 138.2, 248.3, 424.4, 447.0]
     Q_OUT = [32.5, 58.7, 79.9, 91.2, 87.9, 85.0, 90.4]
     G_ITL = [57.7, 58.1, 59.0, 60.2, 88.2, 394.2, 436.9]
     Q_ITL = [74.3, 109.3, 110.3, 111.6, 111.7, 110.9, 111.8]
-    c = Canvas("p2-fig03", "S1에서 동시성에 따른 출력 처리량과 ITL p99",
+    c = Canvas("p2-fig05", "S1에서 동시성에 따른 출력 처리량과 ITL p99",
                "S1 짧은 채팅에서 동시성을 1에서 64까지 올리면 Gemma 4 31B의 출력 처리량은 18.5에서 447.0 tok/s까지 늘고 "
                "Qwen3.8-27B(MTP 켬)는 동시성 8 이후 85.0에서 91.2 tok/s에 머문다. ITL p99는 동시성 1에서 Gemma 57.7ms, "
                "Qwen 74.3ms로 두 모델 모두 기준 50ms를 넘는다")
@@ -175,10 +175,10 @@ def fig03():
 
     c.legend([("teal", "Gemma 4 31B"), ("purple", "Qwen3.8-27B (MTP 켬)"), ("dashed", "SLO의 ITL 기준 (p99 50ms)")], y=664)
     c.check()
-    c.write(os.path.join(OUT, f"{SLUG}-fig03-s1-throughput-itl.html"),
-            os.path.join(OUT, f"{SLUG}-fig03-s1-throughput-itl.svg"))
-    print("OK fig03")
+    c.write(os.path.join(OUT, f"{SLUG}-fig05-s1-throughput-itl.html"),
+            os.path.join(OUT, f"{SLUG}-fig05-s1-throughput-itl.svg"))
+    print("OK fig05")
 
 
 if __name__ == "__main__":
-    fig02(); fig03()
+    fig04(); fig05()
