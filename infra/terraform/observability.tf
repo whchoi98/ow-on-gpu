@@ -3,12 +3,12 @@
 # ---------------------------------------------------------------- 지표 수집
 
 resource "aws_prometheus_workspace" "this" {
-  alias = var.cluster_name
+  alias = local.cluster_name
 }
 
 # k8s/observability의 수집기(Prometheus agent)가 이 역할로 remote write를 서명한다.
 resource "aws_iam_role" "metrics_collector" {
-  name               = "${var.cluster_name}-metrics-collector"
+  name               = "${local.cluster_name}-metrics-collector"
   assume_role_policy = local.pod_identity_trust
 }
 
@@ -57,7 +57,7 @@ resource "aws_eks_addon" "s3_csi" {
 data "aws_elb_service_account" "this" {}
 
 resource "aws_s3_bucket" "alb_logs" {
-  bucket_prefix = "${var.cluster_name}-alb-logs-"
+  bucket_prefix = "${local.cluster_name}-alb-logs-"
   force_destroy = true
 }
 
@@ -108,7 +108,7 @@ resource "aws_s3_bucket_policy" "alb_logs" {
 # CloudFront가 응답에 Server-Timing 헤더를 붙인다. cdn-upstream-fbl(오리진의 첫 바이트까지)과
 # cdn-downstream-fbl(엣지가 첫 바이트를 내보내기까지)로 CloudFront 구간을 요청마다 알 수 있다.
 resource "aws_cloudfront_response_headers_policy" "server_timing" {
-  name = "${var.cluster_name}-server-timing"
+  name = "${local.cluster_name}-server-timing"
 
   server_timing_headers_config {
     enabled       = true

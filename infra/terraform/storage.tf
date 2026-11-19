@@ -1,6 +1,6 @@
 # 모델 가중치(models/)와 compile 캐시(vllm-cache/)를 담는 버킷. 이름은 고유 접미사로 만든다.
 resource "aws_s3_bucket" "models" {
-  bucket_prefix = "${var.cluster_name}-"
+  bucket_prefix = "${local.cluster_name}-"
 }
 
 resource "aws_s3_bucket_public_access_block" "models" {
@@ -24,7 +24,7 @@ locals {
 
 # 서빙 파드: 읽기 전용
 resource "aws_iam_role" "model_reader" {
-  name               = "${var.cluster_name}-model-reader"
+  name               = "${local.cluster_name}-model-reader"
   assume_role_policy = local.pod_identity_trust
 }
 
@@ -59,7 +59,7 @@ resource "aws_eks_pod_identity_association" "model_reader" {
 
 # 적재 Job과 캐시 게시 Job: 쓰기
 resource "aws_iam_role" "model_writer" {
-  name               = "${var.cluster_name}-model-writer"
+  name               = "${local.cluster_name}-model-writer"
   assume_role_policy = local.pod_identity_trust
 }
 

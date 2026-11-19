@@ -1,0 +1,42 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 도쿄(ap-northeast-1, 클러스터 ow-on-gpu-tokyo). k8s/base에서 환경마다 다른 값만 바꾼다.
+# k8s/base/params.yaml도 있어야 빌드된다(값은 여기서 덮어쓴다. 없으면 예시를 복사한다).
+resources:
+  - ../../../base
+  - params.yaml
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: env-params
+      fieldPath: data.modelBucket
+    targets:
+      - select:
+          kind: ConfigMap
+          name: platform
+        fieldPaths:
+          - data.MODEL_BUCKET
+
+patches:
+  # 노드 역할과 discovery 태그는 infra/terraform이 클러스터 이름으로 만든다(environments.tf).
+  - target:
+      kind: EC2NodeClass
+    patch: |-
+      - op: replace
+        path: /spec/role
+        value: KarpenterNodeRole-ow-on-gpu-tokyo
+      - op: replace
+        path: /spec/subnetSelectorTerms/0/tags/karpenter.sh~1discovery
+        value: ow-on-gpu-tokyo
+      - op: replace
+        path: /spec/securityGroupSelectorTerms/0/tags/karpenter.sh~1discovery
+        value: ow-on-gpu-tokyo
+  - target:
+      kind: ConfigMap
+      name: platform
+    patch: |-
+      - op: replace
+        path: /data/AWS_REGION
+        value: ap-northeast-1

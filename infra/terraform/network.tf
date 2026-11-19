@@ -26,7 +26,7 @@ data "aws_subnet" "private" {
 
 locals {
   control_plane_subnet_ids = sort([
-    for s in data.aws_subnet.private : s.id if contains(var.control_plane_azs, s.availability_zone)
+    for s in data.aws_subnet.private : s.id if contains(local.control_plane_azs, s.availability_zone)
   ])
 }
 
@@ -36,11 +36,11 @@ resource "aws_ec2_tag" "karpenter_subnet" {
   for_each    = toset(data.aws_subnets.private.ids)
   resource_id = each.value
   key         = "karpenter.sh/discovery"
-  value       = var.cluster_name
+  value       = local.cluster_name
 }
 
 resource "aws_ec2_tag" "karpenter_security_group" {
   resource_id = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
   key         = "karpenter.sh/discovery"
-  value       = var.cluster_name
+  value       = local.cluster_name
 }

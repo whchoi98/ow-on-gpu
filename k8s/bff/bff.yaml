@@ -1,5 +1,6 @@
 # BFF를 EKS 파드로 실행한다. 이전에는 ECS Fargate 태스크였다(docs/07-bff.md).
-# ${...} 자리는 install.sh가 Terraform 출력에서 읽은 값으로 채운다. 계정 ID가 든 이미지 주소를 이 파일에 적지 않기 위해서다.
+# ${...} 자리는 install.sh가 Terraform 출력에서 읽은 값으로 채운다. 계정 ID가 든 이미지 주소를 이 파일에 적지 않고,
+# 클러스터 이름처럼 환경마다 다른 값을 한 파일로 다루기 위해서다.
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -148,7 +149,7 @@ spec:
       app.kubernetes.io/name: bff
 ---
 # 내부 ALB는 AWS Load Balancer Controller가 이 Ingress에서 만든다. CloudFront의 VPC origin이 이 ALB를 가리킨다.
-# - 보안 그룹은 Terraform이 만든 ow-on-gpu-bff-alb를 쓴다(Name 태그로 찾는다). CloudFront VPC origin의 보안 그룹에서 오는 80만 받는다.
+# - 보안 그룹은 Terraform이 만든 <클러스터>-bff-alb를 쓴다(Name 태그로 찾는다). CloudFront VPC origin의 보안 그룹에서 오는 80만 받는다.
 # - manage-backend-security-group-rules: 컨트롤러가 공용 백엔드 보안 그룹을 ALB에 더 붙이고, 노드의 보안 그룹에 그 그룹에서 오는 8080을 연다.
 # - 서브넷은 적지 않는다. 컨트롤러가 이 VPC에서 kubernetes.io/role/internal-elb 태그가 붙은 Private 서브넷을 AZ마다 하나씩 고른다.
 # - 타임아웃, 접근 로그, 쿠키 고정은 Terraform으로 만든 ALB와 같은 값이다(docs/07-bff.md의 타임아웃 표).
@@ -158,11 +159,11 @@ metadata:
   name: bff
   namespace: app
   annotations:
-    alb.ingress.kubernetes.io/load-balancer-name: ow-on-gpu-bff-pods
+    alb.ingress.kubernetes.io/load-balancer-name: ${CLUSTER_NAME}-bff-pods
     alb.ingress.kubernetes.io/scheme: internal
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/security-groups: ow-on-gpu-bff-alb
+    alb.ingress.kubernetes.io/security-groups: ${CLUSTER_NAME}-bff-alb
     alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
     alb.ingress.kubernetes.io/healthcheck-path: /healthz
     alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=120,access_logs.s3.enabled=true,access_logs.s3.bucket=${ALB_LOG_BUCKET},access_logs.s3.prefix=bff

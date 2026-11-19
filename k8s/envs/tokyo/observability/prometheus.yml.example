@@ -1,0 +1,75 @@
+# Prometheus agent 설정. 수집한 지표를 저장하지 않고 Amazon Managed Service for Prometheus로 보낸다.
+# remote_write의 주소는 `terraform -chdir=infra/terraform output -raw amp_endpoint`에 api/v1/remote_write를 붙인 값이다.
+global:
+  scrape_interval: 15s
+  external_labels:
+    cluster: ow-on-gpu-tokyo
+
+scrape_configs:
+  # vLLM. 측정 중의 변화를 보려고 5초마다 읽는다. 잠든 Qwen 파드도 NotReady인 채로 수집한다.
+  - job_name: vllm
+    scrape_interval: 5s
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: [inference]
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+        regex: vllm-(gemma|qwen)
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_name]
+        regex: http
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+        regex: vllm-(.+)
+        target_label: model
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+      - source_labels: [__meta_kubernetes_pod_node_name]
+        target_label: node
+
+  # EPP. 풀마다 두 개가 뜨고 리더만 요청을 처리한다. 대기 복제본의 값은 0이다.
+  - job_name: epp
+    authorization:
+      credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: [inference]
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_llm_d_router_gateway]
+        regex: (.+)-epp
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_name]
+        regex: metrics
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_label_llm_d_router_gateway]
+        regex: (.+)-epp
+        target_label: pool
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
+  # agentgateway
+  - job_name: gateway
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: [inference]
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_name]
+        regex: inference-gateway
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_name]
+        regex: metrics
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
+remote_write:
+  - url: https://aps-workspaces.ap-northeast-1.amazonaws.com/workspaces/<amp-workspace-id>/api/v1/remote_write
+    sigv4:
+      region: ap-northeast-1
+    queue_config:
+      max_samples_per_send: 1000
+      max_shards: 4
+      capacity: 2500

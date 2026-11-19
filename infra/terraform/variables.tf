@@ -1,12 +1,4 @@
-variable "region" {
-  type    = string
-  default = "ap-northeast-2"
-}
-
-variable "cluster_name" {
-  type    = string
-  default = "ow-on-gpu"
-}
+# 리전, 클러스터 이름, 컨트롤 플레인 AZ는 변수가 아니다. 작업 공간으로 고르는 환경 값이다(environments.tf).
 
 variable "vpc_name" {
   description = "CDK 스택 EksVpcStack(infra/cdk-vpc)이 만든 VPC의 Name 태그"
@@ -44,12 +36,6 @@ variable "lbc_chart_version" {
   default     = "3.6.3"
 }
 
-variable "control_plane_azs" {
-  description = "컨트롤 플레인 ENI와 애드온 노드 그룹을 둘 AZ. EKS 컨트롤 플레인이 2d를 지원하는지 확인하지 못해 2d는 뺀다(eks 엔드포인트 서비스는 2d 미지원). Karpenter 노드는 네 AZ를 모두 쓴다"
-  type        = list(string)
-  default     = ["ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c"]
-}
-
 variable "api_public_access_cidrs" {
   description = "EKS API 퍼블릭 엔드포인트에 접근을 허용할 CIDR. 작업 장비의 외부 IP만 넣는다"
   type        = list(string)
@@ -74,7 +60,7 @@ variable "waf_rate_limit" {
 }
 
 variable "web_search_region" {
-  description = "BFF가 Amazon Bedrock AgentCore Web Search(InvokeWebSearch)를 부를 리전. 서울 리전에는 이 API가 없다. 빈 문자열이면 웹 검색을 쓰지 않는다"
+  description = "BFF가 Amazon Bedrock AgentCore Web Search(InvokeWebSearch)를 부를 리전. 서울과 도쿄 리전에는 이 API가 없다. 빈 문자열이면 웹 검색을 쓰지 않는다"
   type        = string
   default     = "us-east-1"
 }

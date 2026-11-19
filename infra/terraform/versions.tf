@@ -14,7 +14,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
+  region = local.region
 
   default_tags {
     tags = {
@@ -36,7 +36,7 @@ provider "helm" {
     exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
       command     = "aws"
-      args        = ["eks", "get-token", "--cluster-name", aws_eks_cluster.this.name, "--region", var.region]
+      args        = ["eks", "get-token", "--cluster-name", aws_eks_cluster.this.name, "--region", local.region]
     }
   }
 }

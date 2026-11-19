@@ -2,42 +2,47 @@ import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 
-const VPC_CIDR = '10.200.0.0/16';
-const AZS = ['ap-northeast-2a', 'ap-northeast-2b', 'ap-northeast-2c', 'ap-northeast-2d'];
-
-// ecr.api, ecr.dkr, sts, eks 엔드포인트 서비스는 ap-northeast-2d를 지원하지 않는다
-// (aws ec2 describe-vpc-endpoint-services, 2026-11-14 확인). 2d의 워크로드는 프라이빗 DNS로
-// 다른 가용 영역의 엔드포인트 ENI에 도달한다.
-const AZS_WITHOUT_2D = AZS.filter((az) => az !== 'ap-northeast-2d');
+export interface EksVpcStackProps extends cdk.StackProps {
+  vpcCidr: string;
+  azs: string[];
+  // ecr.api, ecr.dkr, sts, eks 엔드포인트 서비스가 지원하지 않는 AZ. 이 네 서비스의 엔드포인트는 이 AZ를 빼고 만든다.
+  // 그 AZ의 워크로드는 프라이빗 DNS로 다른 가용 영역의 엔드포인트 ENI에 도달한다.
+  azsWithoutCoreEndpoints?: string[];
+}
 
 const S = ec2.InterfaceVpcEndpointAwsService;
-const INTERFACE_ENDPOINTS: { id: string; service: ec2.InterfaceVpcEndpointAwsService; azs: string[] }[] = [
-  { id: 'BedrockRuntime', service: S.BEDROCK_RUNTIME, azs: AZS },
-  { id: 'EcrApi', service: S.ECR, azs: AZS_WITHOUT_2D },
-  { id: 'EcrDkr', service: S.ECR_DOCKER, azs: AZS_WITHOUT_2D },
-  { id: 'Logs', service: S.CLOUDWATCH_LOGS, azs: AZS },
-  { id: 'Ssm', service: S.SSM, azs: AZS },
-  { id: 'SsmMessages', service: S.SSM_MESSAGES, azs: AZS },
-  { id: 'Ec2Messages', service: S.EC2_MESSAGES, azs: AZS },
-  { id: 'Sts', service: S.STS, azs: AZS_WITHOUT_2D },
-  { id: 'Eks', service: S.EKS, azs: AZS_WITHOUT_2D },
-  { id: 'EksAuth', service: S.EKS_AUTH, azs: AZS },
-  { id: 'Elb', service: S.ELASTIC_LOAD_BALANCING, azs: AZS },
+// core가 true인 서비스는 azsWithoutCoreEndpoints의 AZ를 뺀다.
+const INTERFACE_ENDPOINTS: { id: string; service: ec2.InterfaceVpcEndpointAwsService; core?: boolean }[] = [
+  { id: 'BedrockRuntime', service: S.BEDROCK_RUNTIME },
+  { id: 'EcrApi', service: S.ECR, core: true },
+  { id: 'EcrDkr', service: S.ECR_DOCKER, core: true },
+  { id: 'Logs', service: S.CLOUDWATCH_LOGS },
+  { id: 'Ssm', service: S.SSM },
+  { id: 'SsmMessages', service: S.SSM_MESSAGES },
+  { id: 'Ec2Messages', service: S.EC2_MESSAGES },
+  { id: 'Sts', service: S.STS, core: true },
+  { id: 'Eks', service: S.EKS, core: true },
+  { id: 'EksAuth', service: S.EKS_AUTH },
+  { id: 'Elb', service: S.ELASTIC_LOAD_BALANCING },
 ];
 
 export class EksVpcStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: EksVpcStackProps) {
     super(scope, id, props);
+
+    const azs = props.azs;
+    const excluded = props.azsWithoutCoreEndpoints ?? [];
+    const coreAzs = azs.filter((az) => !excluded.includes(az));
 
     const vpc = new ec2.Vpc(this, 'Vpc', {
       vpcName: 'eks-vpc',
-      ipAddresses: ec2.IpAddresses.cidr(VPC_CIDR),
-      availabilityZones: AZS,
+      ipAddresses: ec2.IpAddresses.cidr(props.vpcCidr),
+      availabilityZones: azs,
       enableDnsSupport: true,
       enableDnsHostnames: true,
-      natGateways: AZS.length,
+      natGateways: azs.length,
       // CIDR은 선언 순서대로, 각 마스크 경계에 맞춰 배정된다.
-      // Public 10.200.0.0/24부터, Private 10.200.16.0/20부터, Isolated 10.200.80.0/23부터.
+      // 서울(10.200.0.0/16, AZ 4개)은 Public 10.200.0.0/24부터, Private 10.200.16.0/20부터, Isolated 10.200.80.0/23부터.
       subnetConfiguration: [
         { name: 'Public', subnetType: ec2.SubnetType.PUBLIC, cidrMask: 24, mapPublicIpOnLaunch: true },
         { name: 'Private', subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS, cidrMask: 20 },
@@ -64,7 +69,7 @@ export class EksVpcStack extends cdk.Stack {
       description: 'Interface endpoints: HTTPS from the VPC CIDR only',
       allowAllOutbound: false,
     });
-    endpointSg.addIngressRule(ec2.Peer.ipv4(VPC_CIDR), ec2.Port.tcp(443), 'HTTPS from the VPC CIDR');
+    endpointSg.addIngressRule(ec2.Peer.ipv4(props.vpcCidr), ec2.Port.tcp(443), 'HTTPS from the VPC CIDR');
 
     new cdk.CfnOutput(this, 'VpcId', { value: vpc.vpcId });
 
@@ -89,7 +94,7 @@ export class EksVpcStack extends cdk.Stack {
       const endpoint = vpc.addInterfaceEndpoint(e.id, {
         service: e.service,
         privateDnsEnabled: true,
-        subnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS, availabilityZones: e.azs },
+        subnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS, availabilityZones: e.core ? coreAzs : azs },
         securityGroups: [endpointSg],
         open: false,
       });

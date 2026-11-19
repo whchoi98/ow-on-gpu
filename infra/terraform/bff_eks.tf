@@ -9,7 +9,7 @@
 # BFF 파드의 역할. 네임스페이스 app의 ServiceAccount bff에 EKS Pod Identity로 연결한다.
 # BFF가 AWS 자격 증명으로 부르는 API는 웹 검색 하나다(토큰 검증은 공개 JWKS만 읽는다).
 resource "aws_iam_role" "bff_pod" {
-  name               = "${var.cluster_name}-bff-pod"
+  name               = "${local.cluster_name}-bff-pod"
   assume_role_policy = local.pod_identity_trust
 }
 
@@ -42,13 +42,13 @@ resource "aws_eks_pod_identity_association" "bff" {
 data "aws_lb" "bff_eks" {
   tags = {
     "ingress.k8s.aws/stack" = "app/bff"
-    "elbv2.k8s.aws/cluster" = var.cluster_name
+    "elbv2.k8s.aws/cluster" = local.cluster_name
   }
 }
 
 resource "aws_cloudfront_vpc_origin" "bff_eks" {
   vpc_origin_endpoint_config {
-    name                   = "${var.cluster_name}-bff-pods-alb"
+    name                   = "${local.cluster_name}-bff-pods-alb"
     arn                    = data.aws_lb.bff_eks.arn
     http_port              = 80
     https_port             = 443

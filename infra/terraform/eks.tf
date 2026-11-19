@@ -1,5 +1,5 @@
 resource "aws_iam_role" "cluster" {
-  name = "${var.cluster_name}-cluster"
+  name = "${local.cluster_name}-cluster"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -16,7 +16,7 @@ resource "aws_iam_role_policy_attachment" "cluster" {
 }
 
 resource "aws_eks_cluster" "this" {
-  name     = var.cluster_name
+  name     = local.cluster_name
   version  = var.kubernetes_version
   role_arn = aws_iam_role.cluster.arn
 
@@ -37,7 +37,7 @@ resource "aws_eks_cluster" "this" {
 
   lifecycle {
     precondition {
-      condition     = length(local.control_plane_subnet_ids) == length(var.control_plane_azs)
+      condition     = length(local.control_plane_subnet_ids) == length(local.control_plane_azs)
       error_message = "control_plane_azs마다 Private 서브넷이 하나씩 있어야 합니다."
     }
   }
@@ -67,7 +67,7 @@ resource "aws_eks_addon" "coredns" {
 }
 
 resource "aws_iam_role" "addons_node" {
-  name = "${var.cluster_name}-addons-node"
+  name = "${local.cluster_name}-addons-node"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{

@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 도쿄. k8s/bench에서 노드 역할과 discovery 태그만 바꾼다.
+resources:
+  - ../../../bench
+
+patches:
+  - target:
+      kind: EC2NodeClass
+    patch: |-
+      - op: replace
+        path: /spec/role
+        value: KarpenterNodeRole-ow-on-gpu-tokyo
+      - op: replace
+        path: /spec/subnetSelectorTerms/0/tags/karpenter.sh~1discovery
+        value: ow-on-gpu-tokyo
+      - op: replace
+        path: /spec/securityGroupSelectorTerms/0/tags/karpenter.sh~1discovery
+        value: ow-on-gpu-tokyo

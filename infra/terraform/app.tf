@@ -5,7 +5,7 @@
 data "aws_lb" "gateway" {
   tags = {
     "service.k8s.aws/stack" = "inference/inference-gateway"
-    "elbv2.k8s.aws/cluster" = var.cluster_name
+    "elbv2.k8s.aws/cluster" = local.cluster_name
   }
 }
 
@@ -13,8 +13,8 @@ data "aws_lb" "gateway" {
 
 # 배치 작업은 BFF를 거치지 않고 게이트웨이 NLB를 직접 부른다. 배치 클라이언트에 이 보안 그룹을 붙인다.
 resource "aws_security_group" "batch_client" {
-  name        = "${var.cluster_name}-batch-client"
-  tags        = { Name = "${var.cluster_name}-batch-client" }
+  name        = "${local.cluster_name}-batch-client"
+  tags        = { Name = "${local.cluster_name}-batch-client" }
   description = "Batch clients that call the gateway NLB directly"
   vpc_id      = data.aws_vpc.this.id
 
@@ -31,8 +31,8 @@ resource "aws_security_group" "batch_client" {
 # BFF는 클러스터 안에서 게이트웨이의 Service를 직접 부르므로 NLB는 배치 클라이언트만 받는다.
 # description은 바꾸면 보안 그룹이 다시 만들어지므로 그대로 둔다.
 resource "aws_security_group" "gateway_nlb" {
-  name        = "${var.cluster_name}-gateway-nlb"
-  tags        = { Name = "${var.cluster_name}-gateway-nlb" }
+  name        = "${local.cluster_name}-gateway-nlb"
+  tags        = { Name = "${local.cluster_name}-gateway-nlb" }
   description = "Gateway NLB: only the BFF and batch clients"
   vpc_id      = data.aws_vpc.this.id
 
@@ -54,8 +54,8 @@ resource "aws_security_group" "gateway_nlb" {
 # 내부 ALB의 프런트엔드 보안 그룹. k8s/bff의 Ingress가 이 이름을 어노테이션으로 지정한다.
 # 들어오는 쪽은 CloudFront VPC origin만, 나가는 쪽은 BFF 파드가 쓰는 노드의 보안 그룹 8080만 연다.
 resource "aws_security_group" "alb" {
-  name        = "${var.cluster_name}-bff-alb"
-  tags        = { Name = "${var.cluster_name}-bff-alb" }
+  name        = "${local.cluster_name}-bff-alb"
+  tags        = { Name = "${local.cluster_name}-bff-alb" }
   description = "Internal ALB: only the CloudFront VPC origin"
   vpc_id      = data.aws_vpc.this.id
 
@@ -88,7 +88,7 @@ resource "aws_vpc_security_group_ingress_rule" "alb_from_cloudfront" {
 # CloudFront 주소는 공개되어 있다. /v1/* 요청은 이 사용자 풀이 발급한 액세스 토큰이 있어야 BFF를 통과한다.
 # 사용자는 app/bff/create-user.sh로 만든다. 비밀번호를 Terraform 코드와 state에 남기지 않기 위해서다.
 resource "aws_cognito_user_pool" "app" {
-  name                = var.cluster_name
+  name                = local.cluster_name
   user_pool_tier      = "LITE"
   username_attributes = ["email"]
   deletion_protection = "INACTIVE"
@@ -117,7 +117,7 @@ resource "aws_cognito_user_pool" "app" {
 
 # 브라우저가 쓰는 공개 클라이언트라서 시크릿을 두지 않는다.
 resource "aws_cognito_user_pool_client" "web" {
-  name                          = "${var.cluster_name}-web"
+  name                          = "${local.cluster_name}-web"
   user_pool_id                  = aws_cognito_user_pool.app.id
   generate_secret               = false
   explicit_auth_flows           = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
@@ -136,21 +136,21 @@ resource "aws_cognito_user_pool_client" "web" {
 }
 
 locals {
-  cognito_issuer = "https://cognito-idp.${var.region}.amazonaws.com/${aws_cognito_user_pool.app.id}"
+  cognito_issuer = "https://cognito-idp.${local.region}.amazonaws.com/${aws_cognito_user_pool.app.id}"
 }
 
 # ---------------------------------------------------------------- BFF 이미지
 
 # 이미지는 app/bff/build.sh가 올리고 k8s/bff/install.sh가 파드에 쓴다. 파드의 역할과 Pod Identity 연결은 bff_eks.tf에 있다.
 resource "aws_ecr_repository" "bff" {
-  name         = "${var.cluster_name}/bff"
+  name         = "${local.cluster_name}/bff"
   force_delete = true
 }
 
 # ---------------------------------------------------------------- 정적 페이지 (S3)
 
 resource "aws_s3_bucket" "static" {
-  bucket_prefix = "${var.cluster_name}-static-"
+  bucket_prefix = "${local.cluster_name}-static-"
   force_destroy = true
 }
 
@@ -212,13 +212,13 @@ moved {
 resource "aws_s3_object" "config" {
   bucket        = aws_s3_bucket.static.id
   key           = "config.json"
-  content       = jsonencode({ region = var.region, userPoolClientId = aws_cognito_user_pool_client.web.id })
+  content       = jsonencode({ region = local.region, userPoolClientId = aws_cognito_user_pool_client.web.id })
   content_type  = "application/json"
   cache_control = "no-cache"
 }
 
 resource "aws_cloudfront_origin_access_control" "static" {
-  name                              = "${var.cluster_name}-static"
+  name                              = "${local.cluster_name}-static"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -255,7 +255,7 @@ data "aws_cloudfront_origin_request_policy" "all_viewer_except_host" {
 # CloudFront용 WAF는 us-east-1에만 만들 수 있다.
 resource "aws_wafv2_web_acl" "app" {
   provider = aws.virginia
-  name     = "${var.cluster_name}-app"
+  name     = "${local.cluster_name}-app"
   scope    = "CLOUDFRONT"
 
   default_action {
@@ -279,21 +279,21 @@ resource "aws_wafv2_web_acl" "app" {
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "${var.cluster_name}-rate-limit"
+      metric_name                = "${local.cluster_name}-rate-limit"
       sampled_requests_enabled   = true
     }
   }
 
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${var.cluster_name}-app"
+    metric_name                = "${local.cluster_name}-app"
     sampled_requests_enabled   = true
   }
 }
 
 resource "aws_cloudfront_distribution" "app" {
   enabled             = true
-  comment             = "${var.cluster_name} app"
+  comment             = "${local.cluster_name} app"
   default_root_object = "index.html"
   web_acl_id          = aws_wafv2_web_acl.app.arn
   price_class         = "PriceClass_200"

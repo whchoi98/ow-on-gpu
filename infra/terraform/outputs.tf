@@ -7,7 +7,7 @@ output "cluster_endpoint" {
 }
 
 output "update_kubeconfig" {
-  value = "aws eks update-kubeconfig --region ${var.region} --name ${aws_eks_cluster.this.name}"
+  value = "aws eks update-kubeconfig --region ${local.region} --name ${aws_eks_cluster.this.name}"
 }
 
 output "model_bucket" {

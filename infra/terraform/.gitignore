@@ -3,4 +3,6 @@
 *.tfstate.*
 tfplan
 .kubeconfig
+.kubeconfig-*
 bff.auto.tfvars
+bff.*.tfvars

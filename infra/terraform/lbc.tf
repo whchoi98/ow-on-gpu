@@ -1,10 +1,10 @@
 resource "aws_iam_policy" "lbc" {
-  name   = "${var.cluster_name}-aws-load-balancer-controller"
+  name   = "${local.cluster_name}-aws-load-balancer-controller"
   policy = file("${path.module}/files/lbc-iam-policy-v${var.lbc_chart_version}.json")
 }
 
 resource "aws_iam_role" "lbc" {
-  name               = "${var.cluster_name}-aws-load-balancer-controller"
+  name               = "${local.cluster_name}-aws-load-balancer-controller"
   assume_role_policy = local.pod_identity_trust
 }
 
@@ -29,7 +29,7 @@ resource "helm_release" "lbc" {
 
   values = [yamlencode({
     clusterName = aws_eks_cluster.this.name
-    region      = var.region
+    region      = local.region
     vpcId       = data.aws_vpc.this.id
     serviceAccount = {
       name = "aws-load-balancer-controller"

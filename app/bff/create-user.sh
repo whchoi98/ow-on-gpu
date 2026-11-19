@@ -5,12 +5,14 @@
 #
 # 비밀번호는 프롬프트로 받거나 환경 변수 USER_PASSWORD로 넘긴다. 파일과 Terraform state에는 남기지 않는다.
 # 같은 이메일로 다시 실행하면 비밀번호만 바꾼다.
+# 환경은 TF_WORKSPACE로 고른다(infra/terraform/environments.tf). 사용자 풀은 환경마다 따로다.
 set -euo pipefail
 cd "$(dirname "$0")"
 
 EMAIL=${1:?사용법: ./create-user.sh <이메일>}
-REGION=ap-northeast-2
 POOL=$(terraform -chdir=../../infra/terraform output -raw cognito_user_pool_id)
+# 사용자 풀 ID는 <리전>_<값> 꼴이다.
+REGION=${POOL%%_*}
 
 if [ -z "${USER_PASSWORD:-}" ]; then
   read -r -s -p "비밀번호: " USER_PASSWORD

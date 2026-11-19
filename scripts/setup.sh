@@ -31,7 +31,8 @@ fi
 
 # 환경마다 다른 값이 든 파일은 저장소에 없다. 예시를 복사해 두고 무엇을 채울지 알린다.
 for example in k8s/base/params.yaml.example k8s/observability/prometheus.yml.example bench/coldstart/k8s/storage-s3.yaml.example \
-               jobs/model-sync/params.env.example infra/terraform/terraform.tfvars.example; do
+               jobs/model-sync/params.env.example infra/terraform/terraform.tfvars.example \
+               k8s/envs/tokyo/base/params.yaml.example k8s/envs/tokyo/observability/prometheus.yml.example; do
     target="${example%.example}"
     if [ ! -f "$target" ] && [ -f "$example" ]; then
         cp "$example" "$target"

@@ -241,7 +241,8 @@ assert_eq ".env.example: 값이 있는 변수는 비밀이 아닌 둘뿐" "AWS_R
 
 # --- 환경별 값이 든 파일: 예시만 추적하고, 예시는 실제 파일을 가린 것과 같다 ---
 for ST_FILE in k8s/base/params.yaml k8s/observability/prometheus.yml bench/coldstart/k8s/storage-s3.yaml \
-               jobs/model-sync/params.env infra/terraform/terraform.tfvars; do
+               jobs/model-sync/params.env infra/terraform/terraform.tfvars \
+               k8s/envs/tokyo/base/params.yaml k8s/envs/tokyo/observability/prometheus.yml; do
     assert_file_exists "예시 파일: $ST_FILE.example" "$ST_FILE.example"
     grep -qE '<(suffix|amp-workspace-id|ip)>' "$ST_FILE.example" 2>/dev/null && pass "$ST_FILE.example: 자리 표시가 있음" \
         || fail "$ST_FILE.example: 자리 표시가 있음" "자리 표시가 없음"
@@ -258,6 +259,11 @@ for ST_FILE in k8s/base/params.yaml k8s/observability/prometheus.yml bench/colds
     fi
 done
 assert_file_executable "scripts/mask-identifiers.py 실행 권한" "scripts/mask-identifiers.py"
+
+# --- 도쿄의 수집기 설정 예시는 서울 예시에서 리전과 cluster 라벨만 바꾼 것이다 ---
+assert_eq "도쿄 prometheus.yml.example이 서울 예시와 리전, cluster 라벨만 다름" \
+    "$(sed -e 's/ap-northeast-2/ap-northeast-1/g' -e 's/cluster: ow-on-gpu$/cluster: ow-on-gpu-tokyo/' k8s/observability/prometheus.yml.example | md5sum)" \
+    "$(md5sum < k8s/envs/tokyo/observability/prometheus.yml.example)"
 
 # --- 시험 파일이 실행기의 변수를 덮어쓰지 않는지 ---
 assert_eq "시험 파일이 실행기의 카운터를 대입하지 않음" "" \

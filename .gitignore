@@ -10,6 +10,7 @@
 *.tfplan
 .terraform/
 .kubeconfig
+.kubeconfig-*
 
 # 빌드 산출물과 의존성
 node_modules/
@@ -31,3 +32,5 @@ k8s/observability/prometheus.yml
 bench/coldstart/k8s/storage-s3.yaml
 jobs/model-sync/params.env
 infra/terraform/terraform.tfvars
+k8s/envs/tokyo/base/params.yaml
+k8s/envs/tokyo/observability/prometheus.yml
