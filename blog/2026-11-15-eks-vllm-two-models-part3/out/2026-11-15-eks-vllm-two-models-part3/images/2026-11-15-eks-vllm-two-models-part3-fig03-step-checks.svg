@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080" width="1920" height="1080" font-family="NanumSquareOTF, '나눔스퀘어OTF', NanumSquare, '나눔스퀘어', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Noto Sans CJK KR', Arial, sans-serif">
+<defs></defs>
+<rect x="0.0" y="0.0" width="1920.0" height="1080.0" fill="#FFFFFF"/>
+<text x="48.0" y="76.0" font-size="42" font-weight="800" fill="#232F3E" letter-spacing="0.2">단계별 확인표</text>
+<text x="48.0" y="115.0"><tspan font-size="21" font-weight="800" fill="#E8710A">OpenWeight on AWS GPU</tspan><tspan font-size="18" font-weight="700" fill="#5F6B7A" dx="16">단계마다 확인하는 방법, 측정한 값, 막히기 쉬운 곳</tspan></text>
+<text x="1520.6" y="65.0" font-size="11" font-weight="800" fill="#8A94A2" letter-spacing="1.2">SERIES</text>
+<rect x="1577.4" y="48.0" width="83.2" height="26.0" rx="13.0" fill="#F5F7F9" stroke="#CDD4DD" stroke-width="1.1"/>
+<text x="1619.0" y="65.5" font-size="13" font-weight="800" fill="#5F6B7A" text-anchor="middle">1 API 호출</text>
+<rect x="1668.6" y="48.0" width="109.5" height="26.0" rx="13.0" fill="#F5F7F9" stroke="#CDD4DD" stroke-width="1.1"/>
+<text x="1723.4" y="65.5" font-size="13" font-weight="800" fill="#5F6B7A" text-anchor="middle">2 구조와 최적화</text>
+<rect x="1786.1" y="48.0" width="85.9" height="26.0" rx="13.0" fill="#FF9900" fill-opacity="0.900" stroke="#E8710A" stroke-width="1.1"/>
+<text x="1829.1" y="65.5" font-size="13" font-weight="800" fill="#FFFFFF" text-anchor="middle">3 구축 과정</text>
+<rect x="48.0" y="140.0" width="1824.0" height="702.0" rx="14.0" fill="#F5F7F9" stroke="#DFE4EA" stroke-width="1.2"/>
+<circle cx="82.0" cy="173.0" r="15.0" fill="#232F3E"/>
+<text x="82.0" y="178.6" font-size="16" font-weight="800" fill="#FFFFFF" text-anchor="middle">1</text>
+<text x="106.0" y="180.0" data-box="48,140,1824,702"><tspan font-size="21" font-weight="800" fill="#232F3E" letter-spacing="0.2">1~8단계의 확인 방법과 측정한 값</tspan><tspan font-size="15" font-weight="700" fill="#5F6B7A" dx="14">0단계는 리소스가 없고 9단계는 아직 실행하지 않아 제외</tspan></text>
+<rect x="72.0" y="206.0" width="1776.0" height="36.0" rx="6.0" fill="#FFFFFF"/>
+<text x="86.0" y="229.0" font-size="14" font-weight="800" fill="#5F6B7A" data-box="48,140,1824,702">단계</text>
+<text x="344.0" y="229.0" font-size="14" font-weight="800" fill="#5F6B7A" data-box="48,140,1824,702">확인 방법</text>
+<text x="864.0" y="229.0" font-size="14" font-weight="800" fill="#5F6B7A" data-box="48,140,1824,702">측정한 값</text>
+<text x="1384.0" y="229.0" font-size="14" font-weight="800" fill="#5F6B7A" data-box="48,140,1824,702">막히기 쉬운 곳</text>
+<circle cx="98.0" cy="278.6" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="283.5" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">1</text>
+<text x="122.0" y="283.6" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">네트워크와 EKS 기반</text>
+<text x="344.0" y="283.6" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">terraform validate와 서버 dry-run 통과, kubectl get nodes로 연결 확인</text>
+<text x="864.0" y="283.6" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">VPC 10.200.0.0/16, AZ 4개, 애드온용 노드 m7g.large 2대</text>
+<text x="1384.0" y="283.6" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">params.yaml과 terraform.tfvars의 값 채우기</text>
+<line x1="72.0" y1="315.2" x2="1848.0" y2="315.2" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
+<circle cx="98.0" cy="351.9" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="356.8" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="122.0" y="356.9" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">모델 적재</text>
+<text x="344.0" y="356.9" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">Job 로그의 verified 줄과 summary 줄</text>
+<text x="864.0" y="356.9" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">객체 73개, 74.90GB, 전송과 검증 491초</text>
+<text x="1384.0" y="356.9" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">다시 실행은 Job 삭제 뒤 적용, 로그는 먼저 저장</text>
+<line x1="72.0" y1="388.5" x2="1848.0" y2="388.5" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
+<circle cx="98.0" cy="425.1" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="430.0" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">3</text>
+<text x="122.0" y="430.1" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">vLLM 배포</text>
+<text x="344.0" y="430.1" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">파드 로그의 Model loading took 줄과 init engine 줄</text>
+<text x="864.0" y="430.1" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">가중치 로드 Gemma 19.1초, Qwen 34.3초, KV 캐시 5.37GiB와 2.46GiB</text>
+<text x="1384.0" y="430.1" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">Qwen은 gpu-memory-utilization 0.85에서 시작 실패, 0.90 사용</text>
+<line x1="72.0" y1="461.8" x2="1848.0" y2="461.8" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
+<circle cx="98.0" cy="498.4" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="503.3" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">4</text>
+<text x="122.0" y="503.4" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">GAIE와 게이트웨이</text>
+<text x="344.0" y="503.4" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">model 값만 바꿔 두 모델이 각각 200, /sleep 경로는 404</text>
+<text x="864.0" y="503.4" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">설치 72초, Gateway와 HTTPRoute, InferencePool이 Accepted</text>
+<text x="1384.0" y="503.4" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">EPP 대기 복제본의 NotReady는 설계된 동작</text>
+<line x1="72.0" y1="535.0" x2="1848.0" y2="535.0" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
+<circle cx="98.0" cy="571.6" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="576.5" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">5</text>
+<text x="122.0" y="576.6" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">Strands Decider 2B</text>
+<text x="344.0" y="576.6" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">파드 로그의 warmed up 줄 뒤 Ready, /health의 device 값 cuda</text>
+<text x="864.0" y="576.6" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">예열 70.5초, 판단 1회 72.6~73.0ms (게이트웨이 경유, 중앙값)</text>
+<text x="1384.0" y="576.6" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">예열을 끄면 첫 요청 약 28초</text>
+<line x1="72.0" y1="608.2" x2="1848.0" y2="608.2" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
+<circle cx="98.0" cy="644.9" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="649.8" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">6</text>
+<text x="122.0" y="649.9" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">sleep 컨트롤러</text>
+<text x="344.0" y="649.9" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">잠든 동안 Qwen 요청 503, 깨우기 API 호출 뒤 성공</text>
+<text x="864.0" y="649.9" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">sleep 진입 2.98초, 복귀 3.66초 (5회)</text>
+<text x="1384.0" y="649.9" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">VPC CNI의 enableNetworkPolicy를 켜야 정책 적용</text>
+<line x1="72.0" y1="681.5" x2="1848.0" y2="681.5" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
+<circle cx="98.0" cy="718.1" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="723.0" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">7</text>
+<text x="122.0" y="723.1" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">앱 계층</text>
+<text x="344.0" y="723.1" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">토큰 없는 요청 401, 로그인 뒤 스트리밍 응답</text>
+<text x="864.0" y="723.1" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">이벤트 간격 중앙값 53.5ms, VPC origin 생성 9분 18초</text>
+<text x="1384.0" y="723.1" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">Terraform, install.sh, Terraform 순서로 적용</text>
+<line x1="72.0" y1="754.8" x2="1848.0" y2="754.8" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
+<circle cx="98.0" cy="791.4" r="13.0" fill="#232F3E"/>
+<text x="98.0" y="796.3" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">8</text>
+<text x="122.0" y="796.4" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">관측과 측정</text>
+<text x="344.0" y="796.4" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">수집 대상 8개 모두 up, 대시보드 쿼리 27개에 값</text>
+<text x="864.0" y="796.4" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">콜드 스타트 394초에서 260초, 첫 내용 81.9ms와 177.5ms</text>
+<text x="1384.0" y="796.4" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">EPP의 /metrics는 토큰 없이는 401</text>
+<rect x="48.0" y="862.0" width="1824.0" height="182.0" rx="14.0" fill="#F5F7F9" stroke="#DFE4EA" stroke-width="1.2"/>
+<circle cx="82.0" cy="895.0" r="15.0" fill="#232F3E"/>
+<text x="82.0" y="900.6" font-size="16" font-weight="800" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="106.0" y="902.0" data-box="48,862,1824,182"><tspan font-size="21" font-weight="800" fill="#232F3E" letter-spacing="0.2">전체 동작 확인</tspan><tspan font-size="15" font-weight="700" fill="#5F6B7A" dx="14">0~8단계를 마친 뒤의 환경</tspan></text>
+<rect x="72.0" y="928.0" width="342.4" height="100.0" rx="10.0" fill="#FFFFFF" stroke="#DFE4EA" stroke-width="1.2"/>
+<rect x="72.0" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#2E8CF0"/>
+<text x="90.0" y="960.0" font-size="19" font-weight="800" fill="#0972D3" data-box="48,862,1824,182">노드 9대</text>
+<text x="90.0" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">m7g.large 2, c7i-flex.xlarge 2,</text>
+<text x="90.0" y="1001.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">c7g.large 2, g6e.4xlarge 2, g6.xlarge 1</text>
+<rect x="430.4" y="928.0" width="342.4" height="100.0" rx="10.0" fill="#FFFFFF" stroke="#DFE4EA" stroke-width="1.2"/>
+<rect x="430.4" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#8C4FFF"/>
+<text x="448.4" y="960.0" font-size="19" font-weight="800" fill="#7D3FE0" data-box="48,862,1824,182">토큰 없는 요청 401</text>
+<text x="448.4" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">로그인하지 않은 /v1/* 요청은 BFF가 거절</text>
+<rect x="788.8" y="928.0" width="342.4" height="100.0" rx="10.0" fill="#FFFFFF" stroke="#DFE4EA" stroke-width="1.2"/>
+<rect x="788.8" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#FF9900"/>
+<text x="806.8" y="960.0" font-size="19" font-weight="800" fill="#E8710A" data-box="48,862,1824,182">이벤트 간격 53.5ms</text>
+<text x="806.8" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">상담 요청의 내용 이벤트 53개,</text>
+<text x="806.8" y="1001.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">1ms 안에 붙어 온 이벤트 0개</text>
+<rect x="1147.2" y="928.0" width="342.4" height="100.0" rx="10.0" fill="#FFFFFF" stroke="#DFE4EA" stroke-width="1.2"/>
+<rect x="1147.2" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#FF9900"/>
+<text x="1165.2" y="960.0" font-size="19" font-weight="800" fill="#E8710A" data-box="48,862,1824,182">첫 내용 81.9ms, 177.5ms</text>
+<text x="1165.2" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">Gemma 4 31B와 Qwen3.8-27B, 요청 20건의 중앙값</text>
+<rect x="1505.6" y="928.0" width="342.4" height="100.0" rx="10.0" fill="#FFFFFF" stroke="#DFE4EA" stroke-width="1.2"/>
+<rect x="1505.6" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#FF5C85"/>
+<text x="1523.6" y="960.0" font-size="19" font-weight="800" fill="#D4245F" data-box="48,862,1824,182">시간당 약 $10.05</text>
+<text x="1523.6" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">모든 구성 요소가 실행 중일 때의 고정 비용 추정</text>
+<text x="1872.0" y="1064.0" font-size="13" font-weight="700" fill="#8A94A2" text-anchor="end">2026-11-14 서울 리전에서 적용하고 측정, 7단계와 첫 내용은 2026-11-15, 노드 수는 2026-11-16 확인, 횟수를 적지 않은 값은 1회 측정</text>
+</svg>
