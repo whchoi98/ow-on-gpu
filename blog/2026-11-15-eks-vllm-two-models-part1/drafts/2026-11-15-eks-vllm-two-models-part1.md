@@ -11,7 +11,7 @@ by WOO HYUNG CHOI on 15 11월 2026 in [Advanced (300)](https://aws.amazon.com/ko
 
 관리형 LLM API를 호출하면 요청 한 건과 응답 한 건만 보입니다. 오픈 웨이트 모델(가중치가 공개되어 내려받아 직접 실행할 수 있는 모델)을 GPU 인스턴스에서 직접 서빙하면 그 사이의 모든 단계가 내 환경 안에 놓입니다. 인증, 모델 선택, 토큰화, 추론, 응답 전달, 관측을 직접 구성해야 하고 응답이 느리거나 실패하면 어느 단계의 문제인지도 직접 찾아야 합니다. 이 글은 LLM API 호출 한 건을 8개 단계로 나누고 단계마다 어떤 구성 요소가 그 일을 하는지, 시간이 얼마나 걸리는지 설명합니다. 예제 환경에서 사용자가 첫 내용을 받기까지의 시간은 Gemma 4 31B가 81.9ms, Qwen3.8-27B가 177.5ms였고 그 가운데 77%와 83%를 추론 엔진이 사용했습니다.
 
-이 글은 OpenWeight on AWS GPU(OW on GPU) 시리즈의 1부입니다. 이 시리즈는 오픈 웨이트 모델 서빙을 처음 시작하는 분을 위한 안내서입니다. 예제 환경은 Amazon Elastic Kubernetes Service(Amazon EKS)에서 vLLM으로 Gemma 4 31B와 Qwen3.8-27B를 함께 서빙합니다. 코드는 [ow-on-gpu 저장소](https://github.com/whchoi98/ow-on-gpu)에 있습니다. 2부(TODO: Part 2 링크)는 두 모델을 서빙하는 구조와 Amazon EKS 최적화를, 3부(TODO: Part 3 링크)는 이 환경을 10개 단계로 만드는 구축 과정을 다룹니다. 이 글은 Kubernetes와 AWS의 기본 개념을 알고 LLM 서빙은 처음인 플랫폼 엔지니어와 개발자를 대상으로 하며 OpenAI 호환 API를 호출해 본 경험이 있다면 무리 없이 읽을 수 있습니다. 본문의 값은 2026년 11월 14일부터 17일 사이에 서울 리전(ap-northeast-2)에서 측정했고 날짜와 횟수는 표와 문장마다 적었습니다.
+이 글은 OpenWeight on AWS GPU(OW on GPU) 시리즈의 1부입니다. 이 시리즈는 오픈 웨이트 모델 서빙을 처음 시작하는 분을 위한 안내서입니다. 예제 환경은 Amazon Elastic Kubernetes Service(Amazon EKS)에서 vLLM으로 Gemma 4 31B와 Qwen3.8-27B를 함께 서빙합니다. 코드는 [ow-on-gpu 저장소](https://github.com/whchoi98/ow-on-gpu)에 있습니다. 2부(TODO: Part 2 링크)는 두 모델을 서빙하는 구조와 Amazon EKS 최적화를, 3부(TODO: Part 3 링크)는 이 환경을 10개 단계로 만드는 구축 과정을 다룹니다. 이 글은 Kubernetes와 AWS의 기본 개념을 알고 LLM 서빙은 처음인 플랫폼 엔지니어와 개발자를 대상으로 하며 OpenAI 호환 API를 호출해 본 경험이 있다면 무리 없이 읽을 수 있습니다. 본문의 값은 2026년 11월 14일부터 24일 사이에 서울 리전(ap-northeast-2)에서 측정했고 날짜와 횟수는 표와 문장마다 적었습니다.
 
 ![LLM API 호출 한 건이 지나는 8개 단계를 한 장에 모은 인포그래픽. API Gateway, Load Balancer, Tokenization, Model Router, Inference Engine, Post-processing, Response and Billing, Logging and Observability의 순서로 단계마다 이 환경의 구성 요소와 측정값을 적었고 첫 내용까지의 시간은 Gemma 4 31B 81.9ms와 Qwen3.8-27B 177.5ms이며 그 가운데 77%에서 83%를 vLLM이 사용했음을 오른쪽 위의 막대로 보여 준다](images/2026-11-15-eks-vllm-two-models-part1-fig01-llm-api-call.png)
 
@@ -42,7 +42,7 @@ curl -sN -D - "$APP_URL/v1/chat/completions" \
 | 요청 헤더 | 값 | 뜻 |
 |---|---|---|
 | `x-session-id` | 문자열 | 같은 값이면 첫 요청에서 정한 모델을 30분 동안 다시 사용 |
-| `x-task` | `support`, `translate`, `summarize`, `vision`, `ocr`, `coding` | 업무 종류. 있으면 Decider 2B를 거치지 않고 배정표로 모델을 정함 |
+| `x-task` | `support`, `translate`, `summarize`, `vision`, `ocr`, `coding` | 업무 종류. 있으면 Decider 12B를 거치지 않고 배정표로 모델을 정함 |
 | `x-priority` | `interactive`, `batch` | 우선순위. 없으면 업무 종류의 기본값 |
 | `x-web-search` | `on` | 웹 검색 도구를 추가 |
 
@@ -76,7 +76,7 @@ data: [DONE]
 | `x-bff-decision` | `rule`, `task`, `attachment`, `decider`, `fallback`, `eval` | 무엇으로 모델을 정했는지 |
 | `x-bff-sensitive`, `x-bff-thinking` | `true`, `false` | 민감 정보 요청으로 다뤘는지, thinking을 켰는지 |
 | `x-bff-search` | `on`, `off`, `sensitive`, `fallback`, `disabled` | 웹 검색 도구를 넣었는지, 넣지 않았다면 그 이유 |
-| `x-bff-reason` | JSON | 결정의 근거. 적용한 규칙, Decider 2B의 선택과 신뢰도 |
+| `x-bff-reason` | JSON | 결정의 근거. 적용한 규칙, Decider 12B의 선택과 신뢰도 |
 | `x-bff-timing` | JSON | BFF 안의 구간 시간. 판단(`decide_ms`), 깨우기(`wake_ms`), 게이트웨이의 응답 헤더까지(`upstream_ms`) |
 
 *표 2. BFF가 응답에 넣는 헤더*
@@ -90,7 +90,7 @@ LLM API 호출은 어느 환경에서나 비슷한 단계를 지납니다. 이 �
 | 1 API Gateway (요청 진입) | 암호화된 연결 수신, 호출 횟수 제한, 인증, 본문 검증 | Amazon CloudFront, AWS WAF, Amazon Cognito, BFF |
 | 2 Load Balancer (부하 분산) | 요청을 받을 대상에게 나눠 보냄 | 내부 Application Load Balancer(ALB), 게이트웨이(agentgateway) |
 | 3 Tokenization (토큰화) | 문장을 토큰 ID로 바꾸고 길이를 확인 | vLLM API 서버 |
-| 4 Model Router (모델 결정) | 어느 모델의 어느 파드가 처리할지 결정 | BFF, Strands Decider 2B, InferencePool과 EPP, 깨우기 API |
+| 4 Model Router (모델 결정) | 어느 모델의 어느 파드가 처리할지 결정 | BFF, Strands Decider 12B, InferencePool과 EPP, 깨우기 API |
 | 5 Inference Engine (추론) | 토큰 생성 | vLLM v0.33.0, 모델마다 NVIDIA L40S 1장 |
 | 6 Post-processing (후처리) | 토큰을 텍스트로 복원, 추론 과정과 도구 호출 분리, 도구 실행 | vLLM의 parser, BFF, Amazon Bedrock AgentCore Web Search |
 | 7 Response & Billing (응답과 비용) | 응답 전달, 사용량 집계 | BFF의 SSE 전달, `usage`, 응답 헤더 |
@@ -134,9 +134,9 @@ LLM API 호출은 어느 환경에서나 비슷한 단계를 지납니다. 이 �
 
 모델이 두 개이므로 요청마다 어느 모델이 처리할지 정해야 합니다. 이 환경에서는 BFF가 요청의 내용과 정책을 보고 모델을 정하고 게이트웨이는 BFF가 적은 값만 보고 모델의 풀을 고릅니다.
 
-![요청 하나의 모델이 정해지는 순서를 3개 부분으로 나눠 그린 인포그래픽. BFF는 민감 정보 규칙, 업무 종류, 이미지 첨부, Decider 2B의 판단, 기본값의 순서로 먼저 맞는 규칙을 적용하고 Decider 2B는 모델 선택과 개인정보 여부와 추론 필요 여부를 신뢰도와 함께 돌려주며 결정된 값은 본문의 model과 priority, 헤더로 게이트웨이에 전달되어 InferencePool과 EPP를 거쳐 vLLM 파드에 도착한다](images/2026-11-15-eks-vllm-two-models-part1-fig02-model-decision.png)
+![요청 하나의 모델이 정해지는 순서를 3개 부분으로 나눠 그린 인포그래픽. BFF는 민감 정보 규칙, 업무 종류, 이미지 첨부, Decider 12B의 판단, 기본값의 순서로 먼저 맞는 규칙을 적용하고 Decider 12B는 모델 선택과 개인정보 여부와 추론 필요 여부를 신뢰도와 함께 돌려주며 결정된 값은 본문의 model과 priority, 헤더로 게이트웨이에 전달되어 InferencePool과 EPP를 거쳐 vLLM 파드에 도착한다](images/2026-11-15-eks-vllm-two-models-part1-fig02-model-decision.png)
 
-*그림 2. 모델 결정 순서. BFF의 결정 순서, Decider 2B의 판단과 기준값, 결정이 게이트웨이와 엔진으로 전달되는 경로를 나눠 그렸습니다.*
+*그림 2. 모델 결정 순서. BFF의 결정 순서, Decider 12B의 판단과 기준값, 결정이 게이트웨이와 엔진으로 전달되는 경로를 나눠 그렸습니다.*
 
 ### 4.1 BFF의 결정 순서
 
@@ -147,7 +147,7 @@ BFF는 비용이 거의 없는 규칙을 먼저 적용하고 규칙으로 정해
 | 1 | 주민등록번호나 카드번호 형식이 있음 | Gemma 4 31B, 민감 정보 요청으로 표시 | `rule` |
 | 2 | 업무 종류(`x-task`)가 있음 | 상담, 번역, 요약은 Gemma 4 31B, 이미지 이해, OCR, 코딩은 Qwen3.8-27B | `task` |
 | 3 | 이미지가 첨부됨 | Qwen3.8-27B | `attachment` |
-| 4 | Decider 2B의 판단이 기준 이상 | Decider 2B가 고른 모델 | `decider` |
+| 4 | Decider 12B의 판단이 기준 이상 | Decider 12B가 고른 모델 | `decider` |
 | 5 | 그 밖의 경우 | Gemma 4 31B, thinking 끔 | `fallback` |
 
 *표 5. BFF의 모델 결정 순서와 응답 헤더의 값*
@@ -156,9 +156,9 @@ BFF는 비용이 거의 없는 규칙을 먼저 적용하고 규칙으로 정해
 
 한 번 정한 결과는 세션(`x-session-id`)에 30분 동안 저장해 다시 사용합니다. 대화의 두 번째 메시지부터는 판단 시간이 더해지지 않습니다. 민감 정보 형식만은 세션에 결정이 있어도 메시지마다 다시 확인하고 대화 도중에 나오면 그 뒤로는 Gemma 4 31B로만 보냅니다.
 
-### 4.2 Decider 2B의 판단
+### 4.2 Decider 12B의 판단
 
-[Strands Decider 2B](https://github.com/strands-labs/strands-decider)는 요청을 읽고 어느 모델이 맡을지를 판단하는 작은 모델입니다. 글을 생성하지 않고 선택지 가운데 하나와 신뢰도, 또는 예일 확률을 돌려줍니다. 이 환경에서는 g6.xlarge(NVIDIA L4) 노드 한 대에서 실행하고 BFF는 규칙으로 정해지지 않은 요청에만 질문 3개를 한 번에 보냅니다.
+[Strands Decider](https://github.com/strands-labs/strands-decider) 12B는 요청을 읽고 어느 모델이 맡을지를 판단하는 모델입니다. 글을 생성하지 않고 선택지 가운데 하나와 신뢰도, 또는 예일 확률을 돌려줍니다. 2026년 11월 23일에 발표된 [Strands Decider v2](https://strandsagents.com/blog/introducing-strands-decider-v2/)의 체크포인트 5개 가운데 하나이고 이 환경에서는 g6e.xlarge(NVIDIA L40S) 노드 한 대에서 실행합니다. 이 환경은 2026년 11월 24일에 v1의 2B 모델에서 이 모델로 바꿨고 아래의 답과 시간은 바꾼 뒤에 측정한 값입니다. BFF는 규칙으로 정해지지 않은 요청에만 질문 3개를 한 번에 보냅니다.
 
 ```python
 # app/bff/bff.py에서 발췌
@@ -176,28 +176,30 @@ DECIDER_QUESTIONS = {
 }
 ```
 
-BFF는 답을 기준값 0.6과 견줍니다. `route`는 선택의 신뢰도를 그대로 보고 `policy`는 확률이 0.5에서 떨어진 정도를 신뢰도로 봅니다.
+BFF는 답을 기준값 0.6과 비교합니다. `route`는 선택의 신뢰도를 그대로 보고 `policy`는 확률이 0.5에서 떨어진 정도를 신뢰도로 봅니다.
 
-| Decider 2B의 답 | BFF의 처리 | 응답 헤더 |
+| Decider 12B의 답 | BFF의 처리 | 응답 헤더 |
 |---|---|---|
-| 모델 선택과 개인정보 판단의 신뢰도가 모두 0.6 이상 | Decider 2B가 고른 모델. 개인정보가 있다고 보면 Gemma 4 31B와 민감 표시. thinking은 확률 0.5 이상이면 켬 | `decider` |
+| 모델 선택과 개인정보 판단의 신뢰도가 모두 0.6 이상 | Decider 12B가 고른 모델. 개인정보가 있다고 보면 Gemma 4 31B와 민감 표시. thinking은 확률 0.5 이상이면 켬 | `decider` |
 | 모델 선택의 신뢰도만 0.6 미만이고 개인정보가 없다는 판단은 0.6 이상 | Gemma 4 31B, thinking 끔. 민감 정보 요청으로 다루지 않음 | `fallback`, `x-bff-sensitive: false` |
 | 응답 없음, 2초 초과, 개인정보 판단의 신뢰도가 0.6 미만, 개인정보가 있다는 판단 | Gemma 4 31B, thinking 끔, 민감 정보 요청으로 다룸 | `fallback`, `x-bff-sensitive: true` |
 
-*표 6. Decider 2B의 답에 따른 BFF의 처리(2026년 11월 17일부터의 동작)*
+*표 6. Decider 12B의 답에 따른 BFF의 처리(2026년 11월 17일부터의 동작)*
 
 기본값이 둘로 나뉜 이유는 일반 질문에 있습니다. 상담도 코딩도 아닌 일반 질문은 두 선택지 어디에도 뚜렷이 들지 않아 모델 선택의 신뢰도가 낮게 나옵니다. 그 이유만으로 민감 정보 요청이 되면 뒤에서 설명할 웹 검색 도구가 빠지므로 개인정보가 없다는 판단을 얻은 요청은 민감 정보 요청으로 다루지 않게 했습니다.
 
 | 요청 | 모델 선택 (신뢰도) | 개인정보일 확률 | 추론이 필요할 확률 |
 |---|---|---:|---:|
-| 주문한 운동화 배송 문의 | gemma (0.95) | 0.06 | 0.34 |
-| 파이썬 함수 수정 | qwen (0.85) | 0.08 | 0.59 |
-| 이름, 연락처, 주소가 든 배송지 변경 | gemma (0.57) | 0.72 | 0.29 |
-| 요금제 비교 계산 | gemma (0.30) | 0.05 | 0.54 |
+| 주문한 운동화 배송 문의 | gemma (1.00) | 0.04 | 0.42 |
+| 파이썬 함수 수정 | qwen (0.97) | 0.00 | 0.76 |
+| 이름, 연락처, 주소가 든 배송지 변경 | gemma (0.99) | 1.00 | 0.11 |
+| 요금제 비교 계산 | gemma (0.40) | 0.00 | 0.84 |
 
-*표 7. Decider 2B에 직접 보낸 예시 요청의 답(2026년 11월 14일, 요청마다 한 번). 정확도를 평가한 값은 아닙니다.*
+*표 7. Decider 12B에 직접 보낸 예시 요청의 답(2026년 11월 24일, 요청마다 한 번). 정확도를 평가한 값은 아닙니다.*
 
-판단에 걸리는 시간은 질문 하나에 약 70ms입니다. 게이트웨이를 거쳐 질문을 하나씩 50회 보낸 중앙값은 72.6ms에서 73.0ms였습니다(2026년 11월 14일). BFF가 질문 3개를 한 요청에 담아 보낸 왕복은 139.4ms에서 150.0ms였습니다(2026년 11월 15일, 4건). 세션의 첫 요청에서 한 번만 묻기 때문에 이 시간은 메시지마다 더해지지 않습니다. 업무 종류를 헤더로 보낸 요청의 판단 시간은 중앙값 0.1ms였습니다(2026년 11월 15일, 모델마다 20건).
+표 7의 네 번째 요청은 모델 선택의 신뢰도가 0.40이어서 기본값으로 처리되고, 개인정보가 없다는 판단은 기준을 넘으므로 민감 정보 요청으로 다뤄지지 않습니다. 세 번째 요청은 개인정보가 있다는 판단에 따라 Gemma 4 31B로 가고 민감 정보 요청으로 표시됩니다.
+
+판단에 걸리는 시간은 질문 하나에 약 89ms입니다. 게이트웨이를 거쳐 질문을 하나씩 50회 보낸 중앙값은 89.7ms에서 90.6ms였습니다(2026년 11월 24일). BFF 파드에서 질문 3개를 한 요청에 담아 보낸 왕복은 143.8ms에서 159.9ms였습니다(2026년 11월 24일, 20건). 세션의 첫 요청에서 한 번만 묻기 때문에 이 시간은 메시지마다 더해지지 않습니다. 업무 종류를 헤더로 보낸 요청의 판단 시간은 중앙값 0.1ms였습니다(2026년 11월 15일, 모델마다 20건).
 
 ### 4.3 게이트웨이의 풀 선택과 Qwen3.8-27B 깨우기
 
@@ -313,12 +315,12 @@ BFF는 게이트웨이에서 받은 SSE Chunk를 모으지 않고 받은 그대�
 | CloudFront 오리진 응답 타임아웃 | 60초 (기본 30초) | 첫 바이트까지, 그리고 패킷 사이에 기다리는 시간 |
 | ALB 유휴 제한 시간 | 120초 (기본 60초) | CloudFront가 먼저 끊도록 그보다 길게 설정 |
 | HTTPRoute의 요청 타임아웃 | 300초 | 4,096토큰 출력이 이 안에 끝남(Gemma 4 31B는 약 3분) |
-| Decider 2B 호출 | 2초 | 넘으면 기본값으로 처리 |
+| Decider 12B 호출 | 2초 | 넘으면 기본값으로 처리 |
 | 깨우기 API 호출 | 60초 | 측정한 복귀 시간은 3.66초 |
 
 *표 11. 스트리밍 경로의 타임아웃 설정*
 
-사용량은 응답에 함께 옵니다. 요청에 `stream_options.include_usage`를 넣으면 마지막 Chunk의 `usage`에 입력과 출력 토큰 수가 담깁니다. 다만 이 환경에는 토큰 단가가 없습니다. 비용은 GPU 노드가 떠 있는 시간에 발생하고 이 환경의 고정 비용은 시간당 약 10.05 USD로 추정됩니다. 출력이 길어져도 요금은 늘지 않지만 그 요청이 GPU를 점유하는 시간이 늘어납니다.
+사용량은 응답에 함께 옵니다. 요청에 `stream_options.include_usage`를 넣으면 마지막 Chunk의 `usage`에 입력과 출력 토큰 수가 담깁니다. 다만 이 환경에는 토큰 단가가 없습니다. 비용은 GPU 노드가 떠 있는 시간에 발생하고 이 환경의 고정 비용은 시간당 약 11.35 USD로 추정됩니다. 출력이 길어져도 요금은 늘지 않지만 그 요청이 GPU를 점유하는 시간이 늘어납니다.
 
 ## 8. 기록과 관측 (8단계)
 
@@ -387,7 +389,7 @@ vLLM 앞의 구간을 중앙값으로 더하면 Gemma 4 31B 18.2ms, Qwen3.8-27B 
 
 ## 11. 마치며
 
-요청 한 건이 응답으로 돌아오기까지 8개 단계를 지났습니다. 진입과 부하 분산은 CloudFront, AWS WAF, Cognito, 내부 ALB가 맡았습니다. 모델 결정은 BFF의 규칙과 Decider 2B가, 풀과 파드 선택은 게이트웨이와 EPP가 맡았습니다. 토큰화와 추론, 후처리는 vLLM 안에서 일어났고 웹 검색은 BFF가 도구로 실행했습니다. 예제 환경에서 첫 내용까지의 시간은 Gemma 4 31B 81.9ms, Qwen3.8-27B 177.5ms였고 그 가운데 77%와 83%가 추론 엔진의 시간이었습니다.
+요청 한 건이 응답으로 돌아오기까지 8개 단계를 지났습니다. 진입과 부하 분산은 CloudFront, AWS WAF, Cognito, 내부 ALB가 맡았습니다. 모델 결정은 BFF의 규칙과 Decider 12B가, 풀과 파드 선택은 게이트웨이와 EPP가 맡았습니다. 토큰화와 추론, 후처리는 vLLM 안에서 일어났고 웹 검색은 BFF가 도구로 실행했습니다. 예제 환경에서 첫 내용까지의 시간은 Gemma 4 31B 81.9ms, Qwen3.8-27B 177.5ms였고 그 가운데 77%와 83%가 추론 엔진의 시간이었습니다.
 
 확인하지 못한 것도 있습니다. 토큰화와 후처리의 시간은 따로 측정하지 않았습니다. 쿠키 고정으로 세션의 결정이 같은 파드에서 다시 사용되는 동작은 설정만 적었고 따로 확인하지 않았습니다. 응답이 60초 넘게 한 글자도 나오지 않는 경우의 동작도 재현하지 않았습니다. 본문의 값은 대부분 한 번씩 측정한 것이어서 반복했을 때의 편차는 담겨 있지 않습니다.
 

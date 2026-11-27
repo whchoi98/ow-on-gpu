@@ -1,6 +1,6 @@
 """Part 1, figure 2: how one request gets its model.
 
-Section 1 is the decision order of the BFF (app/bff/routing.py), section 2 what Strands Decider 2B returns and
+Section 1 is the decision order of the BFF (app/bff/routing.py), section 2 what Strands Decider 12B returns and
 how the BFF reads it (routing.from_decider, docs/05-decider.md), section 3 the path the decision takes to the
 engine (docs/04-gateway.md, docs/06-sleep.md, docs/08-results.md).
 """
@@ -13,7 +13,7 @@ GEMMA, QWEN = "Gemma 4 31B", "Qwen3.8-27B"
 
 T_KO = dict(
     title="요청별 모델 결정 순서",
-    sub_ko="BFF의 규칙, Decider 2B의 판단, 게이트웨이의 풀 선택",
+    sub_ko="BFF의 규칙, Decider 12B의 판단, 게이트웨이의 풀 선택",
     s1=("BFF의 결정 순서", "위에서부터 먼저 맞는 규칙 하나를 적용"),
     cols=("조건", "결정", "x-bff-decision"),
     rules=[
@@ -21,7 +21,7 @@ T_KO = dict(
         ("업무 종류 헤더", "상담, 번역, 요약 / 이미지 이해, OCR, 코딩", [(GEMMA, "purple"), (QWEN, "blue")],
          "배정표에 적힌 모델", "task"),
         ("이미지 첨부", "업무 종류 없이 이미지가 든 요청", [(QWEN, "blue")], None, "attachment"),
-        ("Decider 2B의 판단", "두 신뢰도가 모두 0.6 이상", [("Decider 2B가 고른 모델", "green")], None, "decider"),
+        ("Decider 12B의 판단", "두 신뢰도가 모두 0.6 이상", [("Decider 12B가 고른 모델", "green")], None, "decider"),
         ("기본값", "판단을 얻지 못했거나 신뢰도 미달", [(GEMMA, "purple")], "thinking 끔", "fallback"),
     ],
     stats1=[
@@ -29,7 +29,7 @@ T_KO = dict(
         ("0.1ms", ["규칙과 업무 종류로 정한", "판단 시간의 중앙값"], "orange"),
         ("422", ["민감 정보와 이미지가", "함께 온 요청은 거절"], "pink"),
     ],
-    s2=("Decider 2B의 판단", "글을 생성하지 않고 선택과 확률만 반환"),
+    s2=("Decider 12B의 판단", "글을 생성하지 않고 선택과 확률만 반환"),
     questions=[
         ("route", "모델 선택", "선택지 gemma, qwen", "선택과 신뢰도 반환"),
         ("policy", "개인정보 여부", "이름, 연락처, 주소, 계좌", "예일 확률 반환"),
@@ -37,7 +37,7 @@ T_KO = dict(
     ],
     threshold=("BFF의 기준값 0.6", "route는 신뢰도, policy는 확률이 0.5에서 떨어진 정도"),
     outcomes=[
-        ("모델 선택과 개인정보 판단의 신뢰도가 모두 0.6 이상", "Decider 2B가 고른 모델, 개인정보가 있으면 " + GEMMA,
+        ("모델 선택과 개인정보 판단의 신뢰도가 모두 0.6 이상", "Decider 12B가 고른 모델, 개인정보가 있으면 " + GEMMA,
          "decider", None, "green"),
         ("모델 선택만 0.6 미만, 개인정보 없음은 0.6 이상", GEMMA + ", thinking 끔, 웹 검색 가능",
          "fallback", "민감 아님", "orange"),
@@ -45,9 +45,9 @@ T_KO = dict(
          "fallback", "민감 표시", "pink"),
     ],
     stats2=[
-        ("약 70ms", ["질문 1개의 판단 시간", "게이트웨이 경유 72.6~73.0ms"], "orange"),
-        ("139.4~150.0ms", ["BFF가 측정한 왕복", "질문 3개를 한 요청으로, 4건"], "orange"),
-        ("g6.xlarge 1대", ["NVIDIA L4 GPU 노드", "GPU 메모리 5,150MiB 사용"], "blue"),
+        ("약 89ms", ["질문 1개의 판단 시간", "게이트웨이 경유 89.7~90.6ms"], "orange"),
+        ("143.8~159.9ms", ["BFF 파드에서 측정한 왕복", "질문 3개를 한 요청으로, 20건"], "orange"),
+        ("g6e.xlarge 1대", ["NVIDIA L40S GPU 노드", "GPU 메모리 23,725MiB 사용"], "blue"),
     ],
     s3=("결정이 엔진까지 전달되는 경로", "BFF가 요청에 적은 값을 게이트웨이와 vLLM이 사용"),
     measured="측정",
@@ -68,12 +68,12 @@ T_KO = dict(
              lines=[("t", "priority 스케줄러, 작은 값 먼저"), ("t", "상담 0, 배치 10")],
              value="배치 부하 중 상담 TTFT 30.9초 → 0.19초"),
     ],
-    note="서울 리전. Decider 2B의 판단은 2026-11-14에 50회씩, BFF 왕복과 깨우기는 11-15, 우선순위는 11-14에 " + GEMMA + "로 측정",
+    note="서울 리전. Decider 12B의 판단과 BFF 왕복은 2026-11-24, 깨우기는 11-15, 우선순위는 11-14에 " + GEMMA + "로 측정",
 )
 
 T_EN = dict(
     title="How a Request Gets Its Model",
-    sub_ko="BFF rules, the Decider 2B judgment, the gateway picking a pool",
+    sub_ko="BFF rules, the Decider 12B judgment, the gateway picking a pool",
     s1=("Decision order of the BFF", "The first rule that matches, from the top"),
     cols=("Condition", "Decision", "x-bff-decision"),
     rules=[
@@ -82,7 +82,7 @@ T_EN = dict(
         ("Task type header", "Support, translate, summarize / vision, OCR, coding", [(GEMMA, "purple"), (QWEN, "blue")],
          "The model in the assignment table", "task"),
         ("Image attached", "A request with an image and no task type", [(QWEN, "blue")], None, "attachment"),
-        ("Decider 2B judgment", "Both confidences at 0.6 or higher", [("The model Decider 2B picked", "green")], None,
+        ("Decider 12B judgment", "Both confidences at 0.6 or higher", [("The model Decider 12B picked", "green")], None,
          "decider"),
         ("Default", "No judgment, or confidence too low", [(GEMMA, "purple")], "Thinking off", "fallback"),
     ],
@@ -91,7 +91,7 @@ T_EN = dict(
         ("0.1 ms", ["Median decision time", "by rule or task type"], "orange"),
         ("422", ["Sensitive data together with", "an image is rejected"], "pink"),
     ],
-    s2=("The Decider 2B judgment", "No generated text, only a choice and probabilities"),
+    s2=("The Decider 12B judgment", "No generated text, only a choice and probabilities"),
     questions=[
         ("route", "Which model", "Choices: gemma, qwen", "Returns choice and confidence"),
         ("policy", "Personal data", "Name, contact, address, account", "Returns probability of yes"),
@@ -99,7 +99,7 @@ T_EN = dict(
     ],
     threshold=("BFF threshold 0.6", "route: confidence, policy: distance of the probability from 0.5"),
     outcomes=[
-        ("Model choice and personal data both at 0.6 or higher", "The model Decider 2B picked, " + GEMMA + " if personal data",
+        ("Model choice and personal data both at 0.6 or higher", "The model Decider 12B picked, " + GEMMA + " if personal data",
          "decider", None, "green"),
         ("Only the model choice below 0.6, no personal data at 0.6 or higher", GEMMA + ", thinking off, web search allowed",
          "fallback", "Not sensitive", "orange"),
@@ -107,9 +107,9 @@ T_EN = dict(
          "fallback", "Sensitive", "pink"),
     ],
     stats2=[
-        ("About 70 ms", ["One question", "72.6~73.0 ms through the gateway"], "orange"),
-        ("139.4~150.0 ms", ["Round trip measured by the BFF", "3 questions in one request, 4 runs"], "orange"),
-        ("1 x g6.xlarge", ["NVIDIA L4 GPU node", "5,150 MiB of GPU memory used"], "blue"),
+        ("About 89 ms", ["One question", "89.7~90.6 ms through the gateway"], "orange"),
+        ("143.8~159.9 ms", ["Round trip measured in the BFF pod", "3 questions in one request, 20 runs"], "orange"),
+        ("1 x g6e.xlarge", ["NVIDIA L40S GPU node", "23,725 MiB of GPU memory used"], "blue"),
     ],
     s3=("How the decision reaches the engine", "The gateway and vLLM use what the BFF wrote into the request"),
     measured="Measured",
@@ -130,7 +130,7 @@ T_EN = dict(
              lines=[("t", "Priority scheduler, low value first"), ("t", "Support 0, batch 10")],
              value="Support TTFT: 30.9 s → 0.19 s"),
     ],
-    note="Seoul Region. Decider 2B: 50 runs each on 2026-11-14. BFF round trip and wake: 11-15. Priority: " + GEMMA + ", 11-14",
+    note="Seoul Region. Decider 12B and the BFF round trip: 2026-11-24. Wake: 11-15. Priority: " + GEMMA + ", 11-14",
 )
 
 T = pick(T_KO, T_EN)

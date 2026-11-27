@@ -46,7 +46,7 @@ T_KO = dict(
     cols=["구분", "조치", "줄이는 구간", "결과 (조치 1~4는 Gemma 4 31B)", "설정"],
     col_x=[12, 108, 452, 636, 890],
     table=[
-        ("전제", "blue", "Hugging Face에서 S3로 1회 적재", "가중치 원본", "4종 74.90GB, 491.4초", "s5cmd pipe"),
+        ("전제", "blue", "Hugging Face에서 S3로 1회 적재", "가중치 원본", "첫 적재 74.90GB, 491.4초", "s5cmd pipe"),
         ("조치 1", "green", "스트리밍 로더로 S3에서 직접 읽기", "가중치 로드", "59.6초에서 19.2초, 3.1배",
          "--load-format=runai_streamer"),
         ("조치 2", "green", "compile 캐시를 노드 hostPath에 보존", "엔진 초기화, 같은 노드", "95.6초에서 23.7초",
@@ -112,7 +112,7 @@ T_EN = dict(
     cols=["Type", "Action", "Phase it shortens", "Result (actions 1~4: Gemma 4 31B)", "Setting"],
     col_x=[12, 112, 452, 636, 890],
     table=[
-        ("Setup", "blue", "Sync from Hugging Face to S3 once", "Source of the weights", "4 repos, 74.90 GB, 491.4 s",
+        ("Setup", "blue", "Sync from Hugging Face to S3 once", "Source of the weights", "First sync 74.90 GB, 491.4 s",
          "s5cmd pipe"),
         ("Action 1", "green", "Read straight from S3 with the streaming loader", "Weight load",
          "59.6 s to 19.2 s, 3.1x", "--load-format=runai_streamer"),

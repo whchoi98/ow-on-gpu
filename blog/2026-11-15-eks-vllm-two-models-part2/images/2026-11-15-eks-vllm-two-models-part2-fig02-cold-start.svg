@@ -133,7 +133,7 @@
 <text x="106.8" y="734.0" font-size="13" font-weight="800" fill="#0972D3" text-anchor="middle" data-box="48,606,1148,438">전제</text>
 <text x="180.0" y="734.3" font-size="15" font-weight="800" fill="#232F3E" data-box="48,606,1148,438">Hugging Face에서 S3로 1회 적재</text>
 <text x="524.0" y="734.3" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,606,1148,438">가중치 원본</text>
-<text x="708.0" y="734.3" font-size="15" font-weight="800" fill="#E8710A" data-box="48,606,1148,438">4종 74.90GB, 491.4초</text>
+<text x="708.0" y="734.3" font-size="15" font-weight="800" fill="#E8710A" data-box="48,606,1148,438">첫 적재 74.90GB, 491.4초</text>
 <rect x="962.0" y="717.3" width="78.0" height="24.0" rx="6.0" fill="#FFFFFF" stroke="#CDD4DD" stroke-width="1.0"/>
 <text x="971.0" y="733.5" font-size="12" font-weight="700" fill="#2E3A4A" font-family="D2Coding, 'D2Coding ligature', Menlo, Consolas, monospace" data-box="48,606,1148,438">s5cmd pipe</text>
 <line x1="72.0" y1="756.7" x2="1172.0" y2="756.7" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>

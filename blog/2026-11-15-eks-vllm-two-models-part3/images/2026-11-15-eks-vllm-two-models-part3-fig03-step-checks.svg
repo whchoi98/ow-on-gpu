@@ -30,7 +30,7 @@
 <text x="98.0" y="356.8" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">2</text>
 <text x="122.0" y="356.9" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">모델 적재</text>
 <text x="344.0" y="356.9" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">Job 로그의 verified 줄과 summary 줄</text>
-<text x="864.0" y="356.9" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">객체 73개, 74.90GB, 전송과 검증 491초</text>
+<text x="864.0" y="356.9" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">첫 적재 73개 74.90GB 491초, Decider 12B 추가 13개 23.97GB 315초</text>
 <text x="1384.0" y="356.9" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">다시 실행은 Job 삭제 뒤 적용, 로그는 먼저 저장</text>
 <line x1="72.0" y1="388.5" x2="1848.0" y2="388.5" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
 <circle cx="98.0" cy="425.1" r="13.0" fill="#232F3E"/>
@@ -49,10 +49,10 @@
 <line x1="72.0" y1="535.0" x2="1848.0" y2="535.0" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
 <circle cx="98.0" cy="571.6" r="13.0" fill="#232F3E"/>
 <text x="98.0" y="576.5" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">5</text>
-<text x="122.0" y="576.6" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">Strands Decider 2B</text>
-<text x="344.0" y="576.6" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">파드 로그의 warmed up 줄 뒤 Ready, /health의 device 값 cuda</text>
-<text x="864.0" y="576.6" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">예열 70.5초, 판단 1회 72.6~73.0ms (게이트웨이 경유, 중앙값)</text>
-<text x="1384.0" y="576.6" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">예열을 끄면 첫 요청 약 28초</text>
+<text x="122.0" y="576.6" font-size="15" font-weight="800" fill="#232F3E" data-box="48,140,1824,702">Strands Decider 12B</text>
+<text x="344.0" y="576.6" font-size="14" font-weight="700" fill="#2E3A4A" data-box="48,140,1824,702">예열 뒤 Ready, /health의 model 값과 device 값 cuda:0</text>
+<text x="864.0" y="576.6" font-size="14" font-weight="800" fill="#E8710A" data-box="48,140,1824,702">시작부터 Ready 43초, 판단 1회 89.7~90.6ms (게이트웨이 경유, 중앙값)</text>
+<text x="1384.0" y="576.6" font-size="14" font-weight="700" fill="#D4245F" data-box="48,140,1824,702">공개 이미지는 v2를 읽지 못해 직접 빌드</text>
 <line x1="72.0" y1="608.2" x2="1848.0" y2="608.2" stroke="#DFE4EA" stroke-width="1.0" stroke-linecap="round"/>
 <circle cx="98.0" cy="644.9" r="13.0" fill="#232F3E"/>
 <text x="98.0" y="649.8" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">6</text>
@@ -82,7 +82,7 @@
 <rect x="72.0" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#2E8CF0"/>
 <text x="90.0" y="960.0" font-size="19" font-weight="800" fill="#0972D3" data-box="48,862,1824,182">노드 9대</text>
 <text x="90.0" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">m7g.large 2, c7i-flex.xlarge 2,</text>
-<text x="90.0" y="1001.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">c7g.large 2, g6e.4xlarge 2, g6.xlarge 1</text>
+<text x="90.0" y="1001.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">c7g.large 2, g6e.4xlarge 2, g6e.xlarge 1</text>
 <rect x="430.4" y="928.0" width="342.4" height="100.0" rx="10.0" fill="#FFFFFF" stroke="#DFE4EA" stroke-width="1.2"/>
 <rect x="430.4" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#8C4FFF"/>
 <text x="448.4" y="960.0" font-size="19" font-weight="800" fill="#7D3FE0" data-box="48,862,1824,182">토큰 없는 요청 401</text>
@@ -98,7 +98,7 @@
 <text x="1165.2" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">Gemma 4 31B와 Qwen3.8-27B, 요청 20건의 중앙값</text>
 <rect x="1505.6" y="928.0" width="342.4" height="100.0" rx="10.0" fill="#FFFFFF" stroke="#DFE4EA" stroke-width="1.2"/>
 <rect x="1505.6" y="938.0" width="4.0" height="80.0" rx="2.0" fill="#FF5C85"/>
-<text x="1523.6" y="960.0" font-size="19" font-weight="800" fill="#D4245F" data-box="48,862,1824,182">시간당 약 $10.05</text>
+<text x="1523.6" y="960.0" font-size="19" font-weight="800" fill="#D4245F" data-box="48,862,1824,182">시간당 약 $11.35</text>
 <text x="1523.6" y="984.0" font-size="12.5" font-weight="700" fill="#5F6B7A" data-box="48,862,1824,182">모든 구성 요소가 실행 중일 때의 고정 비용 추정</text>
-<text x="1872.0" y="1064.0" font-size="13" font-weight="700" fill="#8A94A2" text-anchor="end">2026-11-14 서울 리전에서 적용하고 측정, 7단계와 첫 내용은 2026-11-15, 노드 수는 2026-11-16 확인, 횟수를 적지 않은 값은 1회 측정</text>
+<text x="1872.0" y="1064.0" font-size="13" font-weight="700" fill="#8A94A2" text-anchor="end">2026-11-14 서울 리전에서 적용하고 측정, 7단계와 첫 내용은 2026-11-15, 5단계는 2026-11-24, 노드 수는 2026-11-26 확인, 횟수를 적지 않은 값은 1회 측정</text>
 </svg>

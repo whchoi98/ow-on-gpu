@@ -13,9 +13,9 @@ by WOO HYUNG CHOI on 15 11월 2026 in [Advanced (300)](https://aws.amazon.com/ko
 
 2부인 이 글은 그 환경의 구조를 설명합니다. 먼저 전체 구성을 6개 계층으로 나눠 구성 요소마다 맡은 일을 봅니다. 이어서 Amazon EKS 쪽에서 적용한 최적화 4가지를 측정한 값과 함께 정리합니다. Gemma 4 31B의 콜드 스타트는 394초에서 260초가 됐습니다. 배치 부하 중 상담 요청의 첫 토큰까지의 시간은 중앙값 30.9초에서 0.19초가 됐고 잠든 Qwen3.8-27B는 3.66초 만에 복귀했습니다.
 
-1부(TODO: Part 1 링크)는 API 호출 한 건이 이 구조를 지나는 8개 단계를 따라가고 3부(TODO: Part 3 링크)는 같은 환경을 10개 단계로 구축합니다. 본문의 값은 2026년 11월 14일과 15일에 서울 리전(ap-northeast-2)에서 측정했고 반복 횟수는 표마다 적었습니다. 이 글은 Kubernetes와 AWS의 기본 개념을 알고 LLM 서빙을 처음 구성하는 엔지니어를 대상으로 하며, 파드와 Deployment, IAM 역할을 알고 있다면 무리 없이 읽을 수 있습니다.
+1부(TODO: Part 1 링크)는 API 호출 한 건이 이 구조를 지나는 8개 단계를 따라가고 3부(TODO: Part 3 링크)는 같은 환경을 10개 단계로 구축합니다. 본문의 값은 2026년 11월 14일과 15일에 서울 리전(ap-northeast-2)에서 측정했고 반복 횟수는 표마다 적었습니다. 모델 선택을 돕는 Strands Decider 12B의 값은 2026년 11월 24일에 측정했습니다. 이 글은 Kubernetes와 AWS의 기본 개념을 알고 LLM 서빙을 처음 구성하는 엔지니어를 대상으로 하며, 파드와 Deployment, IAM 역할을 알고 있다면 무리 없이 읽을 수 있습니다.
 
-그림 1은 전체 구조를 한 장에 그린 것입니다. 이 글의 각 절은 이 그림의 한 부분을 확대해 설명합니다.
+그림 1은 전체 구조를 한 장에 그린 것입니다. 이 글의 각 챕터는 이 그림의 한 부분을 확대해 설명합니다.
 
 ![브라우저의 요청이 CloudFront, 내부 ALB, BFF, 게이트웨이를 지나 GPU 노드의 Gemma 4 31B와 Qwen3.8-27B에 이르는 경로와, Hugging Face의 체크포인트를 적재 Job이 S3 모델 버킷에 올리고 GPU 노드가 그 버킷과 이미지 레지스트리에서 가중치, compile 캐시, 컨테이너 이미지를 받는 공급 경로를 한 장에 그린 구조도. 아래쪽에는 모델 적재부터 추론 요청까지의 6개 단계, BFF의 모델 결정 순서, 구간별 측정값, 경계별 접근 제한을 정리했다](images/2026-11-15-eks-vllm-two-models-part2-fig01-architecture.png)
 
@@ -25,13 +25,13 @@ by WOO HYUNG CHOI on 15 11월 2026 in [Advanced (300)](https://aws.amazon.com/ko
 
 ### 1.1 6개 계층과 맡은 일
 
-환경은 서울 리전의 Amazon EKS 1.37 클러스터 하나입니다. 구성 요소가 많아 보여도 맡은 일로 묶으면 6개 계층입니다. 계층마다 바꿀 수 있는 설정과 측정할 지표가 다르므로 이 구분을 먼저 익혀 두면 뒤의 절을 읽기 쉽습니다.
+환경은 서울 리전의 Amazon EKS 1.37 클러스터 하나입니다. 구성 요소가 많아 보여도 맡은 일로 묶으면 6개 계층입니다. 계층마다 바꿀 수 있는 설정과 측정할 지표가 다르므로 이 구분을 먼저 익혀 두면 뒤의 챕터를 읽기 쉽습니다.
 
 | 계층 | 구성 요소 | 맡은 일 |
 |---|---|---|
 | 앱 | Amazon CloudFront, AWS WAF, Amazon Cognito, 내부 ALB, BFF 파드 2개 | 정적 페이지 제공, 속도 제한, 로그인 토큰 검증, 모델과 우선순위 결정, 도구 실행 |
 | 게이트웨이 | agentgateway 파드 2개, 모델별 EPP | 요청 본문의 `model` 값으로 모델별 풀 선택, 노출 경로 제한, 포화 시 배치 요청 거절 |
-| 서빙 | vLLM 파드 2개(Gemma 4 31B, Qwen3.8-27B), Strands Decider 2B | 추론, 요청 처리 순서 결정, 모델 판단 |
+| 서빙 | vLLM 파드 2개(Gemma 4 31B, Qwen3.8-27B), Strands Decider 12B | 추론, 요청 처리 순서 결정, 모델 판단 |
 | 모델과 이미지 공급 | Amazon S3 모델 버킷, 적재 Job, 캐시 게시 Job | 가중치와 compile 캐시를 GPU 노드까지 전달 |
 | 노드 관리 | Karpenter NodePool 6개, 관리형 노드 그룹 1개 | 워크로드별 노드 생성과 회수 |
 | 관측 | Prometheus agent, Amazon Managed Service for Prometheus | vLLM, EPP, 게이트웨이의 지표 수집과 저장 |
@@ -55,13 +55,13 @@ by WOO HYUNG CHOI on 15 11월 2026 in [Advanced (300)](https://aws.amazon.com/ko
 
 *표 2. 업무와 모델 배정. interactive는 사용자가 기다리는 요청이고 batch는 나중에 처리해도 되는 요청입니다.*
 
-데이터 정책은 한 줄입니다. 개인정보가 든 요청은 Gemma 4 31B로만 보냅니다. 주민등록번호나 카드번호처럼 형식이 정해진 정보는 BFF의 규칙이 먼저 거르고, 형식이 없는 경우의 판단은 Strands Decider 2B가 돕습니다. 이 배정이 뒤에서 볼 두 가지 설계의 근거가 됩니다. 한 모델이 대화형 요청과 배치 요청을 함께 받으므로 우선순위가 필요합니다. 내부 업무용 모델은 업무 시간 밖에 사용하지 않으므로 재울 수 있습니다.
+데이터 정책은 한 줄입니다. 개인정보가 든 요청은 Gemma 4 31B로만 보냅니다. 주민등록번호나 카드번호처럼 형식이 정해진 정보는 BFF의 규칙이 먼저 거르고, 형식이 없는 경우의 판단은 Strands Decider 12B가 돕습니다. 이 배정이 뒤에서 볼 두 가지 설계의 근거가 됩니다. 한 모델이 대화형 요청과 배치 요청을 함께 받으므로 우선순위가 필요합니다. 내부 업무용 모델은 업무 시간 밖에 사용하지 않으므로 재울 수 있습니다.
 
 ## 2. 노드 구성
 
 ### 2.1 관리형 노드 그룹 1개와 NodePool 6개
 
-이 절은 어떤 워크로드가 어떤 노드에 올라가는지를 설명합니다. GPU 노드는 비싸고 종류가 적어서, 무엇을 GPU 노드에 올리고 무엇을 올리지 않을지를 노드 단위로 나눠 두어야 합니다.
+이 챕터는 어떤 워크로드가 어떤 노드에 올라가는지를 설명합니다. GPU 노드는 비싸고 종류가 적어서, 무엇을 GPU 노드에 올리고 무엇을 올리지 않을지를 노드 단위로 나눠 두어야 합니다.
 
 Karpenter는 스케줄되지 못한 파드를 보고 조건에 맞는 EC2 인스턴스를 만드는 노드 프로비저너입니다. NodePool은 Karpenter가 만들 노드의 조건(인스턴스 유형, 용량 유형, taint, 한도)을 적은 리소스입니다. EC2NodeClass는 AMI와 서브넷, 사용자 데이터 같은 AWS 쪽 설정을 적은 리소스입니다. Karpenter 자신이 실행될 노드는 Karpenter가 뜨기 전부터 필요하므로 관리형 노드 그룹으로 만듭니다.
 
@@ -72,10 +72,10 @@ Karpenter는 스케줄되지 못한 파드를 보고 조건에 맞는 EC2 인스
 | NodePool `app` | c7g.large 2대 | BFF 파드 2개 | `ow-on-gpu/app` taint, CPU 8개 한도 |
 | NodePool `gemma-od` | g6e.4xlarge 1대 | Gemma 4 31B | `nvidia.com/gpu` taint, GPU 1장 한도 |
 | NodePool `qwen-od` | g6e.4xlarge 1대 | Qwen3.8-27B | `nvidia.com/gpu` taint, GPU 1장 한도 |
-| NodePool `decider` | g6.xlarge 1대 | Strands Decider 2B | `nvidia.com/gpu` taint, GPU 1장 한도 |
+| NodePool `decider` | g6e.xlarge 1대 | Strands Decider 12B | `nvidia.com/gpu` taint, GPU 1장 한도 |
 | NodePool `bench` | 측정할 때만 생성 | 부하 발생기 Job | `ow-on-gpu/bench` taint, CPU 16개 한도 |
 
-*표 3. 노드 묶음과 워크로드(인스턴스는 2026년 11월 16일 기준). Karpenter가 만드는 노드는 모두 On-Demand이고 워크로드는 VPC의 프라이빗 서브넷에 둡니다.*
+*표 3. 노드 묶음과 워크로드(인스턴스는 2026년 11월 24일 기준). Karpenter가 만드는 노드는 모두 On-Demand이고 워크로드는 VPC의 프라이빗 서브넷에 둡니다.*
 
 게이트웨이와 EPP는 두 모델이 함께 지나는 길목이라 `system` 노드 2대를 서로 다른 가용 영역에 두고 복제본을 나눠 올렸습니다. BFF는 Graviton 노드를, 부하 발생기는 측정할 때만 뜨는 노드를 따로 사용합니다. 측정 부하가 서빙 경로의 파드와 CPU를 다투지 않게 하려는 구분입니다.
 
@@ -141,20 +141,19 @@ Qwen3.8-27B에는 가중치가 5.9GB 작은 공식 block FP8 체크포인트도 
 
 ### 3.1 S3에 한 번 올리고 S3에서만 읽는 가중치
 
-이 절은 30GiB가 넘는 가중치가 어디에 있고 어떤 권한으로 GPU 노드에 오는지를 설명합니다. 원칙은 하나입니다. 서빙 파드는 Hugging Face에서 내려받지 않고 Amazon Simple Storage Service(Amazon S3) 버킷에서만 읽습니다. 외부 저장소의 속도와 가용성이 서빙 파드의 시작에 영향을 주지 않게 하려는 구성입니다.
+이 챕터는 30GiB가 넘는 가중치가 어디에 있고 어떤 권한으로 GPU 노드에 오는지를 설명합니다. 원칙은 하나입니다. 서빙 파드는 Hugging Face에서 내려받지 않고 Amazon Simple Storage Service(Amazon S3) 버킷에서만 읽습니다. 외부 저장소의 속도와 가용성이 서빙 파드의 시작에 영향을 주지 않게 하려는 구성입니다.
 
-적재 Job이 리비전 해시로 고정한 저장소 4개를 버킷에 한 번 올립니다. 파일을 받는 대로 `s5cmd pipe`로 올려 로컬 디스크에 쌓지 않고, 받으면서 계산한 해시를 Hugging Face가 알려 준 값과 비교합니다. 2026년 11월 14일에 객체 73개, 74.90GB(69.8GiB)를 올리는 데 전송과 검증이 491.4초 걸렸습니다. 버킷의 구조는 다음과 같이 나눴습니다.
+적재 Job이 리비전 해시로 고정한 저장소 3개(Gemma 4 31B, Qwen3.8-27B, Decider 12B)를 버킷에 올립니다. 파일을 받는 대로 `s5cmd pipe`로 올려 로컬 디스크에 쌓지 않고, 받으면서 계산한 해시를 Hugging Face가 알려 준 값과 비교합니다. 세 저장소를 합치면 객체 45개, 94.07GB입니다. 2026년 11월 14일의 첫 적재는 당시 사용하던 Decider v1과 그 기반 모델을 포함해 객체 73개, 74.90GB(69.8GiB)였고 전송과 검증에 491.4초 걸렸습니다. 2026년 11월 24일에 Decider 12B(객체 13개, 23.97GB)를 추가로 올리는 데는 314.9초 걸렸습니다. 버킷의 구조는 다음과 같이 나눴습니다.
 
 ```
 s3://<bucket>/models/gemma-4-31B-it-FP8-dynamic/
 s3://<bucket>/models/Qwen3.8-27B-FP8-dynamic/
-s3://<bucket>/models/strands-decider-2B-qwen3.5-v1-2610/
-s3://<bucket>/models/Qwen3.5-2B-Base/
+s3://<bucket>/models/strands-decider-12B-gemma4-v2-2611/
 s3://<bucket>/vllm-cache/v0.33.0-gemma4-31b-fp8-l40s/
 s3://<bucket>/vllm-cache/v0.33.0-qwen38-27b-fp8-l40s/
 ```
 
-`models/`에는 가중치가, `vllm-cache/`에는 뒤에서 설명할 compile 캐시가 들어갑니다. Decider의 저장소에는 어댑터와 헤드만 있어 기반 모델(Qwen3.5-2B-Base)을 함께 올렸습니다.
+`models/`에는 가중치가, `vllm-cache/`에는 뒤에서 설명할 compile 캐시가 들어갑니다. Decider 12B의 체크포인트는 어댑터를 병합한 전체 가중치를 담고 있어 기반 모델을 따로 올리지 않습니다.
 
 권한은 EKS Pod Identity로 줍니다. EKS Pod Identity는 AWS Identity and Access Management(IAM) 역할을 Kubernetes ServiceAccount에 연결해 파드에 임시 자격 증명을 주는 기능입니다. 역할은 읽기와 쓰기로 나눴습니다. 읽기 역할은 서빙 파드의 ServiceAccount 3개(`gemma`, `qwen`, `decider`)에, 쓰기 역할은 적재 Job과 캐시 게시 Job에만 연결했습니다. 서빙 파드는 버킷에 아무것도 올리지 못하고 매니페스트에는 자격 증명이 없습니다. 버킷까지의 트래픽은 VPC의 S3 게이트웨이 엔드포인트를 지납니다.
 
@@ -180,7 +179,7 @@ spec:
     '
 ```
 
-`amiSelectorTerms`의 별칭은 EKS 최적화 AL2023 AMI의 릴리스를 고정하고 GPU 노드에는 NVIDIA 드라이버가 든 변형이 올라옵니다. `instanceStorePolicy: RAID0`은 인스턴스 스토어를 kubelet과 containerd의 저장 공간으로 사용하게 합니다. GPU 노드에서는 559GB가 마운트됐고 이미지가 여기에 저장됐습니다. `userData`의 스크립트는 노드가 뜨는 동안 이미지를 미리 받기 시작합니다. 이 사전 pull의 효과는 다음 절에서 봅니다.
+`amiSelectorTerms`의 별칭은 EKS 최적화 AL2023 AMI의 릴리스를 고정하고 GPU 노드에는 NVIDIA 드라이버가 든 변형이 올라옵니다. `instanceStorePolicy: RAID0`은 인스턴스 스토어를 kubelet과 containerd의 저장 공간으로 사용하게 합니다. GPU 노드에서는 559GB가 마운트됐고 이미지가 여기에 저장됐습니다. `userData`의 스크립트는 노드가 뜨는 동안 이미지를 미리 받기 시작합니다. 이 사전 pull의 효과는 다음 챕터에서 봅니다.
 
 ### 3.3 가중치와 compile 캐시를 받는 vLLM 파드
 
@@ -455,11 +454,13 @@ spec:
 
 sleep을 적용하기 전에 확인할 조건이 두 가지 있습니다. sleep은 노드를 그대로 두므로 노드 요금은 줄지 않고 줄어드는 것은 GPU 메모리 사용량입니다. 요금을 줄이려면 노드를 회수해야 하고 그때는 콜드 스타트 290초를 받아들여야 합니다. 또 가중치가 호스트 메모리에 남으므로 노드의 시스템 메모리가 넉넉해야 합니다. sleep을 한 번 거친 뒤 컨테이너 메모리는 60.4GiB였고 g6e.4xlarge의 메모리는 128GiB입니다.
 
-## 9. Decider 2B와 Web Search가 놓인 자리
+## 9. Decider 12B와 Web Search가 놓인 자리
 
 구조도에는 추론 모델 말고도 요청을 돕는 구성 요소가 둘 있습니다. 어디에 놓였는지만 정리하고 요청마다의 동작은 1부(TODO: Part 1 링크)에서 다룹니다.
 
-[Strands Decider](https://github.com/strands-labs/strands-decider) 2B는 요청을 읽고 어느 모델이 받아야 할지 판단하는 작은 모델입니다. g6.xlarge 노드 한 대에서 실행하고 게이트웨이의 `/decide` 경로로 호출합니다. InferencePool을 사용하지 않고 HTTPRoute가 Service로 바로 보냅니다. 어댑터와 기반 모델은 두 추론 모델과 같은 S3 버킷에서 받습니다. BFF는 규칙으로 모델이 정해지지 않는 요청만 Decider 2B에 묻습니다. BFF가 측정한 판단 왕복은 139.4ms에서 150.0ms였습니다(2026년 11월 15일, 4건).
+[Strands Decider](https://github.com/strands-labs/strands-decider) 12B는 요청을 읽고 어느 모델이 받아야 할지 판단하는 모델입니다. g6e.xlarge 노드 한 대에서 실행하고 게이트웨이의 `/decide` 경로로 호출합니다. InferencePool을 사용하지 않고 HTTPRoute가 Service로 바로 보냅니다. 가중치는 두 추론 모델과 같은 S3 버킷에서 받습니다. BFF는 규칙으로 모델이 정해지지 않는 요청만 Decider 12B에 묻습니다. BFF 파드에서 측정한 판단 왕복은 143.8ms에서 159.9ms였습니다(2026년 11월 24일, 20건).
+
+이 환경은 2026년 11월 24일에 Decider를 v1의 2B 모델(g6.xlarge)에서 [Strands Decider v2](https://strandsagents.com/blog/introducing-strands-decider-v2/)의 12B 모델로 바꿨습니다. v2의 체크포인트는 strands-decider 0.4.0 이상에서만 읽힙니다. 저장소가 안내하는 공개 서빙 이미지는 2026년 11월 20일 빌드까지 0.3.1.dev1을 담고 있어서, 저장소의 Dockerfile로 이미지를 빌드해 사용했습니다. 요청과 응답의 형식은 v1과 같아 BFF는 수정하지 않았습니다.
 
 [Amazon Bedrock AgentCore Web Search](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/web-search-api.html)는 BFF가 실행하는 도구입니다. 추론은 그대로 두 모델이 하고 검색만 이 API가 합니다. 그래서 게이트웨이와 vLLM의 구성은 바꾸지 않았습니다. 이 API는 서울 리전에서 제공되지 않아 us-east-1을 호출합니다. 검색어가 리전 밖으로 나가므로 민감 정보가 있는 요청에는 도구를 넣지 않습니다. 권한은 BFF 파드의 ServiceAccount에 연결한 역할 하나이고 `bedrock-agentcore:InvokeWebSearch`만 허용합니다.
 
@@ -511,7 +512,7 @@ AWS 권한은 모두 EKS Pod Identity로 주고 파드의 일마다 역할을 �
 
 *표 15. 모델별로 나눠 보는 지표. 이름은 vLLM v0.33.0 파드의 `/metrics`에서 확인했습니다.*
 
-모든 구성 요소가 실행 중일 때의 고정 비용은 2026년 11월 15일 기준 시간당 약 10.05 USD로 추정됩니다. 그 가운데 앱 계층은 0.1857 USD입니다(내부 ALB 0.0225 USD, c7g.large 2대 0.1632 USD). 약 1.8%입니다. 사용량에 따라 부과되는 ALB 처리 단위, CloudFront 전송량, AWS WAF, Amazon Cognito 요금은 포함하지 않았습니다. GPU 노드는 실행 중인 동안 요금이 발생합니다. 서빙 파드를 0으로 줄이면 NodePool의 설정에 따라 30분 뒤 Karpenter가 빈 GPU 노드를 회수합니다.
+모든 구성 요소가 실행 중일 때의 고정 비용은 시간당 약 11.35 USD로 추정됩니다. 2026년 11월 15일의 추정값은 약 10.05 USD였습니다. 그 뒤 Decider 노드를 g6.xlarge(시간당 0.9896 USD)에서 g6e.xlarge(시간당 2.2880 USD)로 바꿔 1.2984 USD가 늘었습니다. 그 가운데 앱 계층은 0.1857 USD입니다(내부 ALB 0.0225 USD, c7g.large 2대 0.1632 USD). 약 1.6%입니다. 사용량에 따라 부과되는 ALB 처리 단위, CloudFront 전송량, AWS WAF, Amazon Cognito 요금은 포함하지 않았습니다. GPU 노드는 실행 중인 동안 요금이 발생합니다. 서빙 파드를 0으로 줄이면 NodePool의 설정에 따라 30분 뒤 Karpenter가 빈 GPU 노드를 회수합니다.
 
 ## 12. 마치며
 

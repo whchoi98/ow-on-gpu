@@ -14,20 +14,21 @@ T_KO = dict(
     sub_en="OpenWeight on AWS GPU",
     sub_ko="도구가 맡는 범위, 10개 단계의 순서, 7단계 안의 순서",
     s1=("도구별 담당 범위", "칸의 글은 그 도구가 그 단계에서 적용하는 것, 점선 칸은 아직 실행하지 않은 9단계의 계획"),
-    steps=["사전 확인", "EKS 기반", "모델 적재", "vLLM", "게이트웨이", "Decider 2B", "sleep", "앱 계층", "관측, 측정", "정리"],
+    steps=["사전 확인", "EKS 기반", "모델 적재", "vLLM", "게이트웨이", "Decider 12B", "sleep", "앱 계층", "관측, 측정", "정리"],
     # name, where the code lives, color, {step: what it applies}
     lanes=[
         ("AWS CDK", "infra/cdk-vpc", "orange",
          {1: "VPC, 서브넷, 엔드포인트", 9: "VPC 스택 삭제"}),
         ("Terraform", "infra/terraform", "purple",
-         {1: "EKS, Karpenter, LBC, 모델 버킷, 역할", 7: "CloudFront, WAF, Cognito, S3 페이지",
+         {1: "EKS, Karpenter, LBC, 모델 버킷, 역할", 5: "Decider 이미지의 ECR 저장소",
+          7: "CloudFront, WAF, Cognito, S3 페이지",
           8: "AMP 워크스페이스", 9: "terraform destroy"}),
         ("kubectl, Helm", "k8s/, jobs/", "blue",
          {1: "NodePool, EC2NodeClass", 2: "모델 적재 Job", 3: "vLLM 파드, 캐시 게시 Job",
           4: "CRD, agentgateway, EPP", 5: "Decider 파드, /decide 경로", 6: "CronJob, 깨우기 API, NetworkPolicy",
           7: "BFF 파드, Ingress, NodePool", 8: "Prometheus agent, 측정 Job", 9: "Deployment, NodePool 삭제"}),
         ("그 밖의 도구", "AWS CLI, Docker, npm, Python", "green",
-         {0: "AWS CLI 읽기 전용 조회", 7: "Docker, npm 빌드", 8: "Python 측정 스크립트"}),
+         {0: "AWS CLI 읽기 전용 조회", 5: "Docker 이미지 빌드", 7: "Docker, npm 빌드", 8: "Python 측정 스크립트"}),
     ],
     s2=("7단계 안의 적용 순서", "내부 ALB를 컨트롤러가 만들기 때문에 Terraform을 앞뒤로 두 번 적용"),
     # tool, color, command, what it does
@@ -54,7 +55,7 @@ T_KO = dict(
         "측정한 값만 문서에 적고 원시 자료는 results/ 아래에 저장",
     ],
     call=("Terraform 출력을 읽는 스크립트", "install.sh와 build.sh가 이미지 주소와 Cognito 값을 출력에서 읽음, 계정 ID를 파일에 적지 않음"),
-    note="명령과 순서는 ow-on-gpu 저장소의 README, k8s/gateway/install.sh, k8s/bff/install.sh, app/bff/build.sh 기준, "
+    note="명령과 순서는 ow-on-gpu 저장소의 README, k8s/gateway/install.sh, k8s/decider/install.sh, k8s/bff/install.sh, app/bff/build.sh 기준, "
          "9단계는 실행하지 않은 계획",
 )
 
@@ -63,19 +64,20 @@ T_EN = dict(
     sub_en="OpenWeight on AWS GPU",
     sub_ko="What each tool applies, the order of the ten steps, the order inside step 7",
     s1=("What each tool applies", "A cell says what the tool applies in that step, dashed cells are the plan for step 9, not run yet"),
-    steps=["Preflight", "EKS base", "Model sync", "vLLM", "Gateway", "Decider 2B", "Sleep", "App layer", "Observability", "Cleanup"],
+    steps=["Preflight", "EKS base", "Model sync", "vLLM", "Gateway", "Decider 12B", "Sleep", "App layer", "Observability", "Cleanup"],
     lanes=[
         ("AWS CDK", "infra/cdk-vpc", "orange",
          {1: "VPC, subnets, endpoints", 9: "Delete the VPC stack"}),
         ("Terraform", "infra/terraform", "purple",
-         {1: "EKS, Karpenter, LBC, model bucket, roles", 7: "CloudFront, WAF, Cognito, S3 pages",
+         {1: "EKS, Karpenter, LBC, model bucket, roles", 5: "ECR repository for the Decider image",
+          7: "CloudFront, WAF, Cognito, S3 pages",
           8: "AMP workspace", 9: "terraform destroy"}),
         ("kubectl, Helm", "k8s/, jobs/", "blue",
          {1: "NodePools, EC2NodeClass", 2: "Model sync Job", 3: "vLLM pods, cache publish Job",
           4: "CRDs, agentgateway, EPP", 5: "Decider pod, /decide route", 6: "CronJobs, wake API, NetworkPolicy",
           7: "BFF pods, Ingress, NodePool", 8: "Prometheus agent, bench Jobs", 9: "Delete Deployments, NodePools"}),
         ("Other tools", "AWS CLI, Docker, npm, Python", "green",
-         {0: "Read-only AWS CLI queries", 7: "Docker and npm builds", 8: "Python bench scripts"}),
+         {0: "Read-only AWS CLI queries", 5: "Docker image build", 7: "Docker and npm builds", 8: "Python bench scripts"}),
     ],
     s2=("Apply order inside step 7", "The controller creates the internal ALB, so Terraform runs before and after it"),
     order=[

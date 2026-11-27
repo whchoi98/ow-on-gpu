@@ -21,14 +21,14 @@ T_KO = dict(
         ("1", "네트워크와 EKS 기반", "terraform validate와 서버 dry-run 통과, kubectl get nodes로 연결 확인",
          "VPC 10.200.0.0/16, AZ 4개, 애드온용 노드 m7g.large 2대", "params.yaml과 terraform.tfvars의 값 채우기"),
         ("2", "모델 적재", "Job 로그의 verified 줄과 summary 줄",
-         "객체 73개, 74.90GB, 전송과 검증 491초", "다시 실행은 Job 삭제 뒤 적용, 로그는 먼저 저장"),
+         "첫 적재 73개 74.90GB 491초, Decider 12B 추가 13개 23.97GB 315초", "다시 실행은 Job 삭제 뒤 적용, 로그는 먼저 저장"),
         ("3", "vLLM 배포", "파드 로그의 Model loading took 줄과 init engine 줄",
          "가중치 로드 Gemma 19.1초, Qwen 34.3초, KV 캐시 5.37GiB와 2.46GiB",
          "Qwen은 gpu-memory-utilization 0.85에서 시작 실패, 0.90 사용"),
         ("4", "GAIE와 게이트웨이", "model 값만 바꿔 두 모델이 각각 200, /sleep 경로는 404",
          "설치 72초, Gateway와 HTTPRoute, InferencePool이 Accepted", "EPP 대기 복제본의 NotReady는 설계된 동작"),
-        ("5", "Strands Decider 2B", "파드 로그의 warmed up 줄 뒤 Ready, /health의 device 값 cuda",
-         "예열 70.5초, 판단 1회 72.6~73.0ms (게이트웨이 경유, 중앙값)", "예열을 끄면 첫 요청 약 28초"),
+        ("5", "Strands Decider 12B", "예열 뒤 Ready, /health의 model 값과 device 값 cuda:0",
+         "시작부터 Ready 43초, 판단 1회 89.7~90.6ms (게이트웨이 경유, 중앙값)", "공개 이미지는 v2를 읽지 못해 직접 빌드"),
         ("6", "sleep 컨트롤러", "잠든 동안 Qwen 요청 503, 깨우기 API 호출 뒤 성공",
          "sleep 진입 2.98초, 복귀 3.66초 (5회)", "VPC CNI의 enableNetworkPolicy를 켜야 정책 적용"),
         ("7", "앱 계층", "토큰 없는 요청 401, 로그인 뒤 스트리밍 응답",
@@ -38,13 +38,13 @@ T_KO = dict(
     ],
     s2=("전체 동작 확인", "0~8단계를 마친 뒤의 환경"),
     stats=[
-        ("노드 9대", "m7g.large 2, c7i-flex.xlarge 2, c7g.large 2, g6e.4xlarge 2, g6.xlarge 1", "blue"),
+        ("노드 9대", "m7g.large 2, c7i-flex.xlarge 2, c7g.large 2, g6e.4xlarge 2, g6e.xlarge 1", "blue"),
         ("토큰 없는 요청 401", "로그인하지 않은 /v1/* 요청은 BFF가 거절", "purple"),
         ("이벤트 간격 53.5ms", "상담 요청의 내용 이벤트 53개, 1ms 안에 붙어 온 이벤트 0개", "orange"),
         ("첫 내용 81.9ms, 177.5ms", "Gemma 4 31B와 Qwen3.8-27B, 요청 20건의 중앙값", "orange"),
-        ("시간당 약 $10.05", "모든 구성 요소가 실행 중일 때의 고정 비용 추정", "pink"),
+        ("시간당 약 $11.35", "모든 구성 요소가 실행 중일 때의 고정 비용 추정", "pink"),
     ],
-    note="2026-11-14 서울 리전에서 적용하고 측정, 7단계와 첫 내용은 2026-11-15, 노드 수는 2026-11-16 확인, "
+    note="2026-11-14 서울 리전에서 적용하고 측정, 7단계와 첫 내용은 2026-11-15, 5단계는 2026-11-24, 노드 수는 2026-11-26 확인, "
          "횟수를 적지 않은 값은 1회 측정",
 )
 
@@ -58,14 +58,14 @@ T_EN = dict(
         ("1", "Network and EKS base", "terraform validate and a server dry-run pass, kubectl get nodes reaches the cluster",
          "VPC 10.200.0.0/16, 4 AZs, 2 x m7g.large add-on nodes", "Fill in params.yaml and terraform.tfvars first"),
         ("2", "Model sync", "The verified and summary lines in the Job log",
-         "73 objects, 74.90 GB, 491 s to transfer and verify", "To rerun, delete the Job and apply. Save the log before"),
+         "First sync 73 objects 74.90 GB 491 s, Decider 12B added 13 objects 23.97 GB 315 s", "To rerun, delete the Job and apply. Save the log before"),
         ("3", "vLLM deployment", "The Model loading took and init engine lines in the pod log",
          "Weight load Gemma 19.1 s, Qwen 34.3 s, KV cache 5.37 GiB and 2.46 GiB",
          "Qwen fails to start at gpu-memory-utilization 0.85, use 0.90"),
         ("4", "GAIE and gateway", "Changing only the model value returns 200 from each model, /sleep returns 404",
          "Installed in 72 s, Gateway, HTTPRoute and InferencePool are Accepted", "A NotReady standby EPP replica is by design"),
-        ("5", "Strands Decider 2B", "Ready after the warmed up line in the pod log, device is cuda in /health",
-         "Warm-up 70.5 s, one decision 72.6~73.0 ms (via the gateway, median)", "Without warm-up the first request takes about 28 s"),
+        ("5", "Strands Decider 12B", "Ready after warm-up, model name and device cuda:0 in /health",
+         "Start to Ready 43 s, one decision 89.7~90.6 ms (via the gateway, median)", "The public image cannot read v2, build your own"),
         ("6", "Sleep controller", "A Qwen request gets 503 while asleep and succeeds after the wake API call",
          "Enter sleep 2.98 s, wake 3.66 s (5 runs)", "Policies apply only with enableNetworkPolicy on in the VPC CNI"),
         ("7", "App layer", "401 without a token, a streamed reply after sign-in",
@@ -75,14 +75,14 @@ T_EN = dict(
     ],
     s2=("Checking the whole environment", "After steps 0 to 8"),
     stats=[
-        ("9 nodes", "m7g.large 2, c7i-flex.xlarge 2, c7g.large 2, g6e.4xlarge 2, g6.xlarge 1", "blue"),
+        ("9 nodes", "m7g.large 2, c7i-flex.xlarge 2, c7g.large 2, g6e.4xlarge 2, g6e.xlarge 1", "blue"),
         ("401 without a token", "The BFF rejects /v1/* requests that are not signed in", "purple"),
         ("Event interval 53.5 ms", "53 content events of a support request, none arrived within 1 ms of another", "orange"),
         ("First content 81.9, 177.5 ms", "Gemma 4 31B and Qwen3.8-27B, median of 20 requests", "orange"),
-        ("About $10.05 per hour", "Estimated fixed cost with every component running", "pink"),
+        ("About $11.35 per hour", "Estimated fixed cost with every component running", "pink"),
     ],
-    note="Applied and measured 2026-11-14 in the Seoul Region, step 7 and first content on 2026-11-15, node count checked "
-         "2026-11-16. Values without a count were measured once",
+    note="Applied and measured 2026-11-14 in the Seoul Region, step 7 and first content on 2026-11-15, step 5 on 2026-11-24, "
+         "node count checked 2026-11-26. Values without a count were measured once",
 )
 
 T = pick(T_KO, T_EN)

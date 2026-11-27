@@ -32,7 +32,7 @@
 <text x="939.8" y="229.0" font-size="13.5" font-weight="800" fill="#232F3E" data-box="48,140,1824,392">게이트웨이</text>
 <circle cx="1080.0" cy="224.0" r="11.0" fill="#232F3E"/>
 <text x="1080.0" y="228.6" font-size="13" font-weight="800" fill="#FFFFFF" text-anchor="middle">5</text>
-<text x="1097.0" y="229.0" font-size="13.5" font-weight="800" fill="#232F3E" data-box="48,140,1824,392">Decider 2B</text>
+<text x="1097.0" y="229.0" font-size="13.5" font-weight="800" fill="#232F3E" data-box="48,140,1824,392">Decider 12B</text>
 <circle cx="1237.2" cy="224.0" r="11.0" fill="#232F3E"/>
 <text x="1237.2" y="228.6" font-size="13" font-weight="800" fill="#FFFFFF" text-anchor="middle">6</text>
 <text x="1254.2" y="229.0" font-size="13.5" font-weight="800" fill="#232F3E" data-box="48,140,1824,392">sleep</text>
@@ -59,6 +59,9 @@
 <rect x="437.2" y="316.5" width="149.2" height="56.5" rx="8.0" fill="#8C4FFF" fill-opacity="0.130" stroke="#7D3FE0" stroke-width="1.2"/>
 <text x="511.8" y="341.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">EKS, Karpenter,</text>
 <text x="511.8" y="357.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">LBC, 모델 버킷, 역할</text>
+<rect x="1066.0" y="316.5" width="149.2" height="56.5" rx="8.0" fill="#8C4FFF" fill-opacity="0.130" stroke="#7D3FE0" stroke-width="1.2"/>
+<text x="1140.6" y="341.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">Decider 이미지의</text>
+<text x="1140.6" y="357.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">ECR 저장소</text>
 <rect x="1380.4" y="316.5" width="149.2" height="56.5" rx="8.0" fill="#8C4FFF" fill-opacity="0.130" stroke="#7D3FE0" stroke-width="1.2"/>
 <text x="1455.0" y="341.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">CloudFront, WAF,</text>
 <text x="1455.0" y="357.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">Cognito, S3 페이지</text>
@@ -102,6 +105,8 @@
 <text x="88.0" y="498.8" font-size="12" font-weight="700" fill="#5F6B7A" data-box="48,140,1824,392">AWS CLI, Docker, npm, Python</text>
 <rect x="280.0" y="453.5" width="149.2" height="56.5" rx="8.0" fill="#5FA82A" fill-opacity="0.130" stroke="#4F8A10" stroke-width="1.2"/>
 <text x="354.6" y="486.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">AWS CLI 읽기 전용 조회</text>
+<rect x="1066.0" y="453.5" width="149.2" height="56.5" rx="8.0" fill="#5FA82A" fill-opacity="0.130" stroke="#4F8A10" stroke-width="1.2"/>
+<text x="1140.6" y="486.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">Docker 이미지 빌드</text>
 <rect x="1380.4" y="453.5" width="149.2" height="56.5" rx="8.0" fill="#5FA82A" fill-opacity="0.130" stroke="#4F8A10" stroke-width="1.2"/>
 <text x="1455.0" y="486.1" font-size="12.5" font-weight="800" fill="#232F3E" text-anchor="middle" data-box="48,140,1824,392">Docker, npm 빌드</text>
 <rect x="1537.6" y="453.5" width="149.2" height="56.5" rx="8.0" fill="#5FA82A" fill-opacity="0.130" stroke="#4F8A10" stroke-width="1.2"/>
@@ -195,5 +200,5 @@
 <rect x="1192.0" y="970.0" width="656.0" height="58.0" rx="10.0" fill="#FF9900" fill-opacity="0.080" stroke="#E8710A" stroke-width="1.2"/>
 <text x="1208.0" y="995.0" font-size="15" font-weight="800" fill="#232F3E" data-box="1168,552,704,492">Terraform 출력을 읽는 스크립트</text>
 <text x="1208.0" y="1016.0" font-size="13" font-weight="700" fill="#2E3A4A" data-box="1168,552,704,492">install.sh와 build.sh가 이미지 주소와 Cognito 값을 출력에서 읽음, 계정 ID를 파일에 적지 않음</text>
-<text x="1872.0" y="1064.0" font-size="13" font-weight="700" fill="#8A94A2" text-anchor="end">명령과 순서는 ow-on-gpu 저장소의 README, k8s/gateway/install.sh, k8s/bff/install.sh, app/bff/build.sh 기준, 9단계는 실행하지 않은 계획</text>
+<text x="1872.0" y="1064.0" font-size="13" font-weight="700" fill="#8A94A2" text-anchor="end">명령과 순서는 ow-on-gpu 저장소의 README, k8s/gateway/install.sh, k8s/decider/install.sh, k8s/bff/install.sh, app/bff/build.sh 기준, 9단계는 실행하지 않은 계획</text>
 </svg>
