@@ -21,12 +21,12 @@ export const DEPLOY = localized(() => ({
   ),
   facts: [
     [tr('리전', 'Region'), tr('서울 (ap-northeast-2)', 'Seoul (ap-northeast-2)')],
-    [tr('GPU 노드', 'GPU nodes'), tr('g6e.4xlarge 2대, g6.xlarge 1대', '2 x g6e.4xlarge, 1 x g6.xlarge')],
-    [tr('모델', 'Models'), 'Gemma 4 31B, Qwen3.8-27B (FP8), Decider 2B'],
+    [tr('GPU 노드', 'GPU nodes'), tr('g6e.4xlarge 2대, g6e.xlarge 1대', '2 x g6e.4xlarge, 1 x g6e.xlarge')],
+    [tr('모델', 'Models'), 'Gemma 4 31B, Qwen3.8-27B (FP8), Decider 12B'],
     [tr('추론 엔진', 'Inference engine'), 'vLLM v0.33.0'],
     [tr('클러스터', 'Cluster'), 'EKS 1.37, Karpenter 1.15'],
     [tr('게이트웨이', 'Gateway'), 'GAIE v1.6.2, agentgateway v1.7.0'],
-    [tr('고정 비용', 'Fixed cost'), tr('시간당 약 10.05달러', 'about 10.05 USD per hour')],
+    [tr('고정 비용', 'Fixed cost'), tr('시간당 약 11.35달러', 'about 11.35 USD per hour')],
   ],
   steps: [
     {
@@ -75,8 +75,8 @@ export const DEPLOY = localized(() => ({
           'The VPC is 10.200.0.0/16 with public, private, and isolated subnets in four AZs. Workloads run in the private subnets.',
         ),
         tr(
-          'NodePool은 gemma-od, qwen-od(g6e.4xlarge), decider(g6.xlarge), system(CPU)입니다. GPU NodePool에는 taint를 두고 GPU 1장까지만 허용합니다.',
-          'NodePools: gemma-od and qwen-od (g6e.4xlarge), decider (g6.xlarge), and system (CPU). GPU NodePools are tainted and limited to one GPU each.',
+          'NodePool은 gemma-od, qwen-od(g6e.4xlarge), decider(g6e.xlarge), system(CPU)입니다. GPU NodePool에는 taint를 두고 GPU 1장까지만 허용합니다.',
+          'NodePools: gemma-od and qwen-od (g6e.4xlarge), decider (g6e.xlarge), and system (CPU). GPU NodePools are tainted and limited to one GPU each.',
         ),
         tr(
           'EC2NodeClass는 NVIDIA 드라이버가 든 EKS 최적화 AMI를 쓰고, userData로 vLLM 이미지를 미리 받고, 로컬 NVMe를 인스턴스 스토어로 씁니다.',
@@ -95,7 +95,7 @@ export const DEPLOY = localized(() => ({
       rows: [
         ['VPC', tr('10.200.0.0/16, AZ 4개', '10.200.0.0/16, 4 AZs')],
         [tr('애드온용 노드', 'Add-on nodes'), tr('m7g.large 2대', '2 x m7g.large')],
-        [tr('GPU 노드', 'GPU nodes'), tr('g6e.4xlarge 2대, g6.xlarge 1대', '2 x g6e.4xlarge, 1 x g6.xlarge')],
+        [tr('GPU 노드', 'GPU nodes'), tr('g6e.4xlarge 2대, g6e.xlarge 1대', '2 x g6e.4xlarge, 1 x g6e.xlarge')],
       ],
       doc: 'infra/cdk-vpc, infra/terraform, k8s/base',
     },
@@ -110,8 +110,8 @@ export const DEPLOY = localized(() => ({
       ),
       points: [
         tr(
-          '저장소 네 개를 리비전 해시로 고정했습니다. Gemma, Qwen, Decider, 그리고 Decider의 기반 모델입니다.',
-          'Four repositories are pinned by revision hash: Gemma, Qwen, Decider, and the base model for Decider.',
+          '저장소 세 개를 리비전 해시로 고정했습니다. Gemma, Qwen, Decider입니다. Decider v2는 기반 모델이 따로 없습니다.',
+          'Three repositories are pinned by revision hash: Gemma, Qwen, and Decider. Decider v2 needs no separate base model.',
         ),
         tr(
           '받으면서 해시를 계산해 Hugging Face가 알려 준 값과 비교하고, 끝나면 S3의 객체 목록을 기대값과 비교합니다.',
@@ -124,8 +124,9 @@ export const DEPLOY = localized(() => ({
       ],
       command: 'kubectl apply -k jobs/model-sync\nkubectl -n model-jobs logs -f job/model-sync',
       rows: [
-        [tr('올린 양', 'Uploaded'), tr('모델 4종, 객체 73개, 69.8GiB', '4 models, 73 objects, 69.8GiB')],
+        [tr('처음 올린 양 (2026-11-14)', 'First upload (2026-11-14)'), tr('모델 4종, 객체 73개, 69.8GiB', '4 models, 73 objects, 69.8GiB')],
         [tr('걸린 시간', 'Duration'), tr('491초', '491s')],
+        [tr('Decider v2 추가 (2026-11-24)', 'Decider v2 added (2026-11-24)'), tr('객체 13개, 22.3GiB, 315초', '13 objects, 22.3GiB, 315s')],
       ],
       doc: 'jobs/model-sync/README.md',
     },
@@ -201,34 +202,34 @@ export const DEPLOY = localized(() => ({
     {
       n: 5,
       status: 'done',
-      title: 'Strands Decider 2B',
+      title: 'Strands Decider 12B',
       tools: ['kubectl'],
       text: tr(
-        '업무 종류가 없는 요청의 모델을 고르는 Decider 2B를 g6.xlarge 노드에 올렸습니다.',
-        'Decider 2B, which picks the model for requests that carry no task type, runs on a g6.xlarge node.',
+        '업무 종류가 없는 요청의 모델을 고르는 Decider 12B(v2)를 g6e.xlarge 노드에 올렸습니다. 2026-11-24에 v1의 Decider 2B(g6.xlarge)에서 바꿨습니다.',
+        'Decider 12B (v2), which picks the model for requests that carry no task type, runs on a g6e.xlarge node. It replaced the v1 Decider 2B (g6.xlarge) on 2026-11-24.',
       ),
       points: [
         tr(
-          'strands-decider 저장소의 SageMaker 배포 가이드가 쓰는 컨테이너를 그대로 썼습니다.',
-          'It uses the same container as the SageMaker deployment guide in the strands-decider repository.',
+          'strands-decider 저장소 v0.4.0의 Dockerfile로 이미지를 빌드했습니다. 공개 서빙 이미지에는 v2 체크포인트를 읽는 버전이 아직 없습니다.',
+          'The image is built from the Dockerfile of the strands-decider repository at v0.4.0. The public serving image does not yet carry a version that reads v2 checkpoints.',
         ),
         tr(
-          '어댑터와 기반 모델은 S3에서 받고, HF_HUB_OFFLINE=1로 Hugging Face 접근을 막았습니다.',
-          'The adapter and base model come from S3, and HF_HUB_OFFLINE=1 blocks access to Hugging Face.',
+          '가중치 24GB는 S3에서 받고, HF_HUB_OFFLINE=1로 Hugging Face 접근을 막았습니다.',
+          'The 24 GB of weights come from S3, and HF_HUB_OFFLINE=1 blocks access to Hugging Face.',
         ),
         tr(
-          '예열이 끝날 때까지 /health가 실패하므로 파드는 예열 뒤에 Ready가 됩니다. 예열은 70.5초 걸렸습니다.',
-          '/health fails until warm-up finishes, so the pod becomes Ready only after warm-up, which took 70.5s.',
+          '예열이 끝날 때까지 /health가 실패하므로 파드는 예열 뒤에 Ready가 됩니다. 컨테이너 시작부터 Ready까지 43초 걸렸습니다.',
+          '/health fails until warm-up finishes, so the pod becomes Ready only after warm-up. It took 43s from container start to Ready.',
         ),
         tr(
           '게이트웨이의 /decide가 경로를 /v1/systemone으로 바꿔 보냅니다. InferencePool은 쓰지 않습니다.',
           'The gateway route /decide rewrites the path to /v1/systemone. No InferencePool is used.',
         ),
       ],
-      command: 'kubectl apply -k k8s/decider',
+      command: 'k8s/decider/install.sh build\nk8s/decider/install.sh apply',
       rows: [
-        [tr('판단 1회 (게이트웨이 경유, 중앙값)', 'One decision (via gateway, median)'), '72.6~73.0ms'],
-        [tr('BFF가 잰 판단 왕복 (4건)', 'Round trip measured by the BFF (4 requests)'), '139.4~150.0ms'],
+        [tr('판단 1회 (게이트웨이 경유, 중앙값)', 'One decision (via gateway, median)'), '89.7~90.6ms'],
+        [tr('BFF의 판단 요청 왕복 (20건)', 'Round trip of the BFF decision request (20 requests)'), '143.8~159.9ms'],
       ],
       doc: 'docs/05-decider.md',
     },

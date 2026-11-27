@@ -14,10 +14,11 @@
   선    e-<출발>-<도착>  class fedge
   배지  class fbadge, data-step="0".."5"  (아래 흐름 띠의 단계 번호)
 
-수치는 2026-11-14에 이 환경에서 잰 값이다.
+수치는 이 환경에서 잰 값이다. Decider 판단만 2026-11-24(v2 12B, g6e.xlarge)의 값이고 나머지는 2026-11-14와 2026-11-15의 값이다.
   구간별 시간과 기동 구간: docs/08-results.md 1절, 2절
   모델 적재: results/2026-11-14-model-sync/summary.jsonl
-  Decider 판단, 깨우기: docs/07-bff.md
+  Decider 판단: docs/05-decider.md (BFF 파드에서 ask_decider를 부른 20건의 범위 143.8~159.9ms)
+  깨우기: docs/07-bff.md
   웹 검색: docs/10-web-search.md (작업 장비에서 us-east-1을 6회 부른 시간. 배포 뒤 BFF가 잰 값은 docs/10-web-search.md)
 """
 from infokit import Doc, F, cell, dot_list, footer_note, header, poly_d, rw, section, tag
@@ -51,7 +52,7 @@ NODES = {
     "qwen": (6, 2, EC2, "Qwen3.8-27B", "L40S 48GB, FP8", "TTFT 147.6ms"),
     "cognito": (2, 0, "service/Amazon-Cognito", "Cognito", "액세스 토큰 발급", "토큰 유효 60분"),
     "search": (4, 0, "agentcore", "Web Search", "AgentCore, us-east-1", "검색 481~1,065ms"),
-    "decider": (5, 0, EC2, "Decider 2B", "g6.xlarge, 판단 3종", "판단 139~150ms"),
+    "decider": (5, 0, EC2, "Decider 12B", "g6e.xlarge, 판단 3종", "판단 144~160ms"),
     "pages": (1, 2, S3, "S3 페이지", "OAC로만 읽기", ""),
     "wake": (4, 2, EKS, "깨우기 API", "NetworkPolicy로 제한", "깨우기 3,662ms"),
     "registry": (7, 0, "category/Containers", "Image registry", "Docker Hub, v0.33.0", "이미지 9.1GiB"),
@@ -74,7 +75,7 @@ NODES_EN_TEXT = {
     "qwen": ("Qwen3.8-27B", "L40S 48GB, FP8", "TTFT 147.6ms"),
     "cognito": ("Cognito", "Issues access tokens", "Token valid 60 min"),
     "search": ("Web Search", "AgentCore, us-east-1", "Search 481~1,065ms"),
-    "decider": ("Decider 2B", "g6.xlarge, 3 outputs", "Decision 139~150ms"),
+    "decider": ("Decider 12B", "g6e.xlarge, 3 outputs", "Decision 144~160ms"),
     "pages": ("S3 pages", "Read via OAC only", ""),
     "wake": ("Wake API", "NetworkPolicy allowlist", "Wake 3,662ms"),
     "registry": ("Image registry", "Docker Hub, v0.33.0", "Image 9.1GiB"),
@@ -142,7 +143,7 @@ T = dict(
         "Qwen 파드: NetworkPolicy로 게이트웨이, EPP, 깨우기 API만 허용",
         "웹 검색: BFF 파드 역할만 InvokeWebSearch 허용, 민감 요청에는 도구 제외",
     ],
-    note=("서울 리전 측정(0~4번 2026-11-14, 5번과 구간 표 2026-11-15), g6e.4xlarge 2대와 g6.xlarge 1대, 1~4번은 Gemma 콜드 스타트의 기준 구성과 최적화 구성, "
+    note=("서울 리전 측정(0~4번 2026-11-14, 5번과 구간 표 2026-11-15, Decider 판단 2026-11-24), g6e.4xlarge 2대와 g6e.xlarge 1대, 1~4번은 Gemma 콜드 스타트의 기준 구성과 최적화 구성, "
           "5번은 Gemma와 Qwen, 웹 검색 시간은 작업 장비(서울)에서 us-east-1 호출 6회의 범위"),
 )
 
@@ -198,7 +199,7 @@ T_EN = dict(
         "Qwen pod: NetworkPolicy allows gateway, EPP, and wake API only",
         "Web search: BFF pod role only, no tool on sensitive requests",
     ],
-    note=("Seoul Region, two g6e.4xlarge and one g6.xlarge. Steps 0~4 measured 2026-11-14, step 5 and the segment table 2026-11-15. Steps 1~4: Gemma cold start, "
+    note=("Seoul Region, two g6e.4xlarge and one g6e.xlarge. Steps 0~4 measured 2026-11-14, step 5 and the segment table 2026-11-15, the Decider 2026-11-24. Steps 1~4: Gemma cold start, "
           "baseline and optimized. Step 5: Gemma and Qwen. Web search: range of 6 us-east-1 calls from the work machine (Seoul)"),
 )
 

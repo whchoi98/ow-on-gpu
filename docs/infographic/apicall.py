@@ -9,7 +9,8 @@
 
 수치의 출처
   구간별 값       docs/08-results.md 2절 (CloudFront 경유, 모델마다 20건을 하나씩 보낸 중앙값, BFF를 EKS 파드로 옮긴 뒤인 2026-11-15의 재측정)
-                  decide는 BFF의 판단 시간, wake_check는 깨우기 API 확인 시간의 중앙값이다. decider_ms는 BFF가 잰 Decider 왕복 4건의 범위다.
+                  decide는 BFF의 판단 시간, wake_check는 깨우기 API 확인 시간의 중앙값이다. decider_ms는 BFF 파드에서 ask_decider를 부른 Decider 왕복 20건의 범위다(2026-11-24, v2 12B, docs/05-decider.md).
+                  fixed_cost_usd_per_hour는 2026-11-15의 추정(docs/07-bff.md)에 Decider 노드의 가격 차이를 더한 값이다(docs/05-decider.md의 "비용").
   s1              docs/08-results.md 3절과 results/2026-11-14-slo/<모델>/S1_chat_c1.json (입력 256, 출력 128, 동시성 1)
   메모리          docs/03-vllm.md (기동 로그)
   Decider, 비용   docs/07-bff.md
@@ -42,9 +43,9 @@ M = {
     },
     "device_gib": 44.39,
     "epp_ms": 0.03,
-    "decider_ms": [139, 150],
+    "decider_ms": [144, 160],
     "priority_ttft_ms": {"none": 30895, "engine": 190},
-    "fixed_cost_usd_per_hour": 10.05,
+    "fixed_cost_usd_per_hour": 11.35,
     "s1_output_tokens": 128,
     # 웹 검색(Amazon Bedrock AgentCore Web Search). 검색 시간은 작업 장비(서울)에서 us-east-1을 부른 값이다.
     "search": {

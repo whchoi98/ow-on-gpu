@@ -118,14 +118,14 @@ export default {
     "device_gib": 44.39,
     "epp_ms": 0.03,
     "decider_ms": [
-      139,
-      150
+      144,
+      160
     ],
     "priority_ttft_ms": {
       "none": 30895,
       "engine": 190
     },
-    "fixed_cost_usd_per_hour": 10.05,
+    "fixed_cost_usd_per_hour": 11.35,
     "s1_output_tokens": 128,
     "search": {
       "region": "us-east-1",

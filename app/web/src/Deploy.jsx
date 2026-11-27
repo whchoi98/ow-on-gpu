@@ -56,8 +56,8 @@ export default function Deploy() {
             height="1080"
             loading="lazy"
             alt={tr(
-              '구축 단계와 아키텍처. CloudFront, 내부 ALB, BFF, Cognito, S3 페이지에는 7, 게이트웨이에는 4, Decider 2B에는 5, 깨우기 API에는 6, Karpenter NodePool과 GPU 노드, S3 모델 버킷, Pod Identity에는 1, Gemma 4 31B와 Qwen3.8-27B, compile 캐시에는 3, 모델 적재 Job에는 2, AMP에는 8이 붙어 있다. 그림 아래에는 0단계부터 9단계까지의 이름, 쓴 도구, 만든 것을 적었다.',
-              'Build steps on the architecture. CloudFront, the internal ALB, the BFF, Cognito, and the S3 pages carry 7. The gateway carries 4, Decider 2B carries 5, and the wake API carries 6. The Karpenter NodePool, the GPU node, the S3 model bucket, and Pod Identity carry 1. Gemma 4 31B, Qwen3.8-27B, and the compile cache carry 3, the model sync Job carries 2, and AMP carries 8. Below the map, steps 0 to 9 are listed with their names, tools, and what they built.',
+              '구축 단계와 아키텍처. CloudFront, 내부 ALB, BFF, Cognito, S3 페이지에는 7, 게이트웨이에는 4, Decider 12B에는 5, 깨우기 API에는 6, Karpenter NodePool과 GPU 노드, S3 모델 버킷, Pod Identity에는 1, Gemma 4 31B와 Qwen3.8-27B, compile 캐시에는 3, 모델 적재 Job에는 2, AMP에는 8이 붙어 있다. 그림 아래에는 0단계부터 9단계까지의 이름, 쓴 도구, 만든 것을 적었다.',
+              'Build steps on the architecture. CloudFront, the internal ALB, the BFF, Cognito, and the S3 pages carry 7. The gateway carries 4, Decider 12B carries 5, and the wake API carries 6. The Karpenter NodePool, the GPU node, the S3 model bucket, and Pod Identity carry 1. Gemma 4 31B, Qwen3.8-27B, and the compile cache carry 3, the model sync Job carries 2, and AMP carries 8. Below the map, steps 0 to 9 are listed with their names, tools, and what they built.',
             )}
           />
         </div>

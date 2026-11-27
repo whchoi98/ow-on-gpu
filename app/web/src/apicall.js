@@ -146,7 +146,7 @@ export const STAGES = localized(() => [
         '민감 정보 규칙, 업무 종류, 첨부, Decider, 기본값 순서로 먼저 맞는 규칙을 적용해 Gemma와 Qwen 중 하나를 고릅니다.',
         'Picks Gemma or Qwen by the first rule that matches, in this order: sensitive data rule, task type, attachment, Decider, default.',
       )],
-      ['Decider 2B', tr(
+      ['Decider 12B', tr(
         '업무 종류가 없는 요청만 판단합니다. 신뢰도가 0.6 이상일 때 그 판단을 씁니다.',
         'Classifies only requests that have no task type. Its answer is used when the confidence is 0.6 or higher.',
       )],

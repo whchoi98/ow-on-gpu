@@ -31,7 +31,7 @@ BUILT = {
 # 노드의 값 자리에 적는 것: 그 구성 요소를 만들 때 쓴 도구
 TOOLS = {
     "cf": "Terraform", "alb": "kubectl (LBC)", "bff": "kubectl, Docker", "cognito": "Terraform", "pages": "Terraform",
-    "gw": "Helm, kubectl", "decider": "kubectl",
+    "gw": "Helm, kubectl", "decider": "kubectl, Docker",
     "gemma": "kubectl", "cache": "Job, initContainer", "qwen": "kubectl",
     "wake": "kubectl", "s3": "Terraform", "identity": "Terraform",
     "sync": "kubectl (Job)", "amp": "Terraform, kubectl",
@@ -50,10 +50,10 @@ T = dict(
     steps=[
         ("0", "사전 확인", "읽기 전용 조회", "버전 조합, 체크포인트, 할당량 확인 (리소스 없음)", "done"),
         ("1", "네트워크와 EKS 기반", "CDK, Terraform, kubectl", "VPC, EKS, Karpenter NodePool, 모델 버킷, Pod Identity", "done"),
-        ("2", "모델 적재", "kubectl, Job", "Hugging Face에서 S3로 모델 4종 적재", "done"),
+        ("2", "모델 적재", "kubectl, Job", "Hugging Face에서 S3로 모델 3종 적재", "done"),
         ("3", "vLLM 배포", "kubectl", "Gemma와 Qwen 파드, compile 캐시 게시와 복원", "done"),
         ("4", "GAIE와 게이트웨이", "kubectl, Helm", "내부 NLB, agentgateway, EPP, InferencePool", "done"),
-        ("5", "Strands Decider 2B", "kubectl", "Decider 파드, 게이트웨이의 /decide 경로", "done"),
+        ("5", "Strands Decider 12B", "Terraform, kubectl, Docker", "Decider 이미지 빌드, 파드, 게이트웨이의 /decide 경로", "done"),
         ("6", "sleep 컨트롤러", "kubectl", "깨우기 API, CronJob 2개, NetworkPolicy", "done"),
         ("7", "앱 계층", "Terraform, kubectl, Docker",
          "CloudFront, WAF, Cognito, S3 페이지, 내부 ALB, BFF 파드, Graviton NodePool", "done"),
@@ -78,10 +78,10 @@ T_EN = dict(
     steps=[
         ("0", "Preflight", "Read-only queries", "Version matrix, checkpoints, quotas checked (no resources)", "done"),
         ("1", "Network and EKS base", "CDK, Terraform, kubectl", "VPC, EKS, Karpenter NodePools, model bucket, Pod Identity", "done"),
-        ("2", "Model sync", "kubectl, Job", "4 models from Hugging Face to S3", "done"),
+        ("2", "Model sync", "kubectl, Job", "3 models from Hugging Face to S3", "done"),
         ("3", "vLLM deployment", "kubectl", "Gemma and Qwen pods, compile cache publish and restore", "done"),
         ("4", "GAIE and gateway", "kubectl, Helm", "Internal NLB, agentgateway, EPP, InferencePools", "done"),
-        ("5", "Strands Decider 2B", "kubectl", "Decider pod, /decide route on the gateway", "done"),
+        ("5", "Strands Decider 12B", "Terraform, kubectl, Docker", "Decider image build, pod, /decide route on the gateway", "done"),
         ("6", "Sleep controller", "kubectl", "Wake API, 2 CronJobs, NetworkPolicy", "done"),
         ("7", "App layer", "Terraform, kubectl, Docker",
          "CloudFront, WAF, Cognito, S3 pages, internal ALB, BFF pods, Graviton NodePool", "done"),

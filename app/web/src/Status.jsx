@@ -19,7 +19,7 @@ const PARTS = localized(() => [
   },
   {
     key: 'decider',
-    name: 'Decider 2B',
+    name: 'Decider 12B',
     pen: 'auto',
     role: tr('업무 종류가 없는 요청의 모델 판단', 'Picks the model for requests with no task type'),
   },
