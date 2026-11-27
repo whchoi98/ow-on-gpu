@@ -26,6 +26,10 @@ output "bff_repository_url" {
   value = aws_ecr_repository.bff.repository_url
 }
 
+output "decider_repository_url" {
+  value = aws_ecr_repository.decider.repository_url
+}
+
 output "app_url" {
   value = "https://${aws_cloudfront_distribution.app.domain_name}"
 }

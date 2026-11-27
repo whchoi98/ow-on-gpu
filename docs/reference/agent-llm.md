@@ -7,14 +7,14 @@
 ## English
 
 ### 1. Overview
-Two language models are served by vLLM v0.33.0: Gemma 4 31B for customer-facing work and Qwen3.8-27B for internal work. A small model, Strands Decider 2B, answers routing questions when no rule applies. The BFF runs the tools the models call: an order lookup and a web search through Amazon Bedrock AgentCore Web Search.
+Two language models are served by vLLM v0.33.0: Gemma 4 31B for customer-facing work and Qwen3.8-27B for internal work. A small model, Strands Decider 12B, answers routing questions when no rule applies. The BFF runs the tools the models call: an order lookup and a web search through Amazon Bedrock AgentCore Web Search.
 
 ### 2. Components
 | Component | Path | Purpose |
 |---|---|---|
 | Gemma server | `k8s/gemma/deployment.yaml` | vLLM flags, tool-call and reasoning parsers for Gemma |
 | Qwen server | `k8s/qwen/deployment.yaml` | vLLM flags, sleep mode, MTP speculative decoding |
-| Decider | `k8s/decider/deployment.yaml` | Strands Decider 2B served behind the gateway at `/decide` |
+| Decider | `k8s/decider/deployment.yaml` | Strands Decider 12B served behind the gateway at `/decide` |
 | Decision flow | `app/bff/bff.py` | Decider questions, session cache, tool loop of at most three rounds |
 | Routing rules | `app/bff/routing.py` | Turns rules and Decider answers into a model, priority and thinking flag |
 | Web search | `app/bff/websearch.py` | Tool definition, instruction, source numbering |
@@ -47,14 +47,14 @@ No ADR has been written yet. The confirmed decisions are recorded in `AGENT.md`.
 ## 한국어
 
 ### 1. 개요
-vLLM v0.33.0이 언어 모델 둘을 서빙합니다. Gemma 4 31B는 고객 경로, Qwen3.8-27B는 내부 업무입니다. 규칙으로 정해지지 않는 요청은 작은 모델 Strands Decider 2B가 경로를 판단합니다. 모델이 부르는 도구(주문 조회, Amazon Bedrock AgentCore Web Search를 통한 웹 검색)는 BFF가 실행합니다.
+vLLM v0.33.0이 언어 모델 둘을 서빙합니다. Gemma 4 31B는 고객 경로, Qwen3.8-27B는 내부 업무입니다. 규칙으로 정해지지 않는 요청은 작은 모델 Strands Decider 12B가 경로를 판단합니다. 모델이 부르는 도구(주문 조회, Amazon Bedrock AgentCore Web Search를 통한 웹 검색)는 BFF가 실행합니다.
 
 ### 2. 구성요소
 | 구성요소 | 경로 | 목적 |
 |---|---|---|
 | Gemma server | `k8s/gemma/deployment.yaml` | Gemma의 vLLM 플래그, 도구 호출과 추론 파서 |
 | Qwen server | `k8s/qwen/deployment.yaml` | Qwen의 vLLM 플래그, sleep mode, MTP 추측 디코딩 |
-| Decider | `k8s/decider/deployment.yaml` | 게이트웨이의 `/decide` 뒤에서 서빙하는 Strands Decider 2B |
+| Decider | `k8s/decider/deployment.yaml` | 게이트웨이의 `/decide` 뒤에서 서빙하는 Strands Decider 12B |
 | Decision flow | `app/bff/bff.py` | Decider 질문, 세션 캐시, 최대 세 차례의 도구 호출 반복 |
 | Routing rules | `app/bff/routing.py` | 규칙과 Decider 답을 모델, 우선순위, thinking 여부로 바꿈 |
 | Web search | `app/bff/websearch.py` | 도구 정의, 지시문, 출처 번호 관리 |

@@ -1,0 +1,250 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "3"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"decider"},"name":"decider","namespace":"inference"},"spec":{"replicas":1,"selector":{"matchLabels":{"app.kubernetes.io/name":"decider"}},"strategy":{"type":"Recreate"},"template":{"metadata":{"annotations":{"instrumentation.opentelemetry.io/inject-dotnet":"false","instrumentation.opentelemetry.io/inject-java":"false","instrumentation.opentelemetry.io/inject-nodejs":"false","instrumentation.opentelemetry.io/inject-python":"false"},"labels":{"app.kubernetes.io/name":"decider"}},"spec":{"automountServiceAccountToken":false,"containers":[{"env":[{"name":"DECIDER_CHECKPOINT","value":"/opt/ml/model/strands-decider-12B-gemma4-v2-2611"}],"image":"<account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/decider:0.4.0","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":"http"},"periodSeconds":10},"name":"decider","ports":[{"containerPort":8080,"name":"http"}],"readinessProbe":{"httpGet":{"path":"/health","port":"http"},"periodSeconds":2},"resources":{"limits":{"memory":"28Gi","nvidia.com/gpu":1},"requests":{"cpu":"2","memory":"24Gi"}},"startupProbe":{"failureThreshold":900,"httpGet":{"path":"/health","port":"http"},"periodSeconds":1},"volumeMounts":[{"mountPath":"/opt/ml/model","name":"model"}]}],"initContainers":[{"args":["set -eu\nMODEL=strands-decider-12B-gemma4-v2-2611\naws s3 sync \"s3://$MODEL_BUCKET/models/$MODEL/\" \"/opt/ml/model/$MODEL/\" --only-show-errors\ndu -sh /opt/ml/model/*\n"],"command":["/bin/sh","-c"],"env":[{"name":"MODEL_BUCKET","valueFrom":{"configMapKeyRef":{"key":"MODEL_BUCKET","name":"platform"}}},{"name":"AWS_DEFAULT_REGION","valueFrom":{"configMapKeyRef":{"key":"AWS_REGION","name":"platform"}}}],"image":"public.ecr.aws/aws-cli/aws-cli:2.40.3","name":"model-fetch","volumeMounts":[{"mountPath":"/opt/ml/model","name":"model"}]}],"nodeSelector":{"karpenter.sh/nodepool":"decider"},"serviceAccountName":"decider","tolerations":[{"effect":"NoSchedule","key":"nvidia.com/gpu","operator":"Exists"}],"volumes":[{"emptyDir":{},"name":"model"}]}}}}
+    creationTimestamp: "2026-11-14T11:59:45Z"
+    generation: 4
+    labels:
+      app.kubernetes.io/name: decider
+    name: decider
+    namespace: inference
+    resourceVersion: "6342814"
+    uid: 5845cf12-a803-4877-812a-cfd9cc72a312
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: decider
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          cloudwatch.aws.amazon.com/auto-annotate-dotnet: "true"
+          cloudwatch.aws.amazon.com/auto-annotate-java: "true"
+          cloudwatch.aws.amazon.com/auto-annotate-nodejs: "true"
+          cloudwatch.aws.amazon.com/auto-annotate-python: "true"
+          instrumentation.opentelemetry.io/inject-dotnet: "false"
+          instrumentation.opentelemetry.io/inject-java: "false"
+          instrumentation.opentelemetry.io/inject-nodejs: "false"
+          instrumentation.opentelemetry.io/inject-python: "false"
+        labels:
+          app.kubernetes.io/name: decider
+      spec:
+        automountServiceAccountToken: false
+        containers:
+        - env:
+          - name: DECIDER_CHECKPOINT
+            value: /opt/ml/model/strands-decider-12B-gemma4-v2-2611
+          image: <account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/decider:0.4.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: decider
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 28Gi
+              nvidia.com/gpu: "1"
+            requests:
+              cpu: "2"
+              memory: 24Gi
+          startupProbe:
+            failureThreshold: 900
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/ml/model
+            name: model
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            set -eu
+            MODEL=strands-decider-12B-gemma4-v2-2611
+            aws s3 sync "s3://$MODEL_BUCKET/models/$MODEL/" "/opt/ml/model/$MODEL/" --only-show-errors
+            du -sh /opt/ml/model/*
+          command:
+          - /bin/sh
+          - -c
+          env:
+          - name: MODEL_BUCKET
+            valueFrom:
+              configMapKeyRef:
+                key: MODEL_BUCKET
+                name: platform
+          - name: AWS_DEFAULT_REGION
+            valueFrom:
+              configMapKeyRef:
+                key: AWS_REGION
+                name: platform
+          image: public.ecr.aws/aws-cli/aws-cli:2.40.3
+          imagePullPolicy: IfNotPresent
+          name: model-fetch
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/ml/model
+            name: model
+        nodeSelector:
+          karpenter.sh/nodepool: decider
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: decider
+        serviceAccountName: decider
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - effect: NoSchedule
+          key: nvidia.com/gpu
+          operator: Exists
+        volumes:
+        - emptyDir: {}
+          name: model
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-11-24T06:59:21Z"
+      lastUpdateTime: "2026-11-24T06:59:21Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-11-14T11:59:45Z"
+      lastUpdateTime: "2026-11-24T06:59:21Z"
+      message: ReplicaSet "decider-7f55fdb8c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 4
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"decider"},"name":"decider","namespace":"inference"},"spec":{"ports":[{"name":"http","port":8080,"targetPort":"http"}],"selector":{"app.kubernetes.io/name":"decider"}}}
+    creationTimestamp: "2026-11-14T11:59:45Z"
+    labels:
+      app.kubernetes.io/name: decider
+    name: decider
+    namespace: inference
+    resourceVersion: "36775"
+    uid: 4d428554-c69a-44b3-a0b4-1ead24a1b668
+  spec:
+    clusterIP: 172.20.254.72
+    clusterIPs:
+    - 172.20.254.72
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+    selector:
+      app.kubernetes.io/name: decider
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: gateway.networking.k8s.io/v1
+  kind: HTTPRoute
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"gateway.networking.k8s.io/v1","kind":"HTTPRoute","metadata":{"annotations":{},"name":"decider","namespace":"inference"},"spec":{"parentRefs":[{"name":"inference-gateway"}],"rules":[{"backendRefs":[{"name":"decider","port":8080}],"filters":[{"type":"URLRewrite","urlRewrite":{"path":{"replaceFullPath":"/v1/systemone","type":"ReplaceFullPath"}}}],"matches":[{"method":"POST","path":{"type":"Exact","value":"/decide"}}],"timeouts":{"request":"30s"}}]}}
+    creationTimestamp: "2026-11-14T11:59:45Z"
+    generation: 1
+    name: decider
+    namespace: inference
+    resourceVersion: "36786"
+    uid: 393d4180-5091-4c92-979f-d197059050a5
+  spec:
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: inference-gateway
+    rules:
+    - backendRefs:
+      - group: ""
+        kind: Service
+        name: decider
+        port: 8080
+        weight: 1
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            replaceFullPath: /v1/systemone
+            type: ReplaceFullPath
+      matches:
+      - method: POST
+        path:
+          type: Exact
+          value: /decide
+      timeouts:
+        request: 30s
+  status:
+    parents:
+    - conditions:
+      - lastTransitionTime: "2026-11-14T11:59:45Z"
+        message: ""
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2026-11-14T11:59:45Z"
+        message: ""
+        observedGeneration: 1
+        reason: ResolvedRefs
+        status: "True"
+        type: ResolvedRefs
+      controllerName: agentgateway.dev/agentgateway
+      parentRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: inference-gateway
+        namespace: inference
+kind: List
+metadata:
+  resourceVersion: ""

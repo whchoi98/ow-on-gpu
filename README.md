@@ -56,12 +56,12 @@ Three infographics show the environment from different angles. Each figure follo
 
 ## Prerequisites
 
-- An AWS account with capacity for two g6e.4xlarge and one g6.xlarge instance in ap-northeast-2
+- An AWS account with capacity for two g6e.4xlarge and one g6e.xlarge instance in ap-northeast-2
 - AWS CLI, kubectl, Terraform 1.14 or later, Docker, Node.js with npm
 - jq, python3 and Bash 4 or later for the hooks and the harness tests
 - For the infographics: a Python with Pillow and Playwright, the NanumSquareOTF and D2Coding fonts, the icon bundle of the aws-diagram skill
 
-The GPU nodes are billed while they run. With every component running, the fixed cost was about 10.05 USD per hour as of 2026-11-15 (`docs/07-bff.md`).
+The GPU nodes are billed while they run. With every component running, the fixed cost is estimated at about 11.35 USD per hour: about 10.05 USD as of 2026-11-15 (`docs/07-bff.md`) plus the price difference of the Decider node changed on 2026-11-24 (`docs/05-decider.md`).
 
 ## Installation
 
@@ -105,7 +105,7 @@ export KUBECONFIG=$PWD/infra/terraform/.kubeconfig
 kubectl get nodes -L node.kubernetes.io/instance-type,karpenter.sh/nodepool
 # 9 nodes with every component running (2026-11-16):
 #   2 x m7g.large (addons), 2 x c7i-flex.xlarge (system), 2 x c7g.large (app),
-#   2 x g6e.4xlarge (gemma-od, qwen-od), 1 x g6.xlarge (decider)
+#   2 x g6e.4xlarge (gemma-od, qwen-od), 1 x g6e.xlarge (decider)
 ```
 
 Open the site address, sign in with a Cognito user and send a request from the check page.
@@ -288,12 +288,12 @@ ow-on-gpu는 블로그 시리즈 "EKS 기반 vLLM 서빙 최적화" 3부의 측�
 
 ## 사전 요구 사항
 
-- ap-northeast-2에서 g6e.4xlarge 2대와 g6.xlarge 1대를 띄울 수 있는 AWS 계정
+- ap-northeast-2에서 g6e.4xlarge 2대와 g6e.xlarge 1대를 띄울 수 있는 AWS 계정
 - AWS CLI, kubectl, Terraform 1.14 이상, Docker, Node.js와 npm
 - 훅과 하네스 시험에 쓰는 jq, python3, Bash 4 이상
 - 인포그래픽을 만들려면 Pillow와 Playwright가 있는 Python, 나눔스퀘어OTF와 D2Coding 폰트, aws-diagram 스킬의 아이콘 묶음
 
-GPU 노드는 실행 중인 동안 요금이 나옵니다. 모든 구성 요소가 실행 중일 때의 고정 비용은 2026-11-15 기준 시간당 약 10.05달러였습니다(`docs/07-bff.md`).
+GPU 노드는 실행 중인 동안 요금이 나옵니다. 모든 구성 요소가 실행 중일 때의 고정 비용은 시간당 약 11.35달러로 추정됩니다. 2026-11-15의 약 10.05달러(`docs/07-bff.md`)에 2026-11-24에 바꾼 Decider 노드의 가격 차이를 더한 값입니다(`docs/05-decider.md`).
 
 ## 설치 방법
 
@@ -337,7 +337,7 @@ export KUBECONFIG=$PWD/infra/terraform/.kubeconfig
 kubectl get nodes -L node.kubernetes.io/instance-type,karpenter.sh/nodepool
 # 모든 구성 요소가 실행 중일 때 노드 9대 (2026-11-16):
 #   m7g.large 2대(addons), c7i-flex.xlarge 2대(system), c7g.large 2대(app),
-#   g6e.4xlarge 2대(gemma-od, qwen-od), g6.xlarge 1대(decider)
+#   g6e.4xlarge 2대(gemma-od, qwen-od), g6e.xlarge 1대(decider)
 ```
 
 사이트 주소를 열고 Cognito 사용자로 로그인한 뒤 확인용 페이지에서 요청을 보냅니다.

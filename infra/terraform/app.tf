@@ -147,6 +147,16 @@ resource "aws_ecr_repository" "bff" {
   force_delete = true
 }
 
+# ---------------------------------------------------------------- Decider 이미지
+
+# 공개 서빙 이미지가 strands-decider 0.4.0을 담기 전까지 쓰는 이미지. k8s/decider/install.sh build가 올린다.
+# 태그는 패키지 버전이고, 덮어쓰지 못하게 해서 태그 하나가 이미지 하나를 가리키게 한다.
+resource "aws_ecr_repository" "decider" {
+  name                 = "${var.cluster_name}/decider"
+  image_tag_mutability = "IMMUTABLE"
+  force_delete         = true
+}
+
 # ---------------------------------------------------------------- 정적 페이지 (S3)
 
 resource "aws_s3_bucket" "static" {

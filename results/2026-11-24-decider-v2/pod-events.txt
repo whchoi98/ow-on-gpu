@@ -1,0 +1,15 @@
+FIRST                  LAST                   REASON             MESSAGE
+<nil>                  <nil>                  FailedScheduling   0/11 nodes are available: 4 node(s) didn't match Pod's node affinity/selector, 7 node(s) had untolerated taint(s). preemption: 0/11 nodes are available: 11 Preemption is not helpful for scheduling.
+<nil>                  <nil>                  FailedScheduling   0/12 nodes are available: 4 node(s) didn't match Pod's node affinity/selector, 8 node(s) had untolerated taint(s). preemption: 0/12 nodes are available: 12 Preemption is not helpful for scheduling.
+<nil>                  <nil>                  FailedScheduling   0/12 nodes are available: 1 Insufficient nvidia.com/gpu, 4 node(s) didn't match Pod's node affinity/selector, 7 node(s) had untolerated taint(s). preemption: 0/12 nodes are available: 12 Preemption is not helpful for scheduling.
+<nil>                  <nil>                  Scheduled          Successfully assigned inference/decider-7f55fdb8c-4wg9s to ip-10-200-43-232.ap-northeast-2.compute.internal
+2026-11-24T06:53:50Z   2026-11-24T06:53:50Z   Nominated          Pod should schedule on: nodeclaim/decider-t8n8d
+2026-11-24T06:55:15Z   2026-11-24T06:55:15Z   Pulling            Pulling image "public.ecr.aws/aws-cli/aws-cli:2.40.3"
+2026-11-24T06:55:26Z   2026-11-24T06:55:26Z   Pulled             Successfully pulled image "public.ecr.aws/aws-cli/aws-cli:2.40.3" in 10.334s (10.334s including waiting). Image size: 141622405 bytes.
+2026-11-24T06:55:26Z   2026-11-24T06:55:26Z   Created            Container created
+2026-11-24T06:55:26Z   2026-11-24T06:55:26Z   Started            Container started
+2026-11-24T06:57:07Z   2026-11-24T06:57:07Z   Pulling            Pulling image "<account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/decider:0.4.0"
+2026-11-24T06:58:38Z   2026-11-24T06:58:38Z   Pulled             Successfully pulled image "<account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/decider:0.4.0" in 1m30.502s (1m30.502s including waiting). Image size: 3719144148 bytes.
+2026-11-24T06:58:38Z   2026-11-24T06:58:38Z   Created            Container created
+2026-11-24T06:58:38Z   2026-11-24T06:58:38Z   Started            Container started
+2026-11-24T06:58:39Z   2026-11-24T06:59:03Z   Unhealthy          Startup probe failed: Get "http://10.200.34.115:8080/health": dial tcp 10.200.34.115:8080: connect: connection refused

@@ -1,0 +1,17 @@
+# 2026-11-24T07:00:14Z kubectl top pod
+NAME                      CPU(cores)   MEMORY(bytes)   
+decider-7f55fdb8c-4wg9s   2m           3333Mi          
+# cgroup memory (bytes): peak, current
+14388252672
+14385213440
+# memory.stat
+anon 1231548416
+file 13129494528
+shmem 19574784
+# nvidia-smi
+name, memory.used [MiB], memory.total [MiB], driver_version
+NVIDIA L40S, 23725 MiB, 46068 MiB, 580.178.04
+# node allocatable
+TYPE         CPU     MEM          EPH            GPU
+g6.xlarge    3920m   14719320Ki   223694618252   0
+g6e.xlarge   3920m   31381832Ki   223694618252   1

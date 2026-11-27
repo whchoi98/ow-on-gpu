@@ -16,7 +16,7 @@ The runtime layer is one Amazon EKS 1.37 cluster in ap-northeast-2. Karpenter pr
 | Namespaces, device plugin | `k8s/base/namespaces.yaml` | Namespaces `inference` and `model-jobs`; NVIDIA device plugin in the same directory |
 | vLLM Gemma | `k8s/gemma/deployment.yaml` | Gemma 4 31B on one g6e.4xlarge, Recreate strategy |
 | vLLM Qwen | `k8s/qwen/deployment.yaml` | Qwen3.8-27B on one g6e.4xlarge with sleep mode |
-| Decider | `k8s/decider/deployment.yaml` | Strands Decider 2B on one g6.xlarge |
+| Decider | `k8s/decider/deployment.yaml` | Strands Decider 12B on one g6e.xlarge |
 | Inference gateway | `k8s/gateway/gateway.yaml` | agentgateway with Gateway API Inference Extension |
 | Sleep controller | `k8s/sleep-controller/cronjobs.yaml` | CronJobs that put Qwen to sleep and wake it; wake API |
 | BFF pods | `k8s/bff/bff.yaml` | Graviton NodePool, Deployment, Service, Ingress for the internal ALB |
@@ -58,7 +58,7 @@ No ADR has been written yet. The confirmed decisions are recorded in `AGENT.md`.
 | Namespaces, device plugin | `k8s/base/namespaces.yaml` | 네임스페이스 `inference`, `model-jobs`. 같은 디렉터리에 NVIDIA device plugin |
 | vLLM Gemma | `k8s/gemma/deployment.yaml` | g6e.4xlarge 한 대의 Gemma 4 31B, Recreate 전략 |
 | vLLM Qwen | `k8s/qwen/deployment.yaml` | g6e.4xlarge 한 대의 Qwen3.8-27B, sleep mode 사용 |
-| Decider | `k8s/decider/deployment.yaml` | g6.xlarge 한 대의 Strands Decider 2B |
+| Decider | `k8s/decider/deployment.yaml` | g6e.xlarge 한 대의 Strands Decider 12B |
 | Inference gateway | `k8s/gateway/gateway.yaml` | agentgateway와 Gateway API Inference Extension |
 | Sleep controller | `k8s/sleep-controller/cronjobs.yaml` | Qwen을 재우고 깨우는 CronJob, 깨우기 API |
 | BFF pods | `k8s/bff/bff.yaml` | Graviton NodePool, Deployment, Service, 내부 ALB의 Ingress |

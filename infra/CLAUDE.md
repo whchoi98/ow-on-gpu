@@ -16,7 +16,7 @@ AWS 리소스를 코드로 관리합니다. VPC는 CDK가, 그 밖의 리소스�
 | `terraform/lbc.tf` | AWS Load Balancer Controller(Helm), IAM 정책 |
 | `terraform/storage.tf` | 모델 버킷, 서빙 파드와 적재 Job의 역할과 Pod Identity |
 | `terraform/observability.tf` | Amazon Managed Service for Prometheus 작업 공간, 수집기 역할, ALB 접근 로그 버킷 |
-| `terraform/app.tf` | CloudFront, WAF, Cognito, 정적 페이지 버킷과 객체, ECR 저장소, 보안 그룹 |
+| `terraform/app.tf` | CloudFront, WAF, Cognito, 정적 페이지 버킷과 객체, ECR 저장소(BFF, Decider), 보안 그룹 |
 | `terraform/bff_eks.tf` | BFF 파드의 역할과 Pod Identity, CloudFront VPC origin |
 | `terraform/bff.auto.tfvars` | `app/bff/build.sh`가 적는 BFF 이미지 태그. 커밋하지 않음 |
 

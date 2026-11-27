@@ -31,7 +31,7 @@ EKS: BFF 파드 2개 (네임스페이스 app, Graviton NodePool app, arm64)
 | S3 정적 버킷 | 확인용 페이지(`app/web`의 빌드 결과물)와 `config.json`(리전, 앱 클라이언트 ID) |
 
 - 파드, Service, Ingress, NodePool은 `k8s/bff`에 있고 `k8s/bff/install.sh render`, `diff`, `apply`로 다룹니다. 이미지 주소와 Cognito 값, 접근 로그 버킷은 스크립트가 Terraform 출력에서 읽어 채웁니다. 계정 ID가 든 값을 매니페스트 파일에 적지 않기 위해서입니다.
-- 파드 템플릿에 `instrumentation.opentelemetry.io/inject-python`, `inject-java`, `inject-nodejs`, `inject-dotnet`을 `"false"`로 적어 자동 계측을 받지 않습니다. 2026-11-16 08:46Z에 이 클러스터에 `amazon-cloudwatch-observability` 애드온(v7.0.1)이 설치됐고(이 저장소가 설치한 것이 아닙니다), 그 웹훅은 파드 템플릿이 바뀌는 Deployment에 `inject-*: "true"`를 붙입니다. 그렇게 뜬 파드에는 네 언어의 계측 init 컨테이너와 `PYTHONPATH`, `JAVA_TOOL_OPTIONS`, `NODE_OPTIONS`, OTEL 환경 변수가 들어갑니다(서버 dry-run으로 확인). 요청 경로의 조건을 측정 때와 같게 두려고 거부를 명시했습니다. 값이 적혀 있으면 웹훅은 바꾸지 않고 표시용 애노테이션 `cloudwatch.aws.amazon.com/auto-annotate-*`만 붙입니다. 같은 날 이미지 `20261116-130728`을 이 설정으로 배포했고 새 파드 두 개에 init 컨테이너와 OTEL 환경 변수가 없는 것을 확인했습니다. vLLM, Decider, 게이트웨이, EPP, 깨우기 API의 Deployment에는 이 표시가 없어서, 파드 템플릿을 바꾸는 적용을 하면 계측이 붙습니다.
+- 파드 템플릿에 `instrumentation.opentelemetry.io/inject-python`, `inject-java`, `inject-nodejs`, `inject-dotnet`을 `"false"`로 적어 자동 계측을 받지 않습니다. 2026-11-16 08:46Z에 이 클러스터에 `amazon-cloudwatch-observability` 애드온(v7.0.1)이 설치됐고(이 저장소가 설치한 것이 아닙니다), 그 웹훅은 파드 템플릿이 바뀌는 Deployment에 `inject-*: "true"`를 붙입니다. 그렇게 뜬 파드에는 네 언어의 계측 init 컨테이너와 `PYTHONPATH`, `JAVA_TOOL_OPTIONS`, `NODE_OPTIONS`, OTEL 환경 변수가 들어갑니다(서버 dry-run으로 확인). 요청 경로의 조건을 측정 때와 같게 두려고 거부를 명시했습니다. 값이 적혀 있으면 웹훅은 바꾸지 않고 표시용 애노테이션 `cloudwatch.aws.amazon.com/auto-annotate-*`만 붙입니다. 같은 날 이미지 `20261116-130728`을 이 설정으로 배포했고 새 파드 두 개에 init 컨테이너와 OTEL 환경 변수가 없는 것을 확인했습니다. Decider에는 2026-11-24에 v2로 바꾸면서 같은 표시를 넣었습니다(`k8s/decider/deployment.yaml`). vLLM, 게이트웨이, EPP, 깨우기 API의 Deployment에는 이 표시가 없어서, 파드 템플릿을 바꾸는 적용을 하면 계측이 붙습니다.
 - CloudFront, WAF, Cognito, S3, ALB의 보안 그룹, BFF의 역할과 Pod Identity 연결은 Terraform입니다(`infra/terraform/app.tf`, `bff_eks.tf`). Terraform은 컨트롤러가 만든 ALB를 태그로 조회해 CloudFront의 VPC origin에 연결합니다.
 - ALB가 Private 서브넷에 놓이는 근거는 두 가지입니다. Ingress에 `scheme: internal`을 적었고, 컨트롤러가 고르는 `kubernetes.io/role/internal-elb` 태그는 이 VPC에서 Private 서브넷 네 개에만 있습니다.
 - BFF 로그는 파드의 표준 출력입니다(`kubectl -n app logs -l app.kubernetes.io/name=bff`).
@@ -383,7 +383,7 @@ BFF를 EKS 파드로 옮기고 CloudFront 주소로 다시 확인했습니다(`r
 | c7g.large 2대 (BFF용 Graviton 노드, 대당 0.0816달러) | 0.1632달러 |
 | 합계 | 0.1857달러 |
 
-c7g.large의 가격은 2026-11-15에 서울 리전의 On-Demand 가격을 조회한 값입니다. 사용량에 따라 붙는 ALB의 처리 단위, CloudFront 전송량, WAF, Cognito 요금은 넣지 않았습니다. WAF와 Cognito 요금은 조회하지 않았습니다. 전체 고정 비용은 약 10.05달러/시간이 됩니다.
+c7g.large의 가격은 2026-11-15에 서울 리전의 On-Demand 가격을 조회한 값입니다. 사용량에 따라 붙는 ALB의 처리 단위, CloudFront 전송량, WAF, Cognito 요금은 넣지 않았습니다. WAF와 Cognito 요금은 조회하지 않았습니다. 전체 고정 비용은 약 10.05달러/시간이 됩니다. 2026-11-24에 Decider 노드를 g6.xlarge에서 g6e.xlarge로 바꾼 뒤의 추정은 약 11.35달러/시간입니다(`docs/05-decider.md`의 "비용").
 
 Fargate 구성(2026-11-14)에서는 내부 ALB 0.0225달러, 깨우기 NLB 0.0225달러, Fargate ARM64 태스크 2개 0.0454달러로 합계 0.0904달러였고 전체는 약 9.95달러/시간이었습니다.
 

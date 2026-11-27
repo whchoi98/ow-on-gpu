@@ -4,6 +4,8 @@
 
 2026-11-15에 BFF를 ECS Fargate에서 EKS 파드로 옮긴 뒤 구간별 TTFT를 다시 쟀습니다(2절의 "2026-11-15 재측정", 원시 자료 `results/2026-11-15-ttft-segments-eks/`).
 
+2026-11-24에 Decider를 v2 12B(g6e.xlarge)로 바꿨습니다(`docs/05-decider.md`). 이 문서의 구간별 TTFT에 든 Decider 구간은 v1로 측정한 값이고 v2에서는 다시 측정하지 않았습니다.
+
 2026-11-15에 Qwen의 동시 실행 한도의 원인을 확인하는 측정을 두 번 더 했습니다(3절의 "Qwen의 동시 3건 한도"). prefix caching을 끈 구성과 MTP를 끈 구성이고, 원시 자료는 `results/2026-11-15-slo-qwen-no-prefix-cache/`와 `results/2026-11-15-slo-qwen-no-mtp/`에 있습니다.
 
 g7e.2xlarge의 값은 1부와 2부의 측정에서 가져왔습니다. 콜드 스타트는 1부 원고의 전체 시험 결과표(2026-08-30), 처리량은 `gemma4-vllm/results-g7e/`의 원시 결과(2026-08-06)입니다. 두 환경의 차이는 다음과 같아서, 나란히 놓은 값은 같은 조건의 비교가 아닙니다.

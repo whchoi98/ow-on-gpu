@@ -10,13 +10,8 @@
     "prefix": "models/Qwen3.8-27B-FP8-dynamic"
   },
   {
-    "repo": "StrandsAgents/strands-decider-2B-qwen3.5-v1-2610",
-    "revision": "216d1ccb46a9e9b036eb9187b248db98480f77d4",
-    "prefix": "models/strands-decider-2B-qwen3.5-v1-2610"
-  },
-  {
-    "repo": "Qwen/Qwen3.5-2B-Base",
-    "revision": "b1485b2fa6dfa1287294f269f5fb618e03d52d7c",
-    "prefix": "models/Qwen3.5-2B-Base"
+    "repo": "StrandsAgents/strands-decider-12B-gemma4-v2-2611",
+    "revision": "41d5dc0d20a4deb2835690eb7529ee92463f6c9f",
+    "prefix": "models/strands-decider-12B-gemma4-v2-2611"
   }
 ]

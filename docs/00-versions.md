@@ -18,7 +18,7 @@
 | llm-d-router (EPP, InferenceObjective) | v1.0.0 | 릴리스 노트 "Bumps Gateway API / GAIE to v1.6.2". `k8s.io/api` v0.37.1 |
 | agentgateway | v1.7.0 | 지원표에서 쿠버네티스 1.32에서 1.37. `k8s.io/api` v0.37.1 |
 | vLLM | v0.33.0 (`vllm/vllm-openai:v0.33.0`) | 이미지가 CUDA 13.0.2 기반이고 NVIDIA 문서에서 CUDA 13.0의 대응 드라이버 브랜치는 R580. GPU AMI의 기본 드라이버 580.178.04가 이 브랜치. 이미지의 `TORCH_CUDA_ARCH_LIST`에 8.9(Ada)가 들어 있음 |
-| strands-decider | 0.3.0 (PyPI) | Decider 모델 카드가 안내하는 패키지 |
+| strands-decider | 0.4.0 (저장소 v0.4.0 태그의 `deploy/sagemaker/Dockerfile`로 빌드한 이미지) | Decider v2 체크포인트는 0.4.0 이상에서만 읽힘. 2026-11-24에 변경. 그전에는 공개 서빙 이미지에 든 0.3.1.dev1(`docs/05-decider.md`) |
 | 지표 수집기 | Prometheus v3.16.0 (`quay.io/prometheus/prometheus:v3.16.0`, agent 모드) | 2026-11-05 릴리스. `promtool check config`와 `--agent` 플래그를 이미지에서 확인. Pod Identity 자격 증명으로 AMP에 remote write 되는 것을 확인 |
 | Mountpoint S3 CSI 드라이버 | EKS 애드온 v2.9.2-eksbuild.1 | `describe-addon-versions --kubernetes-version 1.37`의 최신. 콜드 스타트의 기준 구성에서만 씀 |
 | BFF | Python 3.13(`python:3.13-slim`), aiohttp 3.14.5, PyJWT 2.15.1, cryptography 50.0.2 | 2026-11-14 `pip index versions`의 최신. 이미지 안에서 시험 17개 통과 |
@@ -196,7 +196,8 @@ Hugging Face API(`/api/models/<repo>?blobs=true`)와 각 저장소의 `config.js
 | Gemma | [RedHatAI/gemma-4-31B-it-FP8-dynamic](https://huggingface.co/RedHatAI/gemma-4-31B-it-FP8-dynamic) | `d4ab4f57` (2026-08-13) | 33.30GB | safetensors 2개, 33.27GB | apache-2.0 (카드의 license_link는 Gemma 4 라이선스 페이지) | compressed-tensors, FP8_DYNAMIC. 가중치는 채널별 정적 FP8, 활성값은 토큰별 동적 FP8. vision, lm_head, embed_tokens는 양자화 제외 |
 | Qwen (per-channel) | [AzatAI/Qwen3.8-27B-FP8-dynamic](https://huggingface.co/AzatAI/Qwen3.8-27B-FP8-dynamic) | `10c68ff4` (2026-08-15) | 36.80GB | safetensors 3개, 36.78GB (MTP 헤드 `model_mtp.safetensors` 0.85GB 포함) | apache-2.0 | compressed-tensors, FP8_DYNAMIC. 가중치는 채널별 정적 FP8, 활성값은 토큰별 동적 FP8. lm_head, visual, embed_tokens, mlp.gate, shared_expert_gate, linear_attn 전체, mtp 전체는 양자화 제외 |
 | Qwen (공식 block) | [Qwen/Qwen3.8-27B-FP8](https://huggingface.co/Qwen/Qwen3.8-27B-FP8) | `c3a462cc` (2026-11-07) | 30.89GB | safetensors 66개, 30.87GB | apache-2.0 | `quant_method: fp8`, `fmt: e4m3`, `activation_scheme: dynamic`, `weight_block_size: [128, 128]`. 카드 문구는 "fine-grained fp8 quantization with block size of 128" |
-| Decider | [StrandsAgents/strands-decider-2B-qwen3.5-v1-2610](https://huggingface.co/StrandsAgents/strands-decider-2B-qwen3.5-v1-2610) | `216d1ccb` (2026-10-09) | 0.235GB | LoRA 어댑터 0.202GB, readout 헤드 0.013GB | apache-2.0 | 양자화 없음(bf16). `Qwen/Qwen3.5-2B-Base` 위에 올리는 rank 48 LoRA 어댑터와 헤드 |
+| Decider (v2, 2026-11-24부터) | [StrandsAgents/strands-decider-12B-gemma4-v2-2611](https://huggingface.co/StrandsAgents/strands-decider-12B-gemma4-v2-2611) | `41d5dc0d` (2026-11-23) | 23.97GB | safetensors 1개 23.92GB, readout 0.002GB | apache-2.0 | 양자화 없음(bf16). `google/gemma-4-12B-it`에 LoRA 어댑터를 병합한 전체 가중치와 토큰 readout |
+| Decider (v1, 2026-11-24까지) | [StrandsAgents/strands-decider-2B-qwen3.5-v1-2610](https://huggingface.co/StrandsAgents/strands-decider-2B-qwen3.5-v1-2610) | `216d1ccb` (2026-10-09) | 0.235GB | LoRA 어댑터 0.202GB, readout 헤드 0.013GB | apache-2.0 | 양자화 없음(bf16). `Qwen/Qwen3.5-2B-Base` 위에 올리는 rank 48 LoRA 어댑터와 헤드 |
 
 체크포인트별 확인 내용은 다음과 같습니다.
 
@@ -204,7 +205,8 @@ Hugging Face API(`/api/models/<repo>?blobs=true`)와 각 저장소의 `config.js
 - AzatAI 저장소의 `config.json` ignore 목록에는 `re:^mtp.*`가 들어 있고, MTP 헤드는 별도 파일(`model_mtp.safetensors`)로 있습니다. AGENT.md의 함정 항목("양자화 ignore 목록에 `mtp.*`가 없으면 드래프트 수락이 0")이 요구하는 조건을 설정상으로는 만족합니다. 실제 수락률은 3단계에서 지표로 확인합니다.
 - AzatAI 저장소는 개인 조직이 올린 것이고 다운로드 수가 422회입니다(공식 FP8은 546만 회). 파일은 safetensors뿐이어서 pickle 실행 위험은 없지만, 적재 Job에서는 위 리비전 해시로 고정해 내려받는 편이 안전합니다.
 - 두 Qwen 저장소는 모두 `architectures: Qwen3_5ForConditionalGeneration`, `model_type: qwen3_5`입니다. 파라미터 구성은 AzatAI가 BF16 89.9억 개와 FP8 187.9억 개, 공식 FP8이 BF16 30.8억 개와 FP8 247.0억 개입니다. AzatAI 쪽은 linear_attn 계층을 BF16으로 남겨 두어 파일이 5.9GB 더 큽니다.
-- Decider 저장소에는 기반 모델 가중치가 없습니다. 코드 저장소 문서에 따르면 로더가 처음 실행될 때 `Qwen/Qwen3.5-2B-Base`(4.57GB, apache-2.0)를 Hugging Face에서 내려받습니다. 같은 파일이 `amazon/strands-decider-2B-qwen3.5-v1-2610`에도 있습니다. 코드는 [strands-labs/strands-decider](https://github.com/strands-labs/strands-decider), PyPI 패키지는 `strands-decider` 0.3.0(2026-11-05)입니다.
+- Decider v2 저장소는 가중치를 모두 담고 있어 기반 모델을 따로 받지 않습니다. `decision_config.json`에 기반 모델(`google/gemma-4-12B-it`)과 리비전이 출처로만 적혀 있습니다. v2를 읽으려면 `strands-decider` 0.4.0(2026-11-20) 이상이 필요합니다. 아래 두 항목은 v1을 확인한 2026-11-14의 내용입니다.
+- Decider v1 저장소에는 기반 모델 가중치가 없습니다. 코드 저장소 문서에 따르면 로더가 처음 실행될 때 `Qwen/Qwen3.5-2B-Base`(4.57GB, apache-2.0)를 Hugging Face에서 내려받습니다. 같은 파일이 `amazon/strands-decider-2B-qwen3.5-v1-2610`에도 있습니다. 코드는 [strands-labs/strands-decider](https://github.com/strands-labs/strands-decider), PyPI 패키지는 `strands-decider` 0.3.0(2026-11-05)입니다.
 - Decider의 공식 서빙 방법은 `strands-decider serve <모델> --port 8000`입니다. 엔드포인트는 `POST /v1/systemone`과 `GET /health`이고, 서버가 예열을 마칠 때까지 `/health`가 실패합니다. 문서는 서버가 기본으로 `127.0.0.1`에 바인딩되고 인증이 없으며 동시 요청 동작은 검증하지 않았다고 적습니다. 저장소의 배포 가이드는 로컬, SageMaker, Lambda 세 가지이고 쿠버네티스 가이드는 없습니다.
 
 ### Qwen: 공식 block FP8과 per-channel FP8-dynamic 중 L40S에서 쓸 쪽
@@ -226,7 +228,7 @@ Hugging Face API(`/api/models/<repo>?blobs=true`)와 각 저장소의 `config.js
 
 | 할당량 | 코드 | 현재 값 | 이 구성에 필요한 vCPU | 여유 |
 |---|---|---|---|---|
-| Running On-Demand G and VT instances | L-DB2E81BA | 768 vCPU | 36 (Gemma g6e.4xlarge 16, Qwen g6e.4xlarge 16, Decider g6.xlarge 4) | 충분 |
+| Running On-Demand G and VT instances | L-DB2E81BA | 768 vCPU | 36 (Gemma g6e.4xlarge 16, Qwen g6e.4xlarge 16, Decider 4. 2026-11-24에 g6.xlarge에서 g6e.xlarge로 바꿨고 vCPU 수는 같음) | 충분 |
 | All G and VT Spot Instance Requests | L-3819A6DF | 64 vCPU | 0 | 쓰지 않음 |
 
 - 조회 시점에 실행 중인 G, VT 계열 인스턴스는 없었습니다.
@@ -237,16 +239,18 @@ Hugging Face API(`/api/models/<repo>?blobs=true`)와 각 저장소의 `config.js
 | 인스턴스 | vCPU | 메모리 | GPU | GPU 메모리 | 네트워크 | 인스턴스 스토어 |
 |---|---|---|---|---|---|---|
 | g6e.4xlarge | 16 | 128GiB | L40S 1장 | 45,776MiB (44.7GiB) | 20 Gigabit | 600GB |
-| g6.xlarge | 4 | 16GiB | L4 1장 | 22,888MiB (22.4GiB) | Up to 10 Gigabit | 250GB |
+| g6e.xlarge (2026-11-24부터 Decider) | 4 | 32GiB | L40S 1장 | 45,776MiB (44.7GiB) | Up to 20 Gigabit | 250GB |
+| g6.xlarge (2026-11-24까지 Decider) | 4 | 16GiB | L4 1장 | 22,888MiB (22.4GiB) | Up to 10 Gigabit | 250GB |
 
 AZ별 제공 여부(`aws ec2 describe-instance-type-offerings --location-type availability-zone`)는 다음과 같습니다.
 
 | 인스턴스 | 2a (apne2-az1) | 2b (apne2-az2) | 2c (apne2-az3) | 2d (apne2-az4) |
 |---|---|---|---|---|
 | g6e.4xlarge | 제공 | 제공 | 없음 | 없음 |
+| g6e.xlarge | 제공 | 제공 | 없음 | 없음 |
 | g6.xlarge | 제공 | 없음 | 제공 | 제공 |
 
-- GPU 노드는 AZ를 가리지 않고 쓰기로 했지만, g6e.4xlarge가 실제로 뜰 수 있는 곳은 2a와 2b 두 곳입니다. eks-vpc는 네 AZ 모두에 Private 서브넷이 있으므로 Karpenter가 2a와 2b에서 g6e.4xlarge를, 2a, 2c, 2d에서 g6.xlarge를 고를 수 있습니다.
+- GPU 노드는 AZ를 가리지 않고 쓰기로 했지만, g6e.4xlarge가 실제로 뜰 수 있는 곳은 2a와 2b 두 곳입니다. eks-vpc는 네 AZ 모두에 Private 서브넷이 있으므로 Karpenter가 2a와 2b에서 g6e.4xlarge를, 2a, 2c, 2d에서 g6.xlarge를 고를 수 있습니다. 2026-11-24에 Decider 노드를 g6e.xlarge로 바꾼 뒤에는 GPU 노드 세 대가 모두 2a와 2b에서만 뜹니다(2026-11-24 조회).
 - g6e.4xlarge 1대 기준 Spot placement score는 apne2-az1이 9, apne2-az2가 8입니다(`aws ec2 get-spot-placement-scores --single-availability-zone`, 2026-11-14 조회).
 - 최근 24시간 내 g6e.4xlarge Linux Spot 가격은 2a가 시간당 1.7644달러, 2b가 1.8541달러였습니다(`aws ec2 describe-spot-price-history`, 2026-11-13 기준 값).
 
@@ -259,7 +263,7 @@ AZ별 제공 여부(`aws ec2 describe-instance-type-offerings --location-type av
 3. Objective 헤더(반영함). 7단계의 헤더를 `x-gateway-inference-objective`에서 `x-llm-d-inference-objective`로 바꿨습니다.
 4. batch 우선순위. batch를 음수 priority로 두면 기본 설정에서는 풀이 포화될 때 대기하지 않고 429로 거절됩니다. 배치 작업이 재시도하게 하거나 flow control을 켜야 합니다.
 5. `/v1/models` 경로. 본문이 없는 요청이라 model 헤더가 만들어지지 않습니다. 두 풀 중 어느 쪽으로 보낼지, 풀별 경로를 따로 둘지 4단계에서 정해야 합니다.
-6. Decider의 기반 모델(반영함). 서빙 파드가 S3에서만 읽게 하려면 `Qwen/Qwen3.5-2B-Base`도 S3에 올려야 합니다. 2단계의 적재 대상과 AGENT.md의 S3 구조에 `models/Qwen3.5-2B-Base/`를 추가했습니다.
+6. Decider의 기반 모델(반영함). 서빙 파드가 S3에서만 읽게 하려면 `Qwen/Qwen3.5-2B-Base`도 S3에 올려야 합니다. 2단계의 적재 대상과 AGENT.md의 S3 구조에 `models/Qwen3.5-2B-Base/`를 추가했습니다. 2026-11-24에 Decider를 v2로 바꾸면서 적재 대상에서 뺐습니다(v2는 기반 모델이 필요 없음).
 7. Decider 서빙. 엔드포인트가 `/v1/systemone`이므로 게이트웨이의 `/decide` 경로에서 경로를 바꿔 줘야 합니다. 저장소에 쿠버네티스 배포 가이드가 없고 서버를 로컬 실험용이라고 적고 있어서, 5단계 전에 이 서버를 EKS에 올리는 방식을 그대로 쓸지 확인이 필요합니다.
 8. Qwen 메모리 여유. per-channel 체크포인트는 KV 캐시에 남는 메모리가 약 3.7GiB로 계산됩니다(5절). 시작하지 못하면 `--max-model-len`을 낮출지, 공식 block FP8로 바꿀지 정해야 합니다.
 9. EPP 리소스. 차트 기본 요청이 CPU 8, 메모리 8Gi여서 시스템 노드 크기를 정하기 전에 값을 낮춰야 합니다.

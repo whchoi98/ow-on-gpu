@@ -1,15 +1,16 @@
 # model-sync: Hugging Face에서 S3로 체크포인트 적재
 
-`models.json`에 적힌 저장소 네 개를 리비전 해시로 고정해 S3 버킷의 `models/` 아래에 올립니다. 서빙 파드는 Hugging Face에서 내려받지 않고 이 S3 경로만 읽습니다.
+`models.json`에 적힌 저장소 세 개를 리비전 해시로 고정해 S3 버킷의 `models/` 아래에 올립니다. 서빙 파드는 Hugging Face에서 내려받지 않고 이 S3 경로만 읽습니다.
 
 | 저장소 | S3 경로 | 객체 수 | 크기 |
 |---|---|---|---|
 | RedHatAI/gemma-4-31B-it-FP8-dynamic | `models/gemma-4-31B-it-FP8-dynamic/` | 18 | 33.30GB |
 | AzatAI/Qwen3.8-27B-FP8-dynamic | `models/Qwen3.8-27B-FP8-dynamic/` | 14 | 36.80GB |
-| StrandsAgents/strands-decider-2B-qwen3.5-v1-2610 | `models/strands-decider-2B-qwen3.5-v1-2610/` | 29 | 0.23GB |
-| Qwen/Qwen3.5-2B-Base | `models/Qwen3.5-2B-Base/` | 12 | 4.57GB |
+| StrandsAgents/strands-decider-12B-gemma4-v2-2611 | `models/strands-decider-12B-gemma4-v2-2611/` | 13 | 23.97GB |
 
-합계는 객체 73개, 74.90GB입니다(`python3 sync.py --plan`으로 조회, 2026-11-14). `Qwen/Qwen3.5-2B-Base`는 Decider의 기반 모델입니다. Decider 저장소에는 LoRA 어댑터와 헤드만 있어서 함께 올립니다.
+합계는 객체 45개, 94.07GB입니다(`python3 sync.py --plan`으로 조회, 2026-11-24). Decider v2 체크포인트는 가중치를 모두 담고 있어 기반 모델을 따로 올리지 않습니다.
+
+2026-11-14에 올린 Decider v1(`models/strands-decider-2B-qwen3.5-v1-2610/`, 29개, 0.23GB)과 그 기반 모델(`models/Qwen3.5-2B-Base/`, 12개, 4.57GB)은 목록에서 뺐지만 버킷에는 남아 있습니다. 적재 Job은 목록에 없는 객체를 지우지 않습니다.
 
 ## 동작
 
@@ -79,3 +80,17 @@ aws s3 ls "s3://$(terraform -chdir=infra/terraform output -raw model_bucket)/mod
 - 전체 시간을 정한 파일은 Qwen의 19.98GB 파일이었고 40.7MB/s로 490초 걸렸습니다. Qwen 저장소의 큰 파일 세 개는 36.7MB/s에서 42.8MB/s로, 예상의 근거로 삼은 연결당 속도와 비슷했습니다.
 - Gemma의 26.89GB 파일은 213.4MB/s로 126초 만에 끝났습니다. 작업 장비에서 같은 파일을 잰 값(44MB/s)의 약 다섯 배여서, 연결당 속도가 40MB/s대로 제한된다는 가정은 저장소에 따라 맞지 않았습니다.
 - 적재 뒤 작업 장비에서 S3 객체 세 개를 다시 받아 sha256을 Hugging Face 값과 대조했고 모두 일치했습니다(`s3-sha256-spotcheck.txt`).
+
+## 실행 결과 (2026-11-24)
+
+Decider를 v2로 바꾸려고 `strands-decider-12B-gemma4-v2-2611`을 더해 다시 실행했습니다. 원시 자료는 `results/2026-11-24-model-sync/`에 있습니다.
+
+| 항목 | 값 |
+|---|---|
+| Job 시작부터 완료까지 | 6분 35초 (06:11:56Z에서 06:18:31Z) |
+| 전송과 검증 | 314.9초 |
+| 올린 객체 | 13개, 23,969,356,362바이트. 기대값과 일치 |
+| 건너뛴 객체 | Gemma와 Qwen의 32개 |
+| 재시도 | 0회 |
+
+- 전체 시간을 정한 파일은 23.92GB의 `model.safetensors`였고 76.1MB/s로 314.5초 걸렸습니다. 나머지 12개는 각각 2.2초 안에 끝났습니다.

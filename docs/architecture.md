@@ -36,7 +36,7 @@ A request travels from the browser through CloudFront and an internal ALB to the
 - **k8s/gateway/**: Gateway API and inference extension CRDs, agentgateway, the Gateway.
 - **k8s/gemma/**: vLLM for Gemma 4 31B with its InferencePool, endpoint picker and routes.
 - **k8s/qwen/**: vLLM for Qwen3.8-27B with sleep mode and MTP speculative decoding.
-- **k8s/decider/**: Strands Decider 2B, reached through the gateway at `/decide`.
+- **k8s/decider/**: Strands Decider 12B (v2), reached through the gateway at `/decide`. `install.sh` builds the image and applies the manifests.
 - **app/bff/websearch.py**: Web search tool that calls Amazon Bedrock AgentCore Web Search in us-east-1.
 
 ### Processing Layer
@@ -46,7 +46,7 @@ A request travels from the browser through CloudFront and an internal ALB to the
 
 ### Storage Layer
 - **infra/terraform/storage.tf**: S3 model bucket for weights and compile caches. Serving pods read only from here.
-- **infra/terraform/app.tf**: S3 bucket of the static page and the ECR repository of the BFF image.
+- **infra/terraform/app.tf**: S3 bucket of the static page and the ECR repositories of the BFF and Decider images.
 
 ### Observability Layer
 - **k8s/observability/**: Prometheus agent that sends vLLM, endpoint picker and gateway metrics to Amazon Managed Service for Prometheus, and the dashboard JSON.
@@ -76,7 +76,7 @@ flowchart TB
     EPPQ[EPP for Qwen]
     GEM["vLLM Gemma 4 31B (g6e.4xlarge)"]
     QWEN["vLLM Qwen3.8-27B (g6e.4xlarge)"]
-    DEC["Strands Decider 2B (g6.xlarge)"]
+    DEC["Strands Decider 12B (g6e.xlarge)"]
     WAKE[Wake API]
     WS(["AgentCore Web Search (us-east-1)"])
   end
@@ -120,6 +120,7 @@ flowchart TB
   S3M -->|weights| DEC
   CRON --> QWEN
   ECR -->|image| BFF
+  ECR -->|image| DEC
   GEM -.->|metrics| PROM
   QWEN -.->|metrics| PROM
   GW -.->|metrics| PROM
@@ -165,7 +166,7 @@ The BFF asks the Decider only when no rule decides the model, and calls the wake
 - Site: `https://<CloudFront domain>` (the default path serves the static page, `/v1/*` goes to the BFF)
 - Cluster: `ow-on-gpu`, namespaces `inference`, `model-jobs`, `app`, `monitoring`, `agentgateway-system`
 - NodePools: `gemma-od`, `qwen-od`, `decider`, `system`, `app`, `bench`
-- Nodes as of 2026-11-16: 2 x g6e.4xlarge, 1 x g6.xlarge, 2 x c7i-flex.xlarge, 2 x c7g.large, 2 x m7g.large
+- Nodes as of 2026-11-16: 2 x g6e.4xlarge, 1 x g6.xlarge, 2 x c7i-flex.xlarge, 2 x c7g.large, 2 x m7g.large. On 2026-11-24 the Decider node changed from g6.xlarge to g6e.xlarge
 
 ## Key Design Decisions
 
@@ -225,7 +226,7 @@ ow-on-gpu는 Amazon EKS 클러스터 하나에서 언어 모델 둘을 서빙하
 - **k8s/gateway/**: Gateway API와 추론 확장의 CRD, agentgateway, Gateway입니다.
 - **k8s/gemma/**: Gemma 4 31B의 vLLM과 InferencePool, 엔드포인트 선택기, 경로입니다.
 - **k8s/qwen/**: Qwen3.8-27B의 vLLM입니다. sleep mode와 MTP 추측 디코딩을 씁니다.
-- **k8s/decider/**: Strands Decider 2B입니다. 게이트웨이의 `/decide`로 부릅니다.
+- **k8s/decider/**: Strands Decider 12B(v2)입니다. 게이트웨이의 `/decide`로 부릅니다. `install.sh`가 이미지를 빌드하고 매니페스트를 적용합니다.
 - **app/bff/websearch.py**: us-east-1의 Amazon Bedrock AgentCore Web Search를 부르는 웹 검색 도구입니다.
 
 ### Processing Layer
@@ -235,7 +236,7 @@ ow-on-gpu는 Amazon EKS 클러스터 하나에서 언어 모델 둘을 서빙하
 
 ### Storage Layer
 - **infra/terraform/storage.tf**: 가중치와 compile 캐시를 두는 S3 모델 버킷입니다. 서빙 파드는 여기서만 읽습니다.
-- **infra/terraform/app.tf**: 정적 페이지의 S3 버킷과 BFF 이미지의 ECR 저장소입니다.
+- **infra/terraform/app.tf**: 정적 페이지의 S3 버킷과 BFF, Decider 이미지의 ECR 저장소입니다.
 
 ### Observability Layer
 - **k8s/observability/**: vLLM, 엔드포인트 선택기, 게이트웨이의 지표를 Amazon Managed Service for Prometheus로 보내는 Prometheus agent와 대시보드 JSON입니다.
@@ -265,7 +266,7 @@ flowchart TB
     EPPQ[EPP for Qwen]
     GEM["vLLM Gemma 4 31B (g6e.4xlarge)"]
     QWEN["vLLM Qwen3.8-27B (g6e.4xlarge)"]
-    DEC["Strands Decider 2B (g6.xlarge)"]
+    DEC["Strands Decider 12B (g6e.xlarge)"]
     WAKE[Wake API]
     WS(["AgentCore Web Search (us-east-1)"])
   end
@@ -309,6 +310,7 @@ flowchart TB
   S3M -->|weights| DEC
   CRON --> QWEN
   ECR -->|image| BFF
+  ECR -->|image| DEC
   GEM -.->|metrics| PROM
   QWEN -.->|metrics| PROM
   GW -.->|metrics| PROM
@@ -354,7 +356,7 @@ BFF는 규칙으로 모델이 정해지지 않을 때만 Decider에 묻고, Qwen
 - 사이트: `https://<CloudFront domain>` (기본 경로는 정적 페이지, `/v1/*`는 BFF)
 - 클러스터: `ow-on-gpu`, 네임스페이스 `inference`, `model-jobs`, `app`, `monitoring`, `agentgateway-system`
 - NodePool: `gemma-od`, `qwen-od`, `decider`, `system`, `app`, `bench`
-- 2026-11-16 기준 노드: g6e.4xlarge 2대, g6.xlarge 1대, c7i-flex.xlarge 2대, c7g.large 2대, m7g.large 2대
+- 2026-11-16 기준 노드: g6e.4xlarge 2대, g6.xlarge 1대, c7i-flex.xlarge 2대, c7g.large 2대, m7g.large 2대. 2026-11-24에 Decider 노드를 g6.xlarge에서 g6e.xlarge로 바꿨습니다
 
 ## 주요 설계 결정
 

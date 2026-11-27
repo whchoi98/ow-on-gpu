@@ -18,7 +18,7 @@ The VPC is one AWS CDK stack (EksVpcStack). Everything else is Terraform with a 
 | Load Balancer Controller | `infra/terraform/lbc.tf` | Helm release and IAM policy |
 | Storage | `infra/terraform/storage.tf` | Model bucket, roles and Pod Identity for serving pods and jobs |
 | Observability | `infra/terraform/observability.tf` | Prometheus workspace, collector role, ALB access-log bucket |
-| App layer | `infra/terraform/app.tf` | CloudFront, WAF, Cognito, static page bucket and objects, ECR repository, security groups |
+| App layer | `infra/terraform/app.tf` | CloudFront, WAF, Cognito, static page bucket and objects, ECR repositories (BFF, Decider), security groups |
 | BFF on EKS | `infra/terraform/bff_eks.tf` | BFF pod role, Pod Identity, CloudFront VPC origin |
 | Network lookup | `infra/terraform/network.tf` | Looks up `eks-vpc` and tags subnets |
 
@@ -59,7 +59,7 @@ VPC는 AWS CDK 스택 하나(EksVpcStack)입니다. 그 밖의 리소스는 로�
 | Load Balancer Controller | `infra/terraform/lbc.tf` | Helm 릴리스와 IAM 정책 |
 | Storage | `infra/terraform/storage.tf` | 모델 버킷, 서빙 파드와 Job의 역할과 Pod Identity |
 | Observability | `infra/terraform/observability.tf` | Prometheus 작업 공간, 수집기 역할, ALB 접근 로그 버킷 |
-| App layer | `infra/terraform/app.tf` | CloudFront, WAF, Cognito, 정적 페이지 버킷과 객체, ECR 저장소, 보안 그룹 |
+| App layer | `infra/terraform/app.tf` | CloudFront, WAF, Cognito, 정적 페이지 버킷과 객체, ECR 저장소(BFF, Decider), 보안 그룹 |
 | BFF on EKS | `infra/terraform/bff_eks.tf` | BFF 파드의 역할, Pod Identity, CloudFront VPC origin |
 | Network lookup | `infra/terraform/network.tf` | `eks-vpc`를 조회하고 서브넷에 태그를 붙임 |
 

@@ -16,6 +16,7 @@
 | `slo/k8s/` | 원인 확인용 구성(prefix caching 끔, MTP 끔) |
 | `priority/run.py` | 배치 부하가 있을 때 interactive 요청의 TTFT |
 | `decider/bench.py` | Decider의 판단 시간 |
+| `decider/bff_ask_decider.py` | BFF 파드 안에서 배포된 `ask_decider`를 불러, 질문 세 개를 담은 요청 하나의 시간과 결정을 확인(비밀번호 불필요, 모델은 부르지 않음) |
 | `bff/websearch_check.py`, `bff/stream_check.py`, `bff/waf_rate_check.sh` | CloudFront 주소로 하는 배포 뒤 확인(로그인 필요) |
 | `bff/lang_check_live.py` | 토큰 없는 요청과 가짜 토큰으로 하는 라이브 확인(비밀번호 불필요) |
 | `bff/lang_check_in_pod.py` | BFF 파드 안에서 같은 앱을 띄워 실제 모델까지 보내는 확인(비밀번호 불필요) |

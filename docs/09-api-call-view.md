@@ -24,7 +24,7 @@ LLM API 호출 한 건이 거치는 여덟 단계를 한 장의 인포그래픽�
 | 1 API Gateway | CloudFront, AWS WAF, Cognito, BFF의 토큰과 본문 검증 | CloudFront, Cognito, BFF |
 | 2 Load Balancer | 내부 ALB(쿠키 고정 30분), agentgateway. 2026-11-15부터 BFF는 게이트웨이의 Service를 직접 불러 NLB를 거치지 않음 | 내부 ALB, 게이트웨이 |
 | 3 Tokenization | vLLM API 서버(chat template, tokenizer), `--max-model-len` | 고른 모델 |
-| 4 Model Router | BFF의 결정 순서, Decider 2B, InferencePool과 EPP, 깨우기 API, vLLM priority 스케줄러 | BFF, 게이트웨이, Decider, 깨우기 API(Qwen만) |
+| 4 Model Router | BFF의 결정 순서, Decider 12B, InferencePool과 EPP, 깨우기 API, vLLM priority 스케줄러 | BFF, 게이트웨이, Decider, 깨우기 API(Qwen만) |
 | 5 Inference Engine | vLLM v0.33.0의 Prefill과 Decode, L40S 48GB | 고른 모델 |
 | 6 Post-processing | vLLM의 detokenize, reasoning parser, tool-call parser, BFF의 도구 실행, AgentCore Web Search | 고른 모델, BFF, Web Search(웹 검색을 켰을 때) |
 | 7 Response & Billing | BFF가 그대로 흘려보내는 SSE, usage, 응답 헤더. 비용은 GPU 노드 시간 | 브라우저, 돌아오는 선 |
@@ -74,7 +74,8 @@ LLM API 호출 한 건이 거치는 여덟 단계를 한 장의 인포그래픽�
 | 구간별 시간(사용자와 엣지 사이, CloudFront, ALB, BFF, 게이트웨이, vLLM, Prefill, 대기열, 응답 헤더, 첫 내용) | `docs/08-results.md` 2절의 "2026-11-15 재측정"(BFF를 EKS 파드로 옮긴 뒤). CloudFront를 거쳐 모델마다 20건을 하나씩 보낸 중앙값 |
 | TTFT, Chunk 간격, 토큰당 시간, 전체 시간, 초당 토큰, 동시에 실행한 요청 수 | `docs/08-results.md` 3절의 S1(입력 256, 출력 128, 동시성 1)과 `results/2026-11-14-slo/<모델>/S1_chat_c1.json` |
 | 가중치와 KV 캐시 크기, 사용 가능한 GPU 메모리 | `docs/03-vllm.md`의 기동 로그 |
-| Decider 판단 시간(BFF가 잰 왕복 4건의 범위, 2026-11-15), 고정 비용 | `docs/07-bff.md` |
+| Decider 판단 시간(BFF 파드에서 `ask_decider`를 부른 왕복 20건의 범위, 2026-11-24) | `docs/05-decider.md` |
+| 고정 비용 | `docs/07-bff.md`의 "비용"(2026-11-15)에 Decider 노드의 가격 차이를 더한 값. `docs/05-decider.md`의 "비용" |
 | 우선순위별 상담 TTFT | `docs/08-results.md` 4절 |
 | 지표 수집 대상, 대시보드 | `docs/08-results.md` 관측 |
 | 웹 검색의 결과 수, 본문 길이, 검색 시간, 입력 토큰, 요금, 할당량 | `docs/10-web-search.md` |

@@ -1,0 +1,292 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cloudwatch.aws.amazon.com/auto-annotate-dotnet: "true"
+    cloudwatch.aws.amazon.com/auto-annotate-java: "true"
+    cloudwatch.aws.amazon.com/auto-annotate-nodejs: "true"
+    cloudwatch.aws.amazon.com/auto-annotate-python: "true"
+    instrumentation.opentelemetry.io/inject-dotnet: "false"
+    instrumentation.opentelemetry.io/inject-java: "false"
+    instrumentation.opentelemetry.io/inject-nodejs: "false"
+    instrumentation.opentelemetry.io/inject-python: "false"
+  creationTimestamp: "2026-11-24T06:53:48Z"
+  generateName: decider-7f55fdb8c-
+  generation: 1
+  labels:
+    app.kubernetes.io/name: decider
+    eks.amazonaws.com/pod-identity: enabled
+    pod-template-hash: 7f55fdb8c
+    topology.kubernetes.io/region: ap-northeast-2
+    topology.kubernetes.io/zone: ap-northeast-2b
+  name: decider-7f55fdb8c-4wg9s
+  namespace: inference
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: decider-7f55fdb8c
+    uid: d80063a7-f69c-4ca8-bd0d-13b7e2a6ec5a
+  resourceVersion: "6342810"
+  uid: 0c605d50-168a-4855-99a8-2656c1488467
+spec:
+  automountServiceAccountToken: false
+  containers:
+  - env:
+    - name: DECIDER_CHECKPOINT
+      value: /opt/ml/model/strands-decider-12B-gemma4-v2-2611
+    - name: AWS_STS_REGIONAL_ENDPOINTS
+      value: regional
+    - name: AWS_DEFAULT_REGION
+      value: ap-northeast-2
+    - name: AWS_REGION
+      value: ap-northeast-2
+    - name: AWS_CONTAINER_CREDENTIALS_FULL_URI
+      value: http://169.254.170.23/v1/credentials
+    - name: AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE
+      value: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token
+    image: <account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/decider:0.4.0
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health
+        port: http
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: decider
+    ports:
+    - containerPort: 8080
+      name: http
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health
+        port: http
+        scheme: HTTP
+      periodSeconds: 2
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      limits:
+        memory: 28Gi
+        nvidia.com/gpu: "1"
+      requests:
+        cpu: "2"
+        memory: 24Gi
+        nvidia.com/gpu: "1"
+    startupProbe:
+      failureThreshold: 900
+      httpGet:
+        path: /health
+        port: http
+        scheme: HTTP
+      periodSeconds: 1
+      successThreshold: 1
+      timeoutSeconds: 1
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /opt/ml/model
+      name: model
+    - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+      name: eks-pod-identity-token
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  initContainers:
+  - args:
+    - |
+      set -eu
+      MODEL=strands-decider-12B-gemma4-v2-2611
+      aws s3 sync "s3://$MODEL_BUCKET/models/$MODEL/" "/opt/ml/model/$MODEL/" --only-show-errors
+      du -sh /opt/ml/model/*
+    command:
+    - /bin/sh
+    - -c
+    env:
+    - name: MODEL_BUCKET
+      valueFrom:
+        configMapKeyRef:
+          key: MODEL_BUCKET
+          name: platform
+    - name: AWS_DEFAULT_REGION
+      valueFrom:
+        configMapKeyRef:
+          key: AWS_REGION
+          name: platform
+    - name: AWS_STS_REGIONAL_ENDPOINTS
+      value: regional
+    - name: AWS_CONTAINER_CREDENTIALS_FULL_URI
+      value: http://169.254.170.23/v1/credentials
+    - name: AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE
+      value: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token
+    image: public.ecr.aws/aws-cli/aws-cli:2.40.3
+    imagePullPolicy: IfNotPresent
+    name: model-fetch
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /opt/ml/model
+      name: model
+    - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+      name: eks-pod-identity-token
+      readOnly: true
+  nodeName: ip-10-200-43-232.ap-northeast-2.compute.internal
+  nodeSelector:
+    karpenter.sh/nodepool: decider
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: decider
+  serviceAccountName: decider
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoSchedule
+    key: nvidia.com/gpu
+    operator: Exists
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: eks-pod-identity-token
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          audience: pods.eks.amazonaws.com
+          expirationSeconds: 85785
+          path: eks-pod-identity-token
+  - emptyDir: {}
+    name: model
+status:
+  allocatedResources:
+    cpu: "2"
+    memory: 24Gi
+    nvidia.com/gpu: "1"
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2026-11-24T06:55:15Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2026-11-24T06:57:07Z"
+    observedGeneration: 1
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2026-11-24T06:59:21Z"
+    observedGeneration: 1
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2026-11-24T06:59:21Z"
+    observedGeneration: 1
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2026-11-24T06:55:13Z"
+    observedGeneration: 1
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - allocatedResources:
+      cpu: "2"
+      memory: 24Gi
+      nvidia.com/gpu: "1"
+    allocatedResourcesStatus:
+    - name: nvidia.com/gpu
+      resources:
+      - health: Healthy
+        resourceID: GPU-43db6a92-e42e-5d8a-e932-5ed74ab6f995
+    containerID: containerd://9938742453db96221160c8a3b45c575743f3c7ebf7a697edac67c5472041b398
+    image: <account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/decider:0.4.0
+    imageID: <account-id>.dkr.ecr.ap-northeast-2.amazonaws.com/ow-on-gpu/decider@sha256:716cd548c9e4d853f67f7e913a1bce15f27f99da117e03154cd672b9243dfe6a
+    lastState: {}
+    name: decider
+    ready: true
+    resources:
+      limits:
+        memory: 28Gi
+        nvidia.com/gpu: "1"
+      requests:
+        cpu: "2"
+        memory: 24Gi
+        nvidia.com/gpu: "1"
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2026-11-24T06:58:38Z"
+    user:
+      linux:
+        gid: 0
+        supplementalGroups:
+        - 0
+        uid: 0
+    volumeMounts:
+    - mountPath: /opt/ml/model
+      name: model
+    - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+      name: eks-pod-identity-token
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 10.200.43.232
+  hostIPs:
+  - ip: 10.200.43.232
+  initContainerStatuses:
+  - containerID: containerd://5ff0942927cad7bef9508644518ce0bf82b0e31224ef88eea57d3d793a5da1c6
+    image: public.ecr.aws/aws-cli/aws-cli:2.40.3
+    imageID: public.ecr.aws/aws-cli/aws-cli@sha256:33a16c53ea442e918b58df67301ad76a8fb57082c39f7e78753b898c3f3e87c2
+    lastState: {}
+    name: model-fetch
+    ready: true
+    resources: {}
+    restartCount: 0
+    started: false
+    state:
+      terminated:
+        containerID: containerd://5ff0942927cad7bef9508644518ce0bf82b0e31224ef88eea57d3d793a5da1c6
+        exitCode: 0
+        finishedAt: "2026-11-24T06:57:07Z"
+        reason: Completed
+        startedAt: "2026-11-24T06:55:26Z"
+    user:
+      linux:
+        gid: 0
+        supplementalGroups:
+        - 0
+        uid: 0
+    volumeMounts:
+    - mountPath: /opt/ml/model
+      name: model
+    - mountPath: /var/run/secrets/pods.eks.amazonaws.com/serviceaccount
+      name: eks-pod-identity-token
+      readOnly: true
+      recursiveReadOnly: Disabled
+  observedGeneration: 1
+  phase: Running
+  podIP: 10.200.34.115
+  podIPs:
+  - ip: 10.200.34.115
+  qosClass: Burstable
+  resources:
+    limits:
+      memory: 28Gi
+    requests:
+      cpu: 1999m
+      memory: 24Gi
+  startTime: "2026-11-24T06:55:13Z"

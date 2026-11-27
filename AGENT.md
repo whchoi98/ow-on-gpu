@@ -20,7 +20,7 @@ EKS: BFF 파드 2개        Graviton NodePool app(Karpenter). 토큰 검증, 정
 EKS: Inference gateway (agentgateway, GAIE)
   ├─ HTTPRoute model=gemma-4-31b ─ Gemma InferencePool ─ EPP ─ vLLM (g6e.4xlarge On-Demand)
   ├─ HTTPRoute model=qwen38-27b  ─ Qwen InferencePool  ─ EPP ─ vLLM (g6e.4xlarge On-Demand)
-  └─ HTTPRoute /decide           ─ Strands Decider 2B Service   (g6.xlarge)
+  └─ HTTPRoute /decide           ─ Strands Decider 12B Service  (g6e.xlarge)
 
 Amazon S3 (S3 Gateway Endpoint 경유): 모델 가중치, compile 캐시. 서빙 파드는 S3에서만 읽음
 ```
@@ -41,7 +41,7 @@ Amazon S3 (S3 Gateway Endpoint 경유): 모델 가중치, compile 캐시. 서빙
 | GPU 노드 | g6e.4xlarge 2대 (L40S 1장, 가용 VRAM 44.7GiB, 시스템 메모리 128GiB, 네트워크 20Gbps 지속) |
 | Gemma 노드 | On-Demand, 고객 경로 전용 |
 | Qwen 노드 | On-Demand, 내부 업무 전용 (처음 계획은 Spot. 2026-11-14 변경) |
-| Decider 노드 | g6.xlarge 1대, On-Demand |
+| Decider 노드 | g6e.xlarge 1대(L40S 1장, 시스템 메모리 32GiB), On-Demand (처음에는 g6.xlarge. 2026-11-24에 Decider v2 12B에 맞춰 변경) |
 | GPU 노드 AZ | 제한 없음. GPU NodePool에는 zone 요구 조건을 두지 않고 Karpenter가 용량이 있는 AZ를 고르게 함 |
 | 시스템 노드 | 게이트웨이와 EPP용 CPU 노드, AZ를 나눠 2대 이상 |
 | vLLM 이미지 | vllm/vllm-openai:v0.33.0 (처음 계획은 v0.26.0. 1부, 2부와 엔진 버전이 다르면 비교표에 버전을 함께 적음) |
@@ -53,7 +53,8 @@ Amazon S3 (S3 Gateway Endpoint 경유): 모델 가중치, compile 캐시. 서빙
 | 정밀도 | FP8. L40S(Ada, SM 8.9)는 NVFP4를 쓸 수 없음 |
 | Gemma 체크포인트 | RedHatAI/gemma-4-31B-it-FP8-dynamic |
 | Qwen 체크포인트 | per-channel FP8-dynamic (예: AzatAI/Qwen3.8-27B-FP8-dynamic). 공식 block FP8은 Ada에서 커널 제약이 있어 0단계에서 비교 확인 |
-| Decider 체크포인트 | strands-decider-2B-qwen3.5-v1-2610 (Strands Labs 저장소 권장 버전) |
+| Decider 체크포인트 | strands-decider-12B-gemma4-v2-2611. v2에서 48GB GPU 한 장에 맞는 크기 (2026-11-24에 v1의 strands-decider-2B-qwen3.5-v1-2610에서 변경, `docs/05-decider.md`, ADR-002) |
+| Decider 이미지 | ECR `ow-on-gpu/decider:0.4.0`. strands-decider 저장소 v0.4.0의 `deploy/sagemaker/Dockerfile`로 빌드(`k8s/decider/install.sh build`). v2 체크포인트는 strands-decider 0.4.0 이상이 필요한데 공개 서빙 이미지는 2026-11-20 빌드까지 0.3.1.dev1이어서 직접 빌드함 |
 
 ## 업무와 모델 배정
 
@@ -64,7 +65,7 @@ Amazon S3 (S3 Gateway Endpoint 경유): 모델 가중치, compile 캐시. 서빙
 | 상품 이미지 속성 추출, 문서 OCR | Qwen | interactive 또는 batch |
 | 사내 코딩 에이전트 | Qwen | interactive |
 
-데이터 정책: 개인정보가 들어간 요청은 Gemma로만 보냅니다. 형식이 정해진 민감 정보(주민등록번호, 카드번호 등)는 BFF의 결정적 규칙으로 먼저 거르고, Decider 2B는 형식이 없는 경우의 보조 판단에만 씁니다. Decider 응답이 없거나 신뢰도가 기준보다 낮으면 Gemma, thinking off, 민감 정보 있음으로 처리합니다. 다만 모델 선택의 신뢰도만 낮고 개인정보가 없다는 판단이 기준 이상이면 Gemma, thinking off로 보내되 민감 정보 요청으로 다루지 않습니다(2026-11-17 변경. 업무 종류 없이 보낸 일반 질문에 웹 검색이 붙지 않던 문제 때문, `docs/10-web-search.md`). Decider 판단은 메시지마다가 아니라 세션 시작 시 한 번 내리고 재사용합니다.
+데이터 정책: 개인정보가 들어간 요청은 Gemma로만 보냅니다. 형식이 정해진 민감 정보(주민등록번호, 카드번호 등)는 BFF의 결정적 규칙으로 먼저 거르고, Decider는 형식이 없는 경우의 보조 판단에만 씁니다. Decider 응답이 없거나 신뢰도가 기준보다 낮으면 Gemma, thinking off, 민감 정보 있음으로 처리합니다. 다만 모델 선택의 신뢰도만 낮고 개인정보가 없다는 판단이 기준 이상이면 Gemma, thinking off로 보내되 민감 정보 요청으로 다루지 않습니다(2026-11-17 변경. 업무 종류 없이 보낸 일반 질문에 웹 검색이 붙지 않던 문제 때문, `docs/10-web-search.md`). Decider 판단은 메시지마다가 아니라 세션 시작 시 한 번 내리고 재사용합니다.
 
 ## vLLM 시작 설정
 
@@ -115,8 +116,9 @@ Qwen3.8-27B
 ```
 s3://<bucket>/models/gemma-4-31B-it-FP8-dynamic/
 s3://<bucket>/models/Qwen3.8-27B-FP8-dynamic/
-s3://<bucket>/models/strands-decider-2B-qwen3.5-v1-2610/
-s3://<bucket>/models/Qwen3.5-2B-Base/                      # Decider의 기반 모델. Decider 저장소에는 어댑터와 헤드만 있음
+s3://<bucket>/models/strands-decider-12B-gemma4-v2-2611/   # Decider v2. 가중치를 모두 담고 있어 기반 모델이 따로 없음
+s3://<bucket>/models/strands-decider-2B-qwen3.5-v1-2610/   # 2026-11-24까지 쓴 Decider v1. 쓰지 않지만 남아 있음
+s3://<bucket>/models/Qwen3.5-2B-Base/                      # Decider v1의 기반 모델. 쓰지 않지만 남아 있음
 s3://<bucket>/vllm-cache/v0.33.0-gemma4-31b-fp8-l40s/
 s3://<bucket>/vllm-cache/v0.33.0-qwen38-27b-fp8-l40s/
 ```
@@ -150,7 +152,7 @@ infra/terraform/        EKS, Karpenter, IAM, S3, 보안 그룹, CloudFront, WAF,
 k8s/base/               네임스페이스, NodePool, EC2NodeClass, NVIDIA device plugin
 k8s/gemma/              Deployment, Service, InferencePool, EPP, HTTPRoute, InferenceObjective
 k8s/qwen/               위와 동일
-k8s/decider/            Deployment, Service, HTTPRoute
+k8s/decider/            Deployment, Service, HTTPRoute. install.sh로 이미지를 빌드하고 적용
 k8s/gateway/            Gateway API CRD, GAIE CRD, llm-d-router CRD, agentgateway, Gateway, 게이트웨이 Service(내부 NLB)
 k8s/sleep-controller/   업무 시간 sleep CronJob, 깨우기 API
 k8s/bff/                BFF의 Graviton NodePool, Deployment, Service, Ingress(내부 ALB). install.sh로 적용
@@ -178,7 +180,10 @@ source-doc/             블로그 원고의 첫 원본(md, images, zip) 사본
 - Qwen chat template은 thinking이 기본으로 켜져 있습니다. 요청별 `enable_thinking`으로 제어합니다.
 - Qwen은 MTP의 추측 토큰 3개 때문에 요청마다 Mamba 상태 블록을 4배로 잡아, KV 캐시 2.45GiB(46블록)에서 동시에 3건만 실행합니다. prefix caching을 꺼도 같습니다. MTP를 끄면 20건까지 실행하고 S1 최대 처리량이 초당 91.2토큰에서 281.8토큰이 되지만 요청 하나는 초당 32.5토큰에서 19.2토큰으로 느려집니다(docs/08-results.md 3절).
 - level 1 sleep은 가중치를 호스트 RAM에 보존합니다. g7e에서는 약 30GiB였고, L40S의 Qwen per-channel 체크포인트에서는 sleep을 한 번 거친 뒤 컨테이너 메모리가 60.4GiB였습니다(docs/03-vllm.md).
-- Decider 2B는 예열 중 첫 요청이 수 초 걸립니다. 예열 요청이 끝난 뒤 Ready가 되게 합니다.
+- Decider는 예열 중 첫 요청이 수 초 걸립니다. 예열 요청이 끝난 뒤 Ready가 되게 합니다.
+- 공개 서빙 이미지에 든 strands-decider 버전은 태그로 알 수 없습니다. 2026-11-20 빌드(v1.0.2)까지 0.3.1.dev1이었고 v2 체크포인트(`decision_config.json`)를 읽는 모듈이 없었습니다. 이미지 설정의 레이블과 패키지 레이어로 확인합니다.
+- `k8s/decider`는 `kubectl apply -k`로 직접 적용하지 않습니다. 이미지 주소의 자리(`${DECIDER_IMAGE}`)를 `k8s/decider/install.sh`가 채웁니다.
+- 작업 장비가 arm64라 Decider 이미지(amd64)를 빌드하려면 amd64 에뮬레이션(binfmt)이 등록되어 있어야 합니다. 재부팅하면 등록이 사라집니다.
 - CloudFront 오리진 응답 타임아웃 기본값은 30초, ALB idle timeout 기본값은 60초입니다. 배치는 CloudFront 경로로 보내지 않습니다.
 - BFF가 SSE 응답을 모아서 내보내면 스트리밍이 깨집니다. 청크 단위로 그대로 흘려보냅니다.
 - 게이트웨이와 EPP가 멈추면 두 모델 모두 응답하지 못합니다. CPU 노드와 복제본을 AZ별로 나눕니다.

@@ -1,0 +1,52 @@
+{"event": "plan", "model": "models/gemma-4-31B-it-FP8-dynamic", "repo": "RedHatAI/gemma-4-31B-it-FP8-dynamic", "revision": "d4ab4f579dd3516f97d8a6a4c98d0653480bad15", "objects": 18, "bytes": 33300479335}
+{"event": "plan", "model": "models/Qwen3.8-27B-FP8-dynamic", "repo": "AzatAI/Qwen3.8-27B-FP8-dynamic", "revision": "10c68ff4bfcfa1580bac4624f2592d4b7808a7d1", "objects": 14, "bytes": 36798482331}
+{"event": "plan", "model": "models/strands-decider-12B-gemma4-v2-2611", "repo": "StrandsAgents/strands-decider-12B-gemma4-v2-2611", "revision": "41d5dc0d20a4deb2835690eb7529ee92463f6c9f", "objects": 13, "bytes": 23969356362}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": ".gitattributes", "bytes": 1708}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "README.md", "bytes": 12987}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "chat_template.jinja", "bytes": 18682}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "config.json", "bytes": 5971}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "every_eval_ever/aime25.json", "bytes": 3728}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "every_eval_ever/gpqa_diamond.json", "bytes": 2345}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "every_eval_ever/gsm8k_platinum.json", "bytes": 3917}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "every_eval_ever/ifeval.json", "bytes": 6170}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "every_eval_ever/lcb_codegeneration_v6.json", "bytes": 2379}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "every_eval_ever/math_500.json", "bytes": 2217}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "every_eval_ever/mmlu_pro.json", "bytes": 1844}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "generation_config.json", "bytes": 208}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "model-00001-of-00002.safetensors", "bytes": 26885346708}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "model-00002-of-00002.safetensors", "bytes": 6382775828}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "model.safetensors.index.json", "bytes": 120246}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "processor_config.json", "bytes": 1689}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "tokenizer.json", "bytes": 32169626}
+{"event": "skipped", "model": "models/gemma-4-31B-it-FP8-dynamic", "path": "tokenizer_config.json", "bytes": 3082}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": ".gitattributes", "bytes": 1570}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "LICENSE", "bytes": 11544}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "README.md", "bytes": 5188}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "chat_template.jinja", "bytes": 8952}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "config.json", "bytes": 29936}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "generation_config.json", "bytes": 214}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "model-00001-of-00002.safetensors", "bytes": 19978305544}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "model-00002-of-00002.safetensors", "bytes": 15950589024}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "model.safetensors.index.json", "bytes": 137930}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "model_mtp.safetensors", "bytes": 849400392}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "processor_config.json", "bytes": 1191}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "recipe.yaml", "bytes": 356}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "tokenizer.json", "bytes": 19989325}
+{"event": "skipped", "model": "models/Qwen3.8-27B-FP8-dynamic", "path": "tokenizer_config.json", "bytes": 1165}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "README.md", "bytes": 26118, "seconds": 0.5, "mb_per_s": 0.1}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "LICENSE", "bytes": 11358, "seconds": 0.5, "mb_per_s": 0.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "decision_config.json", "bytes": 5746, "seconds": 0.5, "mb_per_s": 0.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "config.json", "bytes": 4423, "seconds": 0.5, "mb_per_s": 0.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": ".gitattributes", "bytes": 1788, "seconds": 0.5, "mb_per_s": 0.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "tokenizer_config.json", "bytes": 2102, "seconds": 0.5, "mb_per_s": 0.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "processor_config.json", "bytes": 1382, "seconds": 0.5, "mb_per_s": 0.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "NOTICE", "bytes": 714, "seconds": 0.5, "mb_per_s": 0.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "assets/strands-decider-v2-12B.png", "bytes": 167446, "seconds": 1.5, "mb_per_s": 0.1}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "readout.safetensors", "bytes": 1958512, "seconds": 1.7, "mb_per_s": 1.1}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "tokenizer.json", "bytes": 32169626, "seconds": 1.8, "mb_per_s": 18.0}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "golden_vectors.jsonl", "bytes": 15457739, "seconds": 2.2, "mb_per_s": 7.1}
+{"event": "uploaded", "model": "models/strands-decider-12B-gemma4-v2-2611", "path": "model.safetensors", "bytes": 23919549408, "seconds": 314.5, "mb_per_s": 76.1}
+{"event": "verified", "model": "models/gemma-4-31B-it-FP8-dynamic", "s3": "s3://ow-on-gpu-<suffix>/models/gemma-4-31B-it-FP8-dynamic/", "objects": 18, "bytes": 33300479335, "expected_objects": 18, "expected_bytes": 33300479335, "match": true}
+{"event": "verified", "model": "models/Qwen3.8-27B-FP8-dynamic", "s3": "s3://ow-on-gpu-<suffix>/models/Qwen3.8-27B-FP8-dynamic/", "objects": 14, "bytes": 36798482331, "expected_objects": 14, "expected_bytes": 36798482331, "match": true}
+{"event": "verified", "model": "models/strands-decider-12B-gemma4-v2-2611", "s3": "s3://ow-on-gpu-<suffix>/models/strands-decider-12B-gemma4-v2-2611/", "objects": 13, "bytes": 23969356362, "expected_objects": 13, "expected_bytes": 23969356362, "match": true}
+{"event": "summary", "ok": true, "objects": 45, "bytes": 94068318028, "transferred": 13, "seconds": 314.9}

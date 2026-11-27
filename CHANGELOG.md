@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Move the Decider to Strands Decider v2 12B (`strands-decider-12B-gemma4-v2-2611`) on one g6e.xlarge node, served from an image built from the upstream Dockerfile at v0.4.0 with `k8s/decider/install.sh` (ADR-002)
+- Load three repositories in the model sync Job: the Decider v2 checkpoint holds the full weights, so the v1 checkpoint and its base model are no longer loaded
+- Show the Decider v2 name, node and measured values on the page, in the infographics and in the three blog drafts
+- Update the estimated fixed cost to about 11.35 USD per hour for the price of the new Decider node
+
 ## [1.1.0] - 2026-11-17
 
 ### Changed
@@ -69,6 +76,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)을 따릅니다.
 
 ## [Unreleased]
+
+### Changed
+
+- Decider를 g6e.xlarge 노드 1대의 Strands Decider v2 12B(`strands-decider-12B-gemma4-v2-2611`)로 교체. 이미지는 업스트림 v0.4.0의 Dockerfile을 `k8s/decider/install.sh`로 빌드(ADR-002)
+- 모델 적재 Job이 저장소 3개를 올리도록 변경. Decider v2 체크포인트는 가중치를 모두 담고 있어 v1 체크포인트와 그 기반 모델을 올리지 않음
+- 화면, 인포그래픽, 블로그 원고 3편의 Decider 이름, 노드, 측정값을 v2 값으로 변경
+- 새 Decider 노드의 가격을 반영해 고정 비용 추정을 시간당 약 11.35달러로 변경
 
 ## [1.1.0] - 2026-11-17
 

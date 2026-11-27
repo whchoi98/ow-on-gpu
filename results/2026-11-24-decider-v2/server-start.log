@@ -1,0 +1,27 @@
+Loading weights:   0%|          | 0/676 [00:00<?, ?it/s]Loading weights:  48%|████▊     | 326/676 [00:00<00:00, 3000.76it/s]Loading weights:  93%|█████████▎| 627/676 [00:00<00:00, 2605.39it/s]Loading weights: 100%|██████████| 676/676 [00:00<00:00, 2760.60it/s]
+serving /opt/ml/model/strands-decider-12B-gemma4-v2-2611 on http://0.0.0.0:8080 
+(cuda)
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+INFO:     10.200.43.232:51630 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:51632 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:51648 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:51658 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:51660 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:51676 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:53642 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:53646 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.37.13:60158 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:53652 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:53660 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:53672 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:53676 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:44468 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:44484 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:44500 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:44514 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:44516 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:44528 - "GET /health HTTP/1.1" 200 OK
+INFO:     10.200.43.232:37872 - "GET /health HTTP/1.1" 200 OK

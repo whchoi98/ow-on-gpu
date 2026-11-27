@@ -1,0 +1,60 @@
+{
+ "without_token": [
+  {
+   "x-lang": null,
+   "status": 401,
+   "message": "로그인이 필요합니다"
+  },
+  {
+   "x-lang": "ko",
+   "status": 401,
+   "message": "로그인이 필요합니다"
+  },
+  {
+   "x-lang": "en",
+   "status": 401,
+   "message": "Sign-in is required"
+  },
+  {
+   "x-lang": "fr",
+   "status": 401,
+   "message": "로그인이 필요합니다"
+  }
+ ],
+ "pages": [
+  {
+   "page": "ko",
+   "calls": [
+    {
+     "path": "chat/completions",
+     "x-lang": "ko",
+     "status": 401,
+     "message": "토큰 형식이 올바르지 않습니다"
+    }
+   ],
+   "after_401_heading": "토큰이 도착하는 순간을 기록합니다",
+   "after_401_notice": [
+    "로그인이 만료되었습니다. 다시 로그인해 주세요."
+   ],
+   "page_errors": [],
+   "script": "/assets/index-CIVAEWAC.js"
+  },
+  {
+   "page": "en",
+   "calls": [
+    {
+     "path": "chat/completions",
+     "x-lang": "en",
+     "status": 401,
+     "message": "The token is malformed"
+    }
+   ],
+   "after_401_heading": "We record the moment each token arrives",
+   "after_401_notice": [
+    "Your sign-in expired. Sign in again."
+   ],
+   "page_errors": [],
+   "script": "/assets/index-CIVAEWAC.js"
+  }
+ ]
+}

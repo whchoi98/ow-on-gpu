@@ -1,7 +1,10 @@
 # 서빙 방식은 strands-labs/strands-decider 저장소의 deploy/sagemaker를 따른다.
-# - 이미지: 저장소가 안내하는 공개 컨테이너. 안에서 `strands-decider serve --host 0.0.0.0 --port 8080`이 실행된다.
-# - 모델 배치: scripts/fetch-model.ts와 같게 /opt/ml/model/<모델 이름>/과 /opt/ml/model/base/에 두고,
-#   strands_decider_config.json의 base_model을 로컬 경로로 바꾼다. HF_HUB_OFFLINE=1이라 Hugging Face에 접근하지 않는다.
+# - 이미지: 저장소의 deploy/sagemaker/Dockerfile로 빌드한 이미지(install.sh build). 저장소가 안내하는 공개 컨테이너는
+#   2026-11-20 빌드까지 strands-decider 0.3.1.dev1이어서 v2 체크포인트를 읽지 못한다.
+#   안에서 `strands-decider serve --host 0.0.0.0 --port 8080`이 실행된다.
+#   이미지 주소에 계정 ID가 들어가므로 ${DECIDER_IMAGE} 자리는 install.sh가 채운다. kubectl apply -k로 직접 적용하지 않는다.
+# - 모델 배치: scripts/fetch-model.ts와 같게 /opt/ml/model/<모델 이름>/에 둔다. v2 체크포인트(decision_config.json)는
+#   가중치를 모두 담고 있어 기반 모델을 따로 두지 않는다. HF_HUB_OFFLINE=1이라 Hugging Face에 접근하지 않는다.
 # - 예열: 서버가 요청을 받기 전에 질문 종류별로 한 번씩 스스로 실행하고, 끝날 때까지 /health가 실패한다.
 #
 # infra/terraform/storage.tf가 이 ServiceAccount에 S3 읽기 전용 역할을 Pod Identity로 연결한다.
@@ -29,6 +32,13 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: decider
+      # 자동 계측을 받지 않는다. amazon-cloudwatch-observability 애드온의 웹훅이 파드 템플릿이 바뀌는 Deployment에
+      # inject-*: "true"를 붙여 계측 init 컨테이너와 환경 변수를 넣는다(k8s/bff/bff.yaml과 같은 이유).
+      annotations:
+        instrumentation.opentelemetry.io/inject-python: "false"
+        instrumentation.opentelemetry.io/inject-java: "false"
+        instrumentation.opentelemetry.io/inject-nodejs: "false"
+        instrumentation.opentelemetry.io/inject-dotnet: "false"
     spec:
       serviceAccountName: decider
       automountServiceAccountToken: false
@@ -45,11 +55,8 @@ spec:
           args:
             - |
               set -eu
-              MODEL=strands-decider-2B-qwen3.5-v1-2610
+              MODEL=strands-decider-12B-gemma4-v2-2611
               aws s3 sync "s3://$MODEL_BUCKET/models/$MODEL/" "/opt/ml/model/$MODEL/" --only-show-errors
-              aws s3 sync "s3://$MODEL_BUCKET/models/Qwen3.5-2B-Base/" /opt/ml/model/base/ --only-show-errors
-              sed -i 's#"base_model": *"[^"]*"#"base_model": "/opt/ml/model/base"#' "/opt/ml/model/$MODEL/strands_decider_config.json"
-              grep '"base_model"' "/opt/ml/model/$MODEL/strands_decider_config.json"
               du -sh /opt/ml/model/*
           env:
             - name: MODEL_BUCKET
@@ -63,23 +70,21 @@ spec:
               mountPath: /opt/ml/model
       containers:
         - name: decider
-          # 태그 serve-sagemaker-cuda-v1은 매주 다시 빌드된다. 2026-11-13 빌드(strands-decider 0.3.1.dev1)로 고정한다.
-          image: 763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/strands-decider@sha256:c11c41913c586c98635f1aa7e9c5bcfb0e588292674f34858c825805f2bf7987
+          image: ${DECIDER_IMAGE}
           env:
             - name: DECIDER_CHECKPOINT
-              value: /opt/ml/model/strands-decider-2B-qwen3.5-v1-2610
-            # 이미지 기본값과 같다. 요청 하나의 질문들은 이미 GPU에서 한 번에 처리된다.
-            - name: DECIDER_MAX_CONCURRENCY
-              value: "1"
+              value: /opt/ml/model/strands-decider-12B-gemma4-v2-2611
           ports:
             - name: http
               containerPort: 8080
           resources:
+            # 가중치 크기(24GB)에 맞춰 잡은 값이다. 측정한 최대 사용량은 13.4GiB였고 대부분 가중치 파일의 페이지 캐시다
+            # (docs/05-decider.md). 노드를 Decider가 혼자 쓰므로 낮추지 않았다.
             requests:
               cpu: "2"
-              memory: 8Gi
+              memory: 24Gi
             limits:
-              memory: 12Gi
+              memory: 28Gi
               nvidia.com/gpu: 1
           # /health는 예열이 끝난 뒤에야 성공한다.
           startupProbe:
